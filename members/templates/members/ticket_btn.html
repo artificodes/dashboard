@@ -1,0 +1,104 @@
+
+{% if register %}
+<div class="fixed-bottom text-right">
+  <button
+    contenturl="{% url 'event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+    class="uk-position-relative btn ticket-launch-btn content-modal btn-success 
+uk-animation-slide-top-medium rounded-circle mb-5 elevation-2 text-center p-2 mr-2 ticket_btn"
+    style="height: 60px;width: 60px;">
+    <i class="fa fa-user-check m-0 text-white fa-2x"></i>
+  </button>
+</div>
+
+
+{% elif ticket_btn %}
+<div class="fixed-bottom text-right">
+  <button contenturl="{% url 'buy_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}" class="uk-position-relative btn ticket-launch-btn content-modal btn-darker 
+uk-animation-slide-top-medium rounded-circle mb-5 elevation-2 text-center p-2 mr-2 ticket_btn"
+    style="height: 60px;width: 60px;">
+    <i class="icon ticket m-0 text-yellow loading big"></i>
+  </button>
+</div>
+{% elif arrange %}
+{% if hostedevent.verification_steps == '0' %}
+
+<div class="fixed-bottom text-right">
+  <button contenturl="{% url 'event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}" 
+  class="uk-position-relative btn ticket-launch-btn content-modal btn-darker 
+uk-animation-slide-top-medium rounded-circle mb-5 elevation-2 text-center p-2 mr-2 ticket_btn"
+    style="height: 60px;width: 60px;">
+    <i class="fa fa-chair m-0 text-yellow fa-3x"></i>
+  </button>
+</div>
+{% else %}
+<div class="fixed-bottom text-right">
+  <button
+    contenturl="{% url 'event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+    class="uk-position-relative btn ticket-launch-btn content-modal btn-success 
+uk-animation-slide-top-medium rounded-circle mb-5 elevation-2 text-center p-2 mr-2 ticket_btn"
+    style="height: 60px;width: 60px;">
+    <i class="fa fa-user-check m-0 text-white fa-2x"></i>
+  </button>
+</div>
+
+{% endif %}
+{% endif %}
+
+<script>
+    //  $('.content-modal').off()
+      {
+    (function ($) { //Most read async
+      $('.content-modal').on('click', function (event) {
+        event.preventDefault();
+        var link = $(this);
+        $.ajax({
+          beforeSend: function () {
+
+            $('#loader-cover').show()
+          },
+          complete: function () {
+            $('#loader-cover').hide()
+
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.content) {
+              $('#manager-container').removeClass('uk-animation-fade')
+
+              $('#manager-container').addClass('uk-animation-fade')
+              $('#manager-container').empty()
+              $('#manager-container').append(response.content)
+
+            }
+            if (response.modal_message) {
+              messageModal(response.modal_message, response.heading)
+
+            }
+
+            if (response.modal_content) {
+              contentModal(response.modal_content, response.heading)
+
+            }
+        
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+
+</script>

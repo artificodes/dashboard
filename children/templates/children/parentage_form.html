@@ -1,0 +1,87 @@
+<div class="card bg-transparent uk-display-inline-block mb-1 shadow-none" style="width:100%">
+    <div class="card-body p-1">
+        <form id="acceptparentage" method="POST"
+            action="{% url 'children_accept_parentage'%}">
+            {% csrf_token %}
+
+            <div class="m-1">
+                <div class="uk-inline" style="width: 100%;">
+                    <span class="uk-position-center-left ml-2"> <i class="fa fa-lock"></i></span>
+                    <input class="uk-input form-control pl-5 p-2 bg-transparent" style="height: max-content;" id="private_number"
+                        type="password" placeholder="Private Number" name="private_number">
+                </div>
+            </div>
+            <div class="footer text-center">
+                <button class="btn btn-success" type="submit" style="border-radius: 50px;"> <i class="fa fa-check"></i> Accept</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<script>
+      $("#acceptparentage").submit(function (event) {
+        event.preventDefault(); //prevent default action 
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this); //Creates new FormData object
+        if($('#private_number').val().length == 5 && Number($('#private_number').val()) ){
+            $.ajax({
+            beforeSend: function () {
+
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+            },
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (response) {
+              if (response.content) {
+          $('#tabcontent').removeClass('uk-animation-fade')
+
+          $('#tabcontent').addClass('uk-animation-fade')
+          $('#tabcontent').empty()
+          $('#tabcontent').append(response.content)
+
+        }
+        if (response.modal_message) {
+          messageModal(response.modal_message, response.heading)
+
+        }
+        if (response.modal_notification) {
+          notificationModal(response.modal_notification)
+
+        }
+
+        if (response.modal_content) {
+          contentModal(response.modal_content, response.heading)
+
+        }
+        UIkit.modal($('#content-modal')).hide();
+
+               
+},
+
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+  
+        }
+        else{
+           
+            notificationModal("Invalid Pin.<br> <p class='uk-text-bold text-danger'> Pin must contain 5 digits</p>")
+
+          
+        }
+    });
+
+</script>

@@ -1,0 +1,203 @@
+<div class="card-body uk-padding-remove" id="display:block">
+
+    {% include 'users/hosted_event_days.html' %}
+
+    {% include 'users/hosted_event_tickets.html' %}
+    {% include 'users/hosted_event_arrangements.html' %}
+
+    {% if hostedevent.verification_steps != '0' %}
+    <div class="col-csxx-14 uk-text-center uk-padding-small">
+        <div class="card bg-dark uk-margin-large-top" style="width: max-content;display: inline-block;max-width: 100%;">
+            <div class="card-body text-center">
+
+                <div class="col-csx-14  uk-text-center">
+                    <!-- <div class="uk-text-bold uk-padding-small border text-center rounded-pill" style="width: max-content;display: inline-block;">
+        Event authrorization
+    </div> -->
+                    <div class="uk-text-bold uk-padding-small text-uppercase text-center text-lighter rounded-pill"
+                        style="width: max-content;display: inline-block;">
+                        Event authrorization
+                    </div>
+                    <div class="col-csx-14 uk-text-center">
+
+                        <button type="submit" class="btn btn-warning full-content-modal my-4"
+                            contenturl="{% url 'event_qrcode' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"><i
+                                class="icon qrcode large"></i> EVENT QRCODE</button>
+                        {% if hostedevent.verification_steps == '2' %}
+
+                        <button type="submit" class="btn btn-success my-4 qr-scan"
+                            contenturl="{% url 'host_qrcode_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+                            eventid="{{hostedevent.hostedeventid}}" eventinitials="{{hostedevent.initials}}"><i
+                                class="icon check large"></i> VERIFY ATTENDEES</button>
+                    </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+<script>
+
+    {
+        (function ($) { //Most read async
+            $('.full-content-modal').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        $('#loader-cover').show()
+                    },
+                    complete: function () {
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.modal_content) {
+                            if (response.modal_content) {
+                                fullcontentModal(response.modal_content, response.heading)
+                            }
+                        }
+
+                        if (response.message) {
+                            UIkit.notification.closeAll()
+                            UIkit.notification(response.message)
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+
+
+
+    {
+        (function ($) { //Most read async
+            $('.content-modal').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        $('#loader-cover').show()
+                    },
+                    complete: function () {
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.modal_content) {
+                            contentModal(response.modal_content, response.heading)
+                        }
+
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+
+    {
+        (function ($) { //Most read async
+            $('.delete-content').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                var removableelement = link.attr('removableelement')
+
+                $.ajax({
+                    beforeSend: function () {
+                        $(removableelement).removeClass('uk-animation-fade')
+
+                        $(removableelement).addClass('uk-animation-fade')
+
+                    },
+                    complete: function () {
+
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.done) {
+                            $(removableelement).addClass('uk-animation-fade')
+                            $(removableelement).remove()
+
+                            if (response.content) {
+                                $('#manager-container').removeClass('uk-animation-fade')
+
+                                $('#manager-container').addClass('uk-animation-fade')
+                                $('#manager-container').empty()
+                                $('#manager-container').append(response.content)
+
+
+                                if (response.message) {
+                                    UIkit.notification.closeAll()
+                                    UIkit.notification(response.message)
+                                }
+                            }
+                        }
+                        if (response.modal_message) {
+                            messageModal(response.modal_message, response.heading)
+
+                        }
+
+                        if (response.modal_content) {
+                            contentModal(response.modal_content, response.heading)
+                        }
+                        if (response.full_modal_content) {
+                            fullContentModal(response.full_modal_content, response.heading)
+
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+
+
+</script>

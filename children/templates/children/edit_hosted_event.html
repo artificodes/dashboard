@@ -1,0 +1,268 @@
+<div class="card-body" id="manager-container">
+
+  <form role="form" id='editeventform' enctype="multipart/form-data" class="form uk-padding-small text-left" method="POST"
+    action="{% url 'edit_hosted_event' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="icon tag"></i></span>
+        </div>
+        <input class="form-control" placeholder="Event Title" type="text" name="title" value="{{hostedevent.title}}"
+          required>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-cloud-upload-96"></i></span>
+        </div>
+        <input class="previewimage form-control" name="thumbnail" data-jpreview-container="#preview-container"
+          placeholder="Upload event image" type="file">
+
+      </div>
+      <div id="preview-container" class="jpreview-container uk-padding-small col-csxx-14 col-md-6 col-csx-6"
+        style="float: none;">
+        <img src="{{hostedevent.thumbnail.url}}" alt="">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event start date and time" class="form-control datetimepicker"
+          name="start_date_time" required value="{{hostedevent.start_date_time|date:'m d Y I:M p'}}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event end date and time" class="form-control datetimepicker"
+          name="end_date_time" required value="{{hostedevent.end_date_time|date:'m d Y I:M p'}}" />
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <p class="h4  uk-text-bold uk-margin-remove">Event verification steps</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification1" value="0" name="verification" class="custom-control-input" 
+        {% if hostedevent.verification_steps == '0' %} checked {% endif %} required>
+        <label class="custom-control-label " for="verification1" uk-tooltip="Attendees' registrations
+                   will be automatically marked as attended">No verification</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification2" value="1" name="verification" class="custom-control-input" 
+        {% if hostedevent.verification_steps == '1' %} checked {% endif %} required>
+        <label class="custom-control-label " for="verification2">Single verification</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification3" value="2" name="verification" class="custom-control-input" 
+        {% if hostedevent.verification_steps == '2' %} checked {% endif %} required>
+        <label class="custom-control-label " for="verification3">Two-step verification</label>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <p class="h4 uk-text-bold ">Require one-time ticketing?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="ticketing1" value="yes" name="one_time_ticketing" class="custom-control-input" 
+        {% if hostedevent.one_time_ticketing %} checked {% endif %} required>
+        <label class="custom-control-label " for="ticketing1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline " {% if hostedevent.tickets.count > 0 %} uk-tooltip="Selecting this option will delete {{hostedevent.tickets.count}} ticket(s) on this event"  {% endif %} >
+        <input type="radio" id="ticketing2" value="no" name="one_time_ticketing" class="custom-control-input" 
+        {% if hostedevent.one_time_ticketing == False %} checked {% endif %} required>
+        <label class="custom-control-label {% if hostedevent.tickets.count > 0 %} text-danger text-bold {% endif %}" for="ticketing2">No</label>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <p class="h4  uk-text-bold uk-margin-remove">Use one-time arrangement?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange1" value="yes" name="one_time_arrangement" class="custom-control-input" 
+        {% if hostedevent.one_time_arrangement %} checked {% endif %} required>
+        <label class="custom-control-label " for="arrange1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline" {% if hostedevent.arrangements.count > 0 %} uk-tooltip="Selecting this option will delete {{hostedevent.arrangements.count}} arrangement(s) on this event"  {% endif %} >
+        <input type="radio" id="arrange2" value="no" name="one_time_arrangement" class="custom-control-input" 
+        {% if hostedevent.one_time_arrangement == False %} checked {% endif %} required>
+        <label class="custom-control-label {% if hostedevent.arrangements.count > 0 %} text-danger text-bold {% endif %} " for="arrange2">No</label>
+      </div>
+
+    </div>
+    <div class="form-group mb-3">
+      <p class="h4  uk-text-bold uk-margin-remove">Event days</p>
+      <p class="">Is this a 1 day event?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="oneday1" value="yes"{% if hostedevent.one_day %} checked {% endif %} name="one_day" class="custom-control-input" required>
+        <label class="custom-control-label " for="oneday1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="oneday2" value="no" name="one_day" {% if hostedevent.one_day == False %} checked {% endif %}
+         class="custom-control-input" 
+          required>
+        <label class="custom-control-label " for="oneday2">No</label>
+      </div>
+
+    </div>
+
+    <!-- 
+              <div class="form-group mb-3">
+                <p class="h4  uk-text-bold uk-margin-remove">Special Offers</p>
+                <div class="uk-divider-small uk-margin-small"></div>
+                <p class="">Does this event have special offers?</p>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="offer1" value="yes" name="offer" class="custom-control-input" 
+                  {% if hostedevent.special_offer %} checked {% endif %} required>
+                  <label class="custom-control-label " for="offer1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="offer2" value="no" name="offer" class="custom-control-input"
+                   {% if hostedevent.special_offer  ==  False %} checked {% endif %} required>
+                  <label class="custom-control-label " for="offer2">No</label>
+                </div>
+
+              </div> -->
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary my-4">save</button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+  var submit = false
+  $('#editeventform').djValidator({ mode: 'submit', success: () => { submit = true } })
+
+  $("#editeventform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit  ==  true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.done) {
+            $('#manager-container').removeClass('uk-animation-fade')
+
+          $('#manager-container').addClass('uk-animation-fade')
+          $('#manager-container').empty()
+          $('#manager-container').append(response.content)
+
+            UIkit.modal($('#content-modal')).hide();
+
+            if (response.message) {
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+            }
+          }
+          else if (response.message) {
+            UIkit.notification.closeAll()
+            UIkit.notification(response.message)
+          }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length  ==  11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+
+<script>
+  {
+    (function ($) { //Most read async
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+
+        },
+        type: 'get',
+        url: "{% url 'dashboard_content' %}",
+        data: {
+          'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+        },
+        success: function (response) {
+          if (response.content) {
+            $('#inner-container').empty()
+            $('#inner-container').append(response.content)
+
+            $('#loader-cover').hide()
+          }
+
+        },
+        error: function (xhr, status, error) {
+
+          $('#notification-modal-inner').empty()
+          $('#notification-modal-inner').append('There was an error')
+          $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+          UIkit.modal($('#notification-modal')).show();
+        }
+      });
+    }(jQuery))
+  };
+</script>

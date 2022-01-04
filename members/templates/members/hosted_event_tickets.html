@@ -1,0 +1,245 @@
+{% if hostedevent.one_time_ticketing %}
+<div class="col-csxx-14">
+
+
+<div class="col-csxx-14 uk-position-relative mt-3 pb-2 border-bottom">
+    <div class="uk-text-bold uk-padding-small ">
+        Tickets
+    </div>
+    <a type="button"
+    onclick="requestContentModal('{% url 'member_create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid='None'%}')"           
+     class="uk-icon-button  uk-margin-small-right uk-position-center-right pb-1"><i
+            class="icon plus standard m-0 text-yellow"></i>
+</a>
+</div>
+
+{% if hostedevent.tickets.count > 0 %}
+<div class="col-csxx-14">
+    {% for ticket in hostedevent.tickets.all %}
+    <div class="col-cmd-3-e col-csxx-14 col-csx-7 col-css-7 col-csm-5-e uk-padding-small ">
+        <div class="card rounded-lg shadow-sm border bg-yellow">
+            <div class="card-header uk-position-relative uk-padding-medium bg-darker ">
+
+
+                <div class="uk-text-bold text-yellow position-relative pr-5" style="width: max-content;">
+                    {{ticket.name}}
+                    {% if ticket.price == 0 %} 
+                    <span class="border border-success rounded-pill pl-1 pr-1 pt-0 pb-0 uk-position-top-right text-success" style="font-size: 7px;">free</span>
+                    {% endif %}
+                </div>
+
+
+                <nav class="navbar navbar-top navbar-expand uk-padding-remove uk-position-center-right">
+
+                    <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link pr-0" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <div class="media align-items-center">
+                                    <span
+                                        class="shadow-none rounded-circle uk-position-relative hover uk-padding-small">
+                                        <i
+                                            class="icon ellipsis vertical small uk-position-center uk-margin-remove text-white"></i>
+                                    </span>
+                                    <div class="media-body  ml-2  d-none d-lg-block">
+                                        <span class="mb-0 text-sm  font-weight-bold"></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu  dropdown-menu-right shadow-lg ">
+
+
+                                <a onclick="requestContentModal('{% url 'member_edit_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid%}')"
+                                    class="dropdown-item ">
+                                    <i class="icon edit text-info"></i>
+                                    <span>Edit</span>
+                                </a>
+                                <a href="" class="dropdown-item">
+                                    <i class="icon download text-purple"></i>
+                                    <span>Attendance</span>
+                                </a>
+
+                                <a class="dropdown-item action-btn"
+                                    removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"
+                                    onclick="requestContentModal('{% url 'member_delete_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid%}')">
+                                    <i class="icon trash text-danger"></i>
+                                    <span>Delete</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+
+                </nav>
+
+            </div>
+
+            <div class="card-body uk-padding-small text-darker">
+
+                <div class="col-csxx-14">
+                    <div class="col-csxx-7">
+                        <i class="icon money text-darker text-darker"></i>
+                    </div>
+                    <div class="col-csxx-7 text-right uk-text-bold">
+                        <span>${{ticket.price}}</span>
+                    </div>
+                </div>
+                <div class="col-csxx-14">
+                    <div class="col-csxx-7">
+                        <i class="icon users text-darker"></i>
+                    </div>
+                    <div class="col-csxx-7 text-right uk-text-bold">
+                        <span>{{ticket.attendance_limit}}</span>
+                    </div>
+                </div>
+                <div class="col-csxx-14">
+                    <div class="col-csxx-7">
+                        <i class="fa fa-user-check text-darker"></i>
+                    </div>
+                    <div class="col-csxx-7 text-right uk-text-bold">
+                        <span>{{ticket.registrations.count}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+<div class="col-csx-14 uk-text-center">
+    <button type="button"
+        onclick="requestContentModal('{% url 'member_create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid='None'%}')"
+        class="btn rounded-pill bg-gradient-yellow  text-darker m-0"><i class="icon ticket text-darker"></i>
+        Add
+        Ticket</button>
+</div>
+
+{% else %}
+<div class="uk-padding-large uk-text-center uk-position-relative col-csxx-14">
+    <i class="massive uk-position-center text-lighter fa-ticket-alt fa fa-5x" ></i>
+
+    <!-- <div class="uk-position-relative">No ticket added
+        any ticket to it.</div> -->
+        <button type="button"
+        onclick="requestContentModal('{% url 'member_create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid='None'%}')"
+        class="btn rounded-pill bg-gradient-yellow  text-darker m-0 btn-sm"><i class="icon ticket text-darker"></i>
+        Add
+        </button>
+
+
+</div>
+{% endif %}
+</div>
+{% endif %}
+
+{% if daytickets.count > 0 %}
+<div class="col-csxx-14">
+
+<div class="uk-text-bold uk-padding-small border-bottom">
+    Event Days Tickets
+</div>
+<div class="col-csxx-14">
+    {% for eventday in hostedevent.days.all %}
+        {% if eventday.ticket_required %}
+            {% if eventday.tickets.all.count > 0 %}
+
+{% for ticket in eventday.tickets.all %}
+    <div class="col-cmd-3-e col-csxx-14 col-csx-7 col-css-7 col-csm-5-e uk-padding-small ">
+        <div class="card rounded-lg shadow-sm border bg-yellow">
+            <div class="card-header uk-position-relative uk-padding-medium bg-darker ">
+             <div class="row m-0 text-yellow"> 
+                 <div class="uk-text-bold col-csxx-5">
+                DAY {{eventday.day}} 
+                </div>
+
+                <div class="uk-text-bold col-csxx-9">
+                    {{ticket.name}}
+                </div>
+
+             </div>  
+
+                <nav class="navbar navbar-top navbar-expand uk-padding-remove uk-position-center-right">
+
+                    <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link pr-0" role="button" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <div class="media align-items-center">
+                                    <span
+                                        class="shadow-none rounded-circle uk-position-relative hover uk-padding-small">
+                                        <i
+                                            class="icon ellipsis vertical small uk-position-center uk-margin-remove text-white"></i>
+                                    </span>
+                                    <div class="media-body  ml-2  d-none d-lg-block">
+                                        <span class="mb-0 text-sm  font-weight-bold"></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu  dropdown-menu-right shadow-lg ">
+                                <a onclick="requestContentModal('{% url 'member_edit_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid%}','get')"
+                                    class="dropdown-item ">
+                                    <i class="icon edit text-info"></i>
+                                    <span>Edit</span>
+                                </a>
+                                <a href="" class="dropdown-item">
+                                    <i class="icon download text-purple"></i>
+                                    <span>Attendance</span>
+                                </a>
+
+                                <a class="dropdown-item delete-content"
+                                    removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"
+                                    contenturl="{% url 'member_delete_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid%}">
+                                    <i class="icon trash text-danger"></i>
+                                    <span>Delete</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+
+                </nav>
+
+            </div>
+
+            <div class="card-body uk-padding-small text-darker">
+
+                <div class="col-csxx-x-14">
+                    <div class="col-csxx-7">
+                        <i class="icon money text-darker text-darker"></i>
+                    </div>
+                    <div class="col-csxx-7 text-right uk-text-bold">
+                        <span>${{ticket.price}}</span>
+                    </div>
+                </div>
+                <div class="col-csxx-x-14">
+                    <div class="col-csxx-7">
+                        <i class="icon users text-darker"></i>
+                    </div>
+                    <div class="col-csxx-7 text-right uk-text-bold">
+                        <span>{{ticket.attendance_limit}}</span>
+                    </div>
+                </div>
+                <div class="col-csxx-x-14">
+                    <div class="col-csxx-7">
+                        <i class="fa fa-user-check text-darker"></i>
+                    </div>
+                    <div class="col-csxx-7 text-right uk-text-bold">
+                        <span>{{ticket.registrations.count}}</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+   
+
+</div>
+</div>
+
+{% endif %}

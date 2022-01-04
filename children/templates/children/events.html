@@ -1,0 +1,227 @@
+
+
+{% if upcomingevents %}
+
+<div style="display: flex;flex-wrap: wrap;justify-content: center;">
+    {% for hostedevent in upcomingevents %}
+    <div
+    class="col-csxx-x-14 col-csxx-xx-14 col-csxx-14 col-csx-14 text-center col-cmd-4-e col-css-7 col-csm-7 p-1 "
+    >
+    <div class="card uk-link shadow-lg--hover overflow-hidden text-center  bg-transparent"
+        style=" min-height: 150px;max-height:250px;text-decoration: none;">
+        <!-- <div class=" bg-translucent-success mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small uk-text-bold uk-position-top text-white"
+            style="z-index: 5; height: 40px;width: 40px;font-family: cursive;line-height: 11px;">
+            {{hostedevent.start_date_time.day}} <br>
+            {{hostedevent.start_date_time|date:'M'}}
+        </div>
+        <div class=" bg-translucent-danger mt-5 uk-margin-small-left rounded-sm uk-padding-small uk-text-small uk-text-bold uk-position-top text-white"
+            style="z-index: 5; height: 40px;width: 40px;font-family: cursive;line-height: 11px;">
+            {{hostedevent.end_date_time.day}} <br>
+            {{hostedevent.end_date_time|date:'M'}}
+        </div> -->
+        <div class="card-body uk-padding-remove overflow-hidden">
+            <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+                {% if hostedevent.thumbnail %}
+                <img src="{{hostedevent.thumbnail.url}}" class="ui image"
+                    onclick="requestContentModal('{% url 'children_register_dependant_choice' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+                    style="width: 100%; min-height: 100%;max-height:100%;">
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="card-footer h3 p-1">
+            {{hostedevent.title}}
+            <p class="uk-text-lead uk-text-bold">{{hostedevent.start_date_time}}</p>
+            <!-- <div class="row m-0 text-center">
+                <div class="col-6">
+                    <div class=" bg-translucent-success mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small 
+    uk-text-bold text-white" style="z-index: 5; font-family: cursive;line-height: 11px;">
+                        {{hostedevent.start_date_time.date}}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class=" bg-translucent-danger  mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small 
+    uk-text-bold  text-white" style="z-index: 5;font-family: cursive;line-height: 11px;">
+                        {{hostedevent.end_date_time.date}}
+                    </div>
+                </div>
+            </div> -->
+
+
+        </div>
+        {% if request.user.is_staff %}
+        <div class="rounded-circle bg-green uk-position-top-right mt-1 mr-1" style="height: 40px;width: 40px;">
+            <a type="submit" class="bg-success my-4 main-content-redirect"
+                href="{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+                eventid="{{hostedevent.hostedeventid}}" eventinitials="{{hostedevent.initials}}">
+                <i class="fa fa-shield-alt uk-position-center fa-2x text-white"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+{% endfor %}
+</div>
+
+{% endif %}
+
+
+<script>
+
+    var verificationurl = ''
+    var eventId = ''
+    var eventInitials = '{{hostedevent.initials}}'
+    {
+        (function ($) { //Most read async
+            $('.qr-scan').on('click', function (event) {
+                var eventButton = $(this)
+                verificationurl = eventButton.attr('contenturl')
+                eventId = eventButton.attr('eventid')
+                UIkit.modal($('#qr-modal')).show();
+                Webcam.set({
+                    width: 350,
+                    height: 250,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100
+                });
+                Webcam.attach('#example');
+
+
+                // $('#button').click(function () {
+                // 	take_snapshot();66666
+                // });
+                Webcam.on('load', function () {
+                    qrCodeInterval = setInterval(take_snapshot, 100)
+                    qrcode.callback = hostQrVerification;
+                });
+
+            })
+
+
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+
+
+
+
+            });
+        }(jQuery))
+    };
+
+
+
+
+
+
+    {% for hostedevent in upcomingevents %}
+    // try {
+    //     clearInterval(timeInterval{{hostedevent.eventid}})
+
+    // } catch (ReferenceError) {
+    //     alert('')
+    // }
+
+    $(function () {
+        var suspension_days = (Number({{ hostedevent.start_time_timestamp }}) - Number({{ server_timestamp }})) /(86400)
+    var suspension_seconds = Math.ceil(suspension_days * 24 * 60 * 60)
+    var suspension_minutes = Math.ceil(suspension_seconds / 60)
+    var total_remaining_days = suspension_minutes / 60 / 24
+    var remain_days = total_remaining_days | 0
+    var total_remaining_hours = (suspension_minutes / 60) % 24
+    var remain_hours = (total_remaining_hours | 0)
+    var total_remaining_minutes = (total_remaining_hours - remain_hours) * 60
+    var remain_minutes = (total_remaining_minutes) | 0
+    var remain_seconds = Math.round((total_remaining_minutes - remain_minutes) * 60)
+    // if (remain_minutes < 1) {
+    //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_seconds + ' seconds.')
+
+    // }
+    // else {
+    //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_days + ' days ' + remain_hours + ' hours ' + remain_minutes + ' minutes and ' + remain_seconds + ' seconds.')
+
+    // }
+
+
+    function updateTime() {
+
+        if (remain_seconds >= 1) {
+            remain_seconds--
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+
+        }
+        else {
+            remain_seconds = 60
+            remain_minutes--
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+            if (remain_minutes >= 1) { }
+            else {
+                remain_hours--
+                remain_minutes = 60
+
+                $('#days{{hostedevent.eventid}}').html(remain_days)
+                $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                if (remain_hours >= 1) {
+                    $('#days{{hostedevent.eventid}}').html(remain_days)
+                    $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                    $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                    $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                }
+                else {
+                    if (remain_days < 1) {
+                        $('#days{{hostedevent.eventid}}').html(remain_days)
+                        $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                        $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                        $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                    }
+                    else {
+                        remain_days--
+                        remain_hours = 23
+                    }
+
+                    $('#days{{hostedevent.eventid}}').html(remain_days)
+                    $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                    $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                    $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                }
+            }
+        }
+        // else{
+        //     $('#days{{hostedevent.eventid}}').html(remain_days)
+        // $('#hours{{hostedevent.eventid}}').html(remain_hours)
+        // $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+        // $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+        // }
+
+    }
+    var timeInterval{{ hostedevent.eventid }} =setInterval(updateTime, 1000)
+
+// $('#{{hostedevent.eventid}}').countdowntimer({
+//     seconds: 300 - suspension_seconds,
+//     size: "lg",
+//     displayFormat: 'DHMS',
+
+// });
+
+});
+
+    {% endfor %}
+</script>

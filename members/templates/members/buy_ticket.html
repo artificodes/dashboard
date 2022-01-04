@@ -1,0 +1,137 @@
+<div class="col-csx-14">
+  {% if buydayticket %}
+  {% for eventday in ticketabledays %}
+  {% for ticket in eventday.tickets.all %}
+  <div class="col-cmd-5-e col-csxx-14 col-csx-7 col-css-7 col-csm-5-e uk-padding-remove ">
+      <div class="card rounded-lg shadow-none border bg-yellow m-1">
+           <div class="card-header uk-position-relative uk-padding-small bg-darker row m-0">
+            <div class="uk-text-bold text-yellow col">
+              DAY {{eventday.day}}
+          </div><div class="uk-text-bold text-yellow col">
+                  {{ticket.name}}
+              </div>
+          </div>
+
+          <div class="card-body uk-padding-small text-center ">
+
+              <div>
+                  <div class="col-csxx-5 text-left">
+                      <i class="icon money"></i>
+                  </div>
+                  <div class="col-csxx-9 text-right uk-text-bold">
+                      <span>${{ticket.price}}</span>
+                  </div>
+              </div>
+
+              {% if ticket.free %}
+            <button class="btn btn-darker rounded-pill btn-sm"
+            onclick="requestContentModal('{% url 'bought_day_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid dayid=dayid %}')" style="">Free</button>
+            {% else %}
+            <button class="btn btn-outline-darker rounded-pill btn-sm" onclick="buyTicketWithPaystack({{ticket.price}}00,'{{user.email}}','{{hostedevent.eventid}}','{{ticket.ticketid}}','{% url 'bought_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid dayid=dayid %}')"
+            style="">Buy
+            Now</button>
+            {% endif %}
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+  {% endfor %}
+  {% elif buyhostedeventticket %}
+  {% for ticket in hostedevent.tickets.all %}
+  <div class="col-cmd-5-e col-csxx-14 col-csx-7 col-css-7 col-csm-5-e uk-padding-remove ">
+      <div class="card rounded-lg shadow-none border bg-yellow m-1">
+        <div class="card-header uk-position-relative uk-padding-small bg-darker row m-0">
+           <div class="uk-text-bold text-yellow col">
+                  {{ticket.name}}
+              </div>
+          </div>
+
+          <div class="card-body uk-padding-small text-center">
+
+              <div class="col-csxx-14">
+                  <div class="col-csxx-5 text-left">
+                      <i class="icon money"></i>
+                  </div>
+                  <div class="col-csxx-9 text-right uk-text-bold">
+                      <span>${{ticket.price}}</span>
+                  </div>
+              </div>
+
+                           <div class="col-csxx-14">
+ {% if ticket.free %}
+
+            <button class="btn btn-darker rounded-pill btn-sm"onclick="requestContentModal('{% url 'bought_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid dayid=dayid %}')"
+           style="">Free</button>
+            {% else %}
+            <button class="btn btn-outline-darker rounded-pill btn-sm" onclick="buyTicketWithPaystack({{ticket.price}}00,'{{user.email}}','{{hostedevent.eventid}}','{{ticket.ticketid}}','{% url 'bought_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid dayid=dayid %}')"
+            style="">Buy
+            Now</button>
+            
+            {% endif %}</div>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+</div>
+
+
+  <script>
+       {
+        (function ($) { //Most read async
+            $('.action-btn-free').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        $('#loader-cover').show()
+                    },
+                    complete: function () {
+                    },
+                    type: 'post',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                            if (response.content) {
+                                $('#manager-container').removeClass('uk-animation-fade')
+
+                                $('#manager-container').addClass('uk-animation-fade')
+                                $('#manager-container').empty()
+                                $('#manager-container').append(response.content)
+
+                            }
+                            if (response.modal_content) {
+                                contentModal(response.modal_content,response.heading)
+
+                            }
+                        
+                       if (response.buyticket == true) {                           
+                            alert('')
+                        }
+
+                        else{
+                            $('.ticket-launch-btn').remove()
+                        }
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+  </script>

@@ -1,0 +1,123 @@
+<div class="card-body " id="">
+
+    <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Registrations</th>
+                    <th scope="col">Attendees</th>
+                    <th scope="col">Quota</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{hostedevent.registrations.count}}</td>
+                    <td>{{attendeescount}}</td>
+                    <td>{{hostedevent.attendance_limit}}</td>
+
+                </tr>
+            </tbody>
+            {% if hostedevent.one_time_ticketing %}
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" colspan="5" class="uk-text-lead text-white">EVENT TICKETS</th>
+                </tr>
+            </thead>
+            {% if hostedevent.tickets.count > 0 %}
+
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Tickets</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Quota</th>
+                    <th scope="col">Subscribers</th>
+                    <!-- <th scope="col">Percent</th> -->
+                    <th scope="col">Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in hostedevent.tickets.all %}
+                <tr id="{{hostedevent.eventid}}{{ticket.ticketid}}">
+                    <th scope="row">
+                        {{ticket.name}}
+                    </th>
+                    <td>
+                        ₦{{ticket.price}}
+                    </td>
+                    <td>
+                        {{ticket.attendance_limit}}
+                    </td>
+                    <td>
+                        {{ticket.registrations.count}}
+                    </td>
+                    <!-- <td>
+              <div class="d-flex align-items-center">
+                <span class="mr-2">{{ticket.percent}}%</span>
+                <div>
+                  <div class="progress">
+                    <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="{{ticket.percent}}"
+                      aria-valuemin="0" aria-valuemax="100" style="width: {{ticket.percent}}%;"></div>
+                  </div>
+                </div>
+              </div>
+            </td> -->
+                    <td>
+
+                        {% if ticket.registrations.count > 0 %}
+                        <button type="button" class="btn btn-sm btn-light uk-disabled shadow-none">
+                            <i class="icon edit "></i> Edit</button>
+                        <button type="button" class="btn btn-sm btn-light  uk-disabled shadow-none"><i
+                                class="icon trash "></i>
+                            Delete</button>
+                        {% else %}
+                        <button type="button" class="btn btn-sm btn-info content-modal"
+                            contenturl="{% url 'edit_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid %}">
+                            <i class="icon edit "></i> Edit</button>
+                        <button type="button" class="btn btn-sm btn-danger delete-content"
+                            contenturl="{% url 'delete_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid %}"
+                            removableelement="#{{hostedevent.eventid}}{{ticket.ticketid}}"><i class="icon trash "></i>
+                            Delete</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <td colspan="5" class="uk-text-center">
+                    <button type="button"
+                        contenturl="{% url 'create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' %}"
+                        class="btn bg-gradient-blue content-modal text-white"><i class="icon add text-white"></i> Add
+                        Ticket</button>
+
+                    {% if hostedevent.arrangement_update_needed %}
+                    <a type="button"
+                        href="{% url 'edit_hosted_event' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+                        class="btn btn-warning"><i class="icon sync "></i> Update Ticket</a>
+                    {% endif %}
+                </td>
+            </tbody>
+            {% else %}
+            <tr>
+                <td colspan="5">
+                    <div class="uk-padding-large uk-text-center uk-position-relative">
+                        <i class="massive uk-position-center text-lighter" uk-icon='icon:calendar;ratio:10'></i>
+
+                        <div class="uk-position-relative">This event requires one-time ticketing and you have not added
+                            any ticket to it.</div>
+                        <button type="button"
+                            contenturl="{% url 'create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}"
+                            class="btn bg-gradient-blue content-modal text-white"><i class="icon add text-white"></i>
+                            Add
+                            Ticket</button>
+
+
+                    </div>
+                </td>
+            </tr>
+
+            {% endif %}
+            {% endif %}
+        </table>
+    </div>
+</div>

@@ -1,0 +1,282 @@
+<div class="col uk-padding-remove"></div>
+  <div class="col-xl-12 col-md-12 uk-padding-remove">
+    <div class="card card-stats shadow-none">
+      <div class="card-body uk-padding-remove">
+        <!-- <h5 class="card-title text-uppercase text-muted mb-0 uk-text-large">EVENT DATE & TIME</h5> -->
+        <div class="col uk-text-center col-csxx-8 uk-padding-small" style="">
+
+          <div class=" card bg-white uk-border-rounded elevation-1 col-csxx-14"
+            style="display: inline-block;">
+            <div class="card-header uk-padding-small">
+              <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                <i class="icon calendar text-white"></i>
+              </div>
+            </div>
+            <div class="col-csxx-14">
+              <div class="col-csxx-7 text-center">
+                  <i class="icon calendar outline text-green"></i>
+                  <p class=" uk-margin-remove">
+                      {{hostedevent.start_date_time.date}}
+                  </p>
+              </div>
+              <div class="col-csxx-7 text-center">
+                  <i class="icon clock outline text-green"></i>
+                  <p class=" uk-margin-remove">
+                      {{hostedevent.start_date_time.time}}
+                  </p>
+              </div>
+          </div>
+          <div class="col-csxx-14">
+              <div class="col-csxx-7 text-center">
+                  <i class="icon calendar outline text-danger"></i>
+                  <p class=" uk-margin-remove">
+                      {{hostedevent.end_date_time.date}}
+                  </p>
+              </div>
+              <div class="col-csxx-7 text-center">
+                  <i class="icon clock outline text-danger"></i>
+                  <p class=" uk-margin-remove">
+                      {{hostedevent.end_date_time.time}}
+                  </p>
+              </div>
+          </div>
+
+            <!--  <div class="uk-text-center uk-padding-small col-csxx-7" style="">
+            
+             
+                <div class=" uk-padding-small uk-text-center bg-gradient-success rounded-left rounded-right" style="width: 100%;">
+                  <span class="h3 font-weight-bold mb-0 text-white">STARTS</span>
+                </div>
+                <div class=" uk-margin-remove-right uk-margin-remove-left uk-margin-small-top">
+
+                  <div class=" uk-padding-remove uk-text-center col-csxx-4" style="display:inline-block;">
+                    <div
+                      class="h3 font-weight-bold mb-0 uk-text-center  border-success border rounded-left  uk-padding-small"
+                      style="width: 100%;">{{hostedevent.start_date_time|date:'M'}}
+                    </div>
+                  </div>
+                  <div class="uk-divider-vertical uk-margin-remove col-csxx-1" style="height: 30px;"></div>
+
+                  <div class=" uk-padding-remove uk-text-center uk-text-center col-csxx-3"
+                    style="display:inline-block;">
+                    <div class="h3 font-weight-bold mb-0  uk-text-center  border-success border  uk-padding-small">
+                      {{hostedevent.start_date_time|date:'d'}}</div>
+                  </div>
+                  <div class="uk-divider-vertical uk-margin-remove col-csxx-1" style="height: 30px;"></div>
+
+                  <div class=" uk-padding-remove uk-text-center uk-text-center col-csxx-5"
+                    style="display:inline-block;">
+                    <div
+                      class="h3 font-weight-bold mb-0 uk-text-center  border-success border  uk-padding-small rounded-right">
+                      {{hostedevent.start_date_time|date:'Y'}}</div>
+                  </div>
+
+                </div>
+                <div class="col uk-padding-remove">
+                  <span class=" h1 text-uppercase uk-text-large"
+                    style="font-size: 30px;">{{hostedevent.start_date_time.time}}</span>
+                </div>
+              </div>
+              <div class="uk-text-center uk-padding-small col-csxx-7" style="">
+                <div class=" uk-padding-small uk-text-center bg-gradient-dark rounded-left rounded-right" style="width: 100%;">
+                  <span class="h3 font-weight-bold mb-0 text-white">ENDS</span>
+                </div>
+                <div class=" uk-margin-remove-right uk-margin-remove-left uk-margin-small-top">
+
+                  <div class=" uk-padding-remove uk-text-center col-csxx-4" style="display:inline-block;">
+                    <div
+                      class="h3 font-weight-bold mb-0 uk-text-center border-danger border rounded-left  uk-padding-small"
+                      style="width: 100%;">{{hostedevent.end_date_time|date:'M'}}
+                    </div>
+                  </div>
+                  <div class="uk-divider-vertical uk-margin-remove col-csxx-1" style="height: 30px;"></div>
+
+                  <div class=" uk-padding-remove uk-text-center uk-text-center col-csxx-3"
+                    style="display:inline-block;">
+                    <div class="h3 font-weight-bold mb-0 uk-text-center  border-danger border  uk-padding-small">
+                      {{hostedevent.end_date_time|date:'d'}}</div>
+                  </div>
+                  <div class="uk-divider-vertical uk-margin-remove col-csxx-1" style="height: 30px;"></div>
+
+                  <div class=" uk-padding-remove uk-text-center uk-text-center col-csxx-5"
+                    style="display:inline-block;">
+                    <div
+                      class="h3 font-weight-bold mb-0 uk-text-center  border-danger border  uk-padding-small rounded-right">
+                      {{hostedevent.end_date_time|date:'Y'}}</div>
+                  </div>
+
+                </div>
+                <div class="col uk-padding-remove">
+                  <span class=" h1 text-uppercase uk-text-large"
+                    style="font-size: 30px;">{{hostedevent.start_date_time.time}}</span>
+                </div>
+              </div> 
+
+            </div>-->
+            </div>
+            <div class="uk-text-center uk-padding-small col-csxx-6" style="">
+
+              <div class="card uk-padding-small uk-text-small bg-white uk-border-rounded elevation-1 col-csxx-14"
+                style="font-weight: bold;z-index: 2;cursor:default; display: inline-block;">
+                <div class="card-header">
+                  <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                    <i class="icon stopwatch text-white"></i>
+                  </div>
+                </div>
+                <div class=" uk-padding-small uk-text-center uk-margin-small-top col-csx-4-e" style="">
+                  <div class="rounded-circle border-success card uk-margin-remove"
+                    style="height: 40px;width: 40px;border: 2px solid green;display: inline-block;">
+                    <div id="days{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                    </div>
+                  </div>
+                  <div class="uk-margin-small-top">
+                    DAYS
+                  </div>
+                </div>
+                <div class=" uk-padding-small uk-text-center uk-margin-small-top  col-csx-4-e" style="">
+                  <div class="rounded-circle border-primary card uk-margin-remove"
+                    style="height: 40px;width: 40px;border: 2px solid blue;display: inline-block;">
+                    <div id="hours{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                    </div>
+                  </div>
+
+
+                  <div class="uk-margin-small-top">
+                    HOURS
+                  </div>
+                </div>
+
+                <div class=" uk-padding-small uk-text-center uk-margin-small-top  col-csx-4-e" style=" ">
+                  <div class="rounded-circle border-warning card uk-margin-remove"
+                    style="height: 40px;width: 40px;border: 2px solid green;display: inline-block;">
+                    <div id="minutes{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                    </div>
+                  </div>
+                  <div class="uk-margin-small-top">
+                    MINS
+                  </div>
+                </div>
+                <div class=" uk-padding-small  uk-text-center uk-margin-small-top col-csx-4-e" style=" ">
+                  <div class="rounded-circle border-danger card uk-margin-remove"
+                    style="height: 40px;width: 40px;border: 2px solid green;display: inline-block;">
+                    <div id="seconds{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                    </div>
+                  </div>
+
+                  <div class="uk-margin-small-top">
+                    SECS
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- <div class="col-auto">
+            <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+              <i class="icon calendar text-white"></i>
+            </div>
+          </div> -->
+        </div>
+
+
+      </div>
+    </div>
+
+
+
+  <script>
+    $(function () {
+      var suspension_days = (Number({{ hostedevent.start_time_timestamp }}) - Number({{ server_timestamp }})) /(86400)
+    var suspension_seconds = Math.ceil(suspension_days * 24 * 60 * 60)
+    var suspension_minutes = Math.ceil(suspension_seconds / 60)
+    var total_remaining_days = suspension_minutes / 60 / 24
+    var remain_days = total_remaining_days | 0
+    var total_remaining_hours = (suspension_minutes / 60) % 24
+    var remain_hours = (total_remaining_hours | 0)
+    var total_remaining_minutes = (total_remaining_hours - remain_hours) * 60
+    var remain_minutes = (total_remaining_minutes) | 0
+    var remain_seconds = Math.round((total_remaining_minutes - remain_minutes) * 60)
+    // if (remain_minutes < 1) {
+    //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_seconds + ' seconds.')
+
+    // }
+    // else {
+    //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_days + ' days ' + remain_hours + ' hours ' + remain_minutes + ' minutes and ' + remain_seconds + ' seconds.')
+
+    // }
+
+    function updateTime() {
+
+      if (remain_seconds >= 1) {
+        remain_seconds--
+        $('#days{{hostedevent.eventid}}').html(remain_days)
+        $('#hours{{hostedevent.eventid}}').html(remain_hours)
+        $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+        $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+
+      }
+      else {
+        remain_seconds = 60
+        remain_minutes--
+        $('#days{{hostedevent.eventid}}').html(remain_days)
+        $('#hours{{hostedevent.eventid}}').html(remain_hours)
+        $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+        $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+        if (remain_minutes >= 1) { }
+        else {
+          remain_hours--
+          remain_minutes = 60
+
+          $('#days{{hostedevent.eventid}}').html(remain_days)
+          $('#hours{{hostedevent.eventid}}').html(remain_hours)
+          $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+          $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+          if (remain_hours >= 1) {
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+          }
+          else {
+            if (remain_days < 1) {
+              $('#days{{hostedevent.eventid}}').html(remain_days)
+              $('#hours{{hostedevent.eventid}}').html(remain_hours)
+              $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+              $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+            }
+            else {
+              remain_days--
+              remain_hours = 23
+            }
+
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+          }
+        }
+      }
+      // else{
+      //     $('#days{{hostedevent.eventid}}').html(remain_days)
+      // $('#hours{{hostedevent.eventid}}').html(remain_hours)
+      // $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+      // $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+      // }
+
+    }
+    setInterval(updateTime, 1000)
+
+    // $('#{{hostedevent.eventid}}').countdowntimer({
+    //     seconds: 300 - suspension_seconds,
+    //     size: "lg",
+    //     displayFormat: 'DHMS',
+
+    // });
+
+});
+  </script>

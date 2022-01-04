@@ -1,0 +1,110 @@
+{% extends "base/ubase.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="pr-3 pl-3 overflow-hidden">
+
+    <div class="card card-login uk-animation-slide-top shadow-none" id="other_support">
+        <div class="card-body text-center">
+            <div class="uk-text-lead uk-text-bold mb-2">
+                Unverified Email!
+            </div>
+            <p class="uk-text bg-danger p-3 text-white">
+
+                You are seeing this because you have not verified your email address.
+                Kindly check your email <b>({{request.user.email}})</b> for verification code sent to you
+                or click the button below
+                to
+                resend verification code
+
+            </p>
+            <button class="btn btn-primary rounded-pill" type="button"
+                onclick="requestContentModal('{% url 'resend_activation_code' %}','get')">Resend Code</button>
+
+        </div>
+
+        <form class="form" id="account-activate-form" method="POST" action="{% url 'activate_account' %}">
+
+            {% csrf_token %}
+
+            <div class="activate-form-inner">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="material-icons">lock_outline</i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" name="activation_code" id="id_login" required
+                        placeholder="6 digit activation code" autofocus="autofocus">
+
+                </div>
+
+            </div>
+            <div class="footer text-center">
+                <button class="btn btn-success" type="submit" style="border-radius: 50px;">Activate account</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
+
+
+<script>
+
+    $("#account-activate-form").submit(function (event) {
+        event.preventDefault(); //prevent default action 
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this); //Creates new FormData object
+        $.ajax({
+            beforeSend: function () {
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+            },
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (response) {
+                if (response.invalid_code) {
+
+                    $('.code-alert').remove()
+                    $('.activate-form-inner').append('<div class="uk-text-danger code-alert  uk-animation-fade p-3 uk-text-center">Invalid Code entered</div>')
+                    $('#loader-cover').hide()
+
+                }
+
+                else if (response.activated) {
+
+                    if (response.modal_message) {
+                        messageModal(response.modal_message, response.heading)
+
+                    }
+
+                    window.location = "{% url 'member_dashboard' %}"
+                }
+
+
+            },
+
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+
+
+</script>
+
+{% endblock content %}

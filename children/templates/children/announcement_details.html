@@ -1,0 +1,23 @@
+{% autoescape off %}
+<div class="card uk-text-center" style="width: 100%;box-shadow: none;display: inline-block;">
+    {% if announcement.thumbnail %}
+    <img class="card-img-top col-cmd-7" src="http://localhost:8000{{announcement.thumbnail.url}}" rel="nofollow" alt="{{announcement.title}}" style="float: none;display: inline-block;">
+    {% endif %}
+    <div class="bg-primary uk-padding-medium uk-text-center"
+    style="color: white;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+    {{announcement.title|truncatechars:30}}
+</div>
+    <div class="card-body uk-text-left">
+        <div class="input-group" style="font-size: 9px;">
+            <p class="input-group bg-rose uk-margin-remove uk-padding-small" style="width: max-content;color: white;">
+                <span class="uk-padding-remove"></span> <i class="material-icons uk-padding-remove"
+                    style="color: white;font-size: inherit;">announcement</i></p>
+           <p class="bg-primary uk-margin-remove uk-padding-small" style="width: max-content;color: white;font-size: inherit;">
+            {{announcement.date_time_added}}</p>            
+        </div>
+      <p class="card-text">{{announcement.full_description}}</p>
+    </div>
+  </div>
+  
+  {% endautoescape %}
+ 

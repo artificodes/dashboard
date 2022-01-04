@@ -1,0 +1,254 @@
+{% load static %}
+<div style="display: inline-block;" class="uk-width-1-2@m uk-text-left">
+<div class="card-body">
+
+  <form role="form" id='editeventday' enctype="multipart/form-data" class="form uk-padding-small" method="POST"
+    action="{% url 'edit_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="icon tag"></i></span>
+        </div>
+        <input class="form-control" placeholder="Event Title" type="text" name="title" value="{{eventday.title}}"
+          required>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event start date and time" class="form-control datetimepicker"
+          name="start_date_time" required value="{{eventday.start_date_time|date:'m d Y I:M p'}}" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event end date and time" class="form-control datetimepicker"
+          name="end_date_time" required value="{{eventday.end_date_time|date:'m d Y I:M p'}}" />
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-cloud-upload-96"></i></span>
+        </div>
+        <input class="previewimage form-control" name="thumbnail" data-jpreview-container="#preview-container"
+          placeholder="Upload event image" type="file">
+
+      </div>
+      <div id="preview-container" class="jpreview-container uk-padding-small col-csxx-14 col-md-6 col-csx-6"
+        style="float: none;">
+        <img src="{{eventday.thumbnail.url}}" alt="">
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <p class="">Use parent image instead?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="parent_thumbnail1" value="yes" name="parent_thumbnail"
+          class="custom-control-input"  {% if eventday.parent_image == True %} checked {% endif %} required>
+        <label class="custom-control-label" for="parent_thumbnail1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="parent_thumbnail2" value="no" name="parent_thumbnail" class="custom-control-input"
+        {% if eventday.parent_image == False %} checked {% endif %} required>
+        <label class="custom-control-label " for="parent_thumbnail2">No</label>
+      </div>
+
+    </div>
+    <div class="form-group mb-3">
+      <p class=" ">Require tickets for this day?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="ticketing1" value="yes" name="ticketing" class="custom-control-input" {% if eventday.ticket_required == True %} checked {% endif %}
+          required>
+        <label class="custom-control-label " for="ticketing1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="ticketing2" value="no" name="ticketing" class="custom-control-input" {% if eventday.ticket_required == False %} checked {% endif %} required>
+        <label class="custom-control-label " for="ticketing2">No</label>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <p class="">Auto-arrange attendees?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange1" value="yes" name="arrange" class="custom-control-input" {% if eventday.arrange == True %} checked {% endif %} required>
+        <label class="custom-control-label " for="arrange1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange2" value="no" name="arrange" class="custom-control-input"  {% if eventday.arrange == False %} checked {% endif %} required>
+        <label class="custom-control-label " for="arrange2">No</label>
+      </div>
+
+    </div>
+    <div class="form-group mb-3">
+      <p class="">Does this event have special offers?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="offer1" value="yes" name="offer" class="custom-control-input"  {% if eventday.special_offer == True %} checked {% endif %} required>
+        <label class="custom-control-label " for="offer1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="offer2" value="no" name="offer" class="custom-control-input"  {% if eventday.special_offer == False %} checked {% endif %} required>
+        <label class="custom-control-label " for="offer2">No</label>
+      </div>
+
+    </div>
+  
+  <div class="uk-padding-small">
+    <div class="form-group">
+      <label for="short_description">Short Description</label>
+      <textarea class="form-control" id="short_description" rows="3" name="short_description"
+        maxlength="200">{{eventday.short_description}}</textarea>
+    </div>
+    <div class="form-group">
+      <label for="full_description">Full Description</label>
+      <textarea class="form-control" id="full_description" rows="3" name="full_description" >{{eventday.full_description}}</textarea>
+    </div>
+
+
+  </div>
+
+    <div class="text-center">
+
+
+      <button type="submit" class="btn btn-success my-4 ticket-form-submit">Save</button>
+
+    </div>
+  </form>
+
+</div>
+</div>
+
+
+<script>
+  
+  var submit = false
+  var action = ''
+  {
+    (function ($) {
+      $('.ticket-form-submit').on('click', function (event) {
+        button = $(this)
+        action = button.attr('action')
+      })
+    }(jQuery))
+  }
+  $('#editeventday').djValidator({ mode: 'submit', success: () => { submit = true;} })
+
+  $("#editeventday").submit(function(event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit == true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.done) {
+            $('#manager-container').removeClass('uk-animation-fade')
+
+            $('#manager-container').addClass('uk-animation-fade')
+            $('#manager-container').empty()
+            $('#manager-container').append(response.content)
+            $('#full-content-modal-body').empty()
+            $('#full-content-modal-body').append(response.modal_content)
+            UIkit.modal($('#full-content-modal')).hide();
+
+            if (response.message) {
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  else{
+    alert('')
+  }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length == 11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+<script src="{% static 'base/tinymce/jquery.tinymce.min.js' %}"></script>
+<script src="{% static 'base/tinymce/tinymce.min.js' %}"></script>
+<script>
+
+  
+  tinymce.init({
+    selector: 'textarea#full_description',
+    height: 250,
+    menubar: false,
+    plugins: [
+      'advlist autolink lists link image charmap print preview anchor',
+      'searchreplace visualblocks code fullscreen',
+      'insertdatetime media table paste code help wordcount'
+    ],
+    toolbar: 'undo redo | formatselect | ' +
+      'bold italic backcolor | alignleft aligncenter ' +
+      'alignright alignjustify | bullist numlist outdent indent | ' +
+      'removeformat | help',
+    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+  });
+
+
+
+</script>

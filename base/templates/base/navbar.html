@@ -1,0 +1,94 @@
+{% if request.user.is_authenticated %}
+<nav class="navbar navbar-top navbar-expand navbar-dark bg-white fixed-top p-1 border-bottom shadow-lg" style="">
+  <div class="container-fluid">
+    <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent"> -->
+    <div class="uk-text-center uk-padding-remove" style="width: 40px;">
+      <img src="{{settings.logo_half.url}}" alt="" style="width: 100%;">
+    </div>
+    <ul class="navbar-nav align-items-center  ml-md-0 ">
+      <li class="nav-item dropdown mr-3">
+        <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-th-large text-yellow"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-dark bg-white shadow-lg  dropdown-menu-right ">
+          <div class="row shortcuts px-4">
+            <a href=""
+              class="col-4 shortcut-item flex-column main-content-redirect text-center">
+              <span class="shortcut-media avatar rounded-circle bg-gradient-green position-relative">
+                <i class="fa fa-child fa-2x uk-position-center"></i>
+              </span>
+              <p class="text-dark uk-text-bold text-sm">Children Ministry</p>
+            </a>
+            <a  class="col-4 shortcut-item flex-column  text-center coming-soon">
+              <span class="shortcut-media avatar rounded-circle bg-gradient-red position-relative">
+                <i class="fa fa-praying-hands fa-2x uk-position-center"></i>
+              </span>
+              <p class="text-dark uk-text-bold text-sm">Missionary Force</p>
+            </a>
+            <a  class="col-4 shortcut-item flex-column  text-center coming-soon">
+              <span class="shortcut-media avatar rounded-circle bg-gradient-blue position-relative">
+                <i class="fa fa-genderless fa-2x uk-position-center"></i>
+              </span>
+              <p class="text-dark uk-text-bold text-sm">Classics</p>
+            </a>
+            <a  class="col-4 shortcut-item flex-column  text-center coming-soon">
+              <span class="shortcut-media avatar rounded-circle bg-yellow position-relative">
+                <i class="fa fa-bible fa-2x uk-position-center text-darker"></i>
+              </span>
+              <p class="text-dark uk-text-bold text-sm">ATS</p>
+            </a>
+            <a  class="col-4 shortcut-item flex-column text-center coming-soon">
+              <span class="shortcut-media avatar rounded-circle bg-gradient-cyan position-relative">
+                <i class="fa fa-briefcase fa-2x uk-position-center"></i>
+              </span>
+              <p class="text-dark uk-text-bold text-sm">Staff</p>
+            </a>
+            <a  class="col-4 shortcut-item flex-column  text-center coming-soon">
+              <span class="shortcut-media avatar rounded-circle bg-gradient-gray-dark position-relative">
+                <i class="fa fa-cart-arrow-down fa-2x uk-position-center"></i>
+              </span>
+              <p class="text-dark uk-text-bold text-sm">Store</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="uk-icon-button uk-margin-small-right uk-margin-remove-top position-relative " style="" type="button">
+          <i class="fa fa-user uk-text-bold m-0 text-yellow uk-position-center" style=""></i></a>
+      <div uk-dropdown="mode:click;pos:bottom-right" class=" uk-padding-medium rounded-sm uk-text-left shadow-lg"
+          style="min-width: max-content; ">
+          <ul class="uk-nav uk-dropdown-nav ">
+              <!-- <li class="uk-nav-header">Account</li> -->
+              <!-- <li><a href="#">Settings</a></li> -->
+              <!-- <li class="uk-nav-header">Header</li>
+                  <li><a href="#">Item</a></li>
+                  <li><a href="#">Item</a></li> -->
+              <!-- <li class="uk-nav-divider"></li> -->
+              <li><a class="signout text-lg uk-flex-inline " contenturl="{% url 'account_logout' %}"><i class="fa fa-sign-out-alt text-dark"></i> <span>Logout</span> </a></li>
+          </ul>
+      </div>
+      </li>
+    </ul>
+    <!-- </div> -->
+  </div>
+
+</nav>
+
+{% comment %} <nav class="bg-white navbar navbar-color-on-scroll navbar-transparent navbar-expand-lg uk-margin-remove p-0 
+fixed-top top-0"
+    color-on-scroll="100" id="sectionsNav" style="border-radius: 0;height: 300px;z-index: 1;border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;color: white;
+  ">
+   </div>
+    </div>
+    </div>
+</nav> {% endcomment %}
+<div class="col-csxx-x-14 text-center fixed-top hide" id='progress-container' style="margin-top:39.2px;z-index: 3;">
+  <div class="ui tiny col-csxx-x-14 float-none rounded-0 active progress uk-margin-small-top shadow-none uk-display-inline-block"
+    style="border: none;height: 3px;" id="progress">
+    <div class="bar rounded-0" style="border-radius: 0 !important;background-color: goldenrod !important;"></div>
+  </div>
+</div>
+
+
+
+{% endif %}

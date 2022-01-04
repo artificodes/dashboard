@@ -1,0 +1,454 @@
+{% extends "base/chbase.html" %}
+{% load static %}
+{% block content %}
+<!-- <div class="uk-text-center uk-padding-remove uk-display-inline-block m-2" style="width: 200px;">
+    <img src="{{settings.logo_full.url}}" alt="" style="width: 100%;">
+</div> -->
+<div class="position-relative uk-display-block uk-height-viewport bg-white text-center p-2" style="z-index: 10;">
+    {% if request.user.is_staff %}
+    <div class="row m-0">
+        <div class="col-md-6 col-sm-12 p-2">
+            <div class="container-fluid col-csxx-x-14 col-csxx-xx-14 p-2 float-none pt-2 text-center 
+    uk-display-inline-block bg-gradient-white shadow-lg mt-0 rounded-lg ">
+                <div class="position-relative pt-2 pl-2 pr-2 pb-0 uk-display-inline-block ">
+                    <div id="qr-reader" class=" overflow-hidden uk-display-inline-block bg-darker"
+                        style="max-width: 100%;height:200px">
+
+
+
+                        <video id="preview" class="position-relative"
+                            style="width: 100%; max-width: 100%; z-index: 2;"></video>
+
+                        <span class="bg-translucent-darker rounded-pill hide uk-position-bottom-right mb-3 mr-3"
+                            style="height: 30px;width: 30px;z-index: 2;">
+                            <i class="fa fa-undo text-white  uk-position-center camera-switch" value='1'></i>
+
+                        </span>
+
+
+                    </div>
+                    <div class="bg-darker hide uk-position-top-left mt-1 ml-1 qrcodeborder"
+                        style="width: 25px;height: 25px;z-index: 1;">
+
+                    </div>
+                    <div class="bg-darker hide uk-position-top-right mt-1 mr-1 qrcodeborder"
+                        style="width: 25px;height: 25px;z-index: 1;"></div>
+                    <div class="bg-darker hide uk-position-bottom-left  mb-0 ml-1 qrcodeborder"
+                        style="width: 25px;height: 25px;z-index: 1;">
+
+                    </div>
+                    <div class="bg-darker hide uk-position-bottom-right  mb-0 mr-1 qrcodeborder"
+                        style="width: 25px;height: 25px;z-index: 1;">
+
+                    </div>
+                </div>
+
+                <!-- <div id='qr-data' class="uk-text-lead">
+
+                </div> -->
+                <div class="card bg-transparent uk-display-inline-block mb-1 shadow-none" style="width:100%">
+                    <div class="card-body p-1">
+                        <form id="pickup-search" method="POST"
+                            action="{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}">
+                            {% csrf_token %}
+
+                            <div class="m-1">
+                                <div class="uk-inline" style="width: 100%;">
+                                    <span class="uk-position-center-left ml-2"> <i class="fa fa-user-shield"></i></span>
+                                    <input class="uk-input form-control pl-5 p-2 rounded-lg"
+                                        style="height: max-content;" name="trackingid" id="trackingid" type="text"
+                                        placeholder="Tracking ID">
+                                </div>
+                            </div>
+
+                            <div class="m-1">
+                                <div class="uk-inline" style="width: 100%;">
+                                    <span class="uk-position-center-left ml-2"> <i class="fa fa-user-check"></i></span>
+                                    <input class="uk-input form-control pl-5 p-2 rounded-lg"
+                                        style="height: max-content;" id="phonenumber" type="text"
+                                        placeholder="Phone number/Email" name="phone_number">
+                                </div>
+                            </div>
+                            <div class="m-1">
+                                <div class="uk-inline" style="width: 100%;">
+                                    <span class="uk-position-center-left ml-2"> <i class="fa fa-lock"></i></span>
+                                    <input class="uk-input form-control pl-5 p-2 rounded-lg"
+                                        style="height: max-content;" id="private_number" type="password"
+                                        placeholder="Secret Pin" name="private_number">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div id="verification-result" class="uk-text-center mb-3"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 p-2">
+
+            {% include 'members/member_search.html' %}
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body">
+            You are not permitted to be here!!!
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<audio src="{{settings.qrc_sound.url}}" id="qrc-sound"></audio>
+<script type="text/javascript">
+    {
+        (function ($) {
+            $('.camera-switch').on('click', function () {
+                var button = $(this)
+                buttonvalue = button.attr('value')
+                if (buttonvalue == '1') {
+                    button.attr('value', '2')
+
+                }
+                else {
+                    button.attr('value', '1')
+
+                }
+            })
+        }(jQuery))
+    }
+
+    cancheckqcr = true
+
+    function verifyQrc(qrresult) {
+        if (qrresult.startsWith('CGCC')) {
+            $('#qrc-sound')[0].play()
+            if (cancheckqcr) {
+                $.ajax({
+                    beforeSend: function () {
+
+                        showLoadingBar()
+                        cancheckqcr = false
+                        $('.qrcodeborder').removeClass('bg-darker')
+                        $('.qrcodeborder').addClass('bg-green')
+
+                    },
+                    complete: function () {
+                        hideLoadingBar()
+                        $('.qrcodeborder').addClass('bg-darker')
+                        $('.qrcodeborder').removeClass('bg-green')
+
+                    },
+                    type: 'post',
+                    url: verificationUrl,
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                        'memberqrc': qrresult,
+                    },
+                    success: function (response) {
+
+
+
+                        if (response.modal_message) {
+                            messageModal(response.modal_message, response.heading)
+
+                        }
+                        if (response.notification) {
+                            notificationModal(response.notification)
+
+                        }
+
+                        if (response.modal_content) {
+                            contentModal(response.modal_content, response.heading)
+
+                        }
+
+                        $('#verification-result').empty()
+                        $('#verification-result').append(response.message);
+                        $('.disappear').on('click', function (event) {
+                            $('#verification-result').empty()
+
+                        })
+                        cancheckqcr = true
+
+                    },
+                    error: function (xhr, status, error) {
+                        cancheckqcr = true
+
+                    }
+                });
+            }
+
+        }
+
+
+    }
+    var scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror: false, continuous: false });
+    scanner.addListener('scan', function (qrresult) {
+
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+        if (cameras.length > 0) {
+            scanner.start(cameras[0]);
+            function displayBorders(){
+                document.getElementById('preview').onplay = () => {
+                $('.qrcodeborder').show()
+           $('.camera-switch').parent().show() } 
+            }
+            displayBorders()
+            function scanQr() {
+                var scanresult = scanner.scan()
+                if (scanresult == null) {
+                }
+                else {
+                    verifyQrc(scanresult.content)
+                }
+            }
+             cameraShots = setInterval(scanQr, 500)
+            $('.camera-switch').on('click', function () {
+                $('.qrcodeborder').hide()
+                $('.camera-switch').parent().hide()
+                if ($(this).attr('value') == 1) {
+                    if (cameras[0] != "") {
+                        scanner.start(cameras[0]);
+                    } else {
+                        alert('No Front camera found!');
+                    }
+                } else if ($(this).attr('value') == 2) {
+                    if (cameras[1] != "") {
+                        scanner.start(cameras[1]);
+                    } else {
+                        alert('No Back camera found!');
+                    }
+                }
+            });
+        } else {
+            alert('No cameras found.');
+        }
+    }).catch(function (e) {
+        console.error(e);
+        alert(e);
+    });
+
+
+</script>
+<script>
+
+
+    function warnIdle() {
+
+        messageModal('<p class="uk-text-lead uk-text-bold"> You have been idle for 3 minutes.</p>' +
+            '<br> Kindly ensure to use this interface within the next  <b> 2 minutes </b> from now else you will be logged out')
+
+
+    }
+    function callIdle() {
+        if (loggedOut == true) {
+
+        }
+        else {
+            logout()
+
+        }
+    }
+
+
+    // $(document).idle({
+    //     onIdle: function () {
+    //         warnIdle()
+    //         idleCounter = setTimeout(logout,5000)
+    //     },
+    //     onActive: function () {
+    //         clearTimeout(idleCounter)
+    //     }, 
+    //     events: 'mousemove keydown mousedown touchstart',
+    //     idle: 5000,
+    // })
+
+
+    var verificationurl = ''
+    var eventId = ''
+    var eventInitials = '{{hostedevent.initials}}'
+    var verificationUrl = '{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}'
+    // UIkit.modal($('#qr-modal')).show();
+    // Webcam.set({
+    //     width: 350,
+    //     height: 250,
+    //     image_format: 'jpeg',
+    //     jpeg_quality: 100
+    // });
+    // Webcam.attach('#example');
+
+
+    // $('#button').click(function () {
+    // 	take_snapshot();
+    // });
+    Webcam.on('load', function () {
+        qrCodeInterval = setInterval(take_snapshot, 100)
+        qrcode.callback = hostQrVerification;
+    });
+
+
+
+
+
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+
+
+
+
+            });
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) { //Most read async
+            $('#member-search').on('input', function () {
+                var identifier = $('#identifier').val();
+                if (identifier == '') {
+                    $('#member-search-result').empty()
+                }
+
+                if (identifier != '' && identifier.length >= 10) {
+                    var post_url = $(this).attr("action"); //get form action url
+                    var request_method = $(this).attr("method"); //get form GET/POST method
+                    var form_data = new FormData(this); //Creates new FormData object
+                    $.ajax({
+                        beforeSend: function () {
+
+                            showLoadingBar()
+
+
+                        },
+                        complete: function () {
+                            hideLoadingBar()
+                        },
+                        url: post_url,
+                        type: request_method,
+                        data: {
+                            'identifier': identifier,
+                            'csrfmiddlewaretoken': window.CSRF_TOKEN,
+                        },
+
+                        success: function (response) {
+                            if (response.modal_message) {
+                                messageModal(response.modal_message, response.heading)
+
+                            }
+                            if (response.notification) {
+                                notificationModal(response.notification)
+
+                            }
+
+                            if (response.modal_content) {
+                                contentModal(response.modal_content, response.heading)
+
+                            }
+
+                            $('#member-search-result').empty()
+                            $('#member-search-result').append(response.message);
+                            $('.disappear').on('click', function (event) {
+                                $('#member-search-result').empty()
+
+                            })
+
+
+
+
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            alert('there was an error')
+                        }
+                    });
+                }
+            });
+        }(jQuery))
+    };
+
+    {
+        (function ($) { //Most read async
+            $('#pickup-search').on('input', function () {
+                var trackingid = $('#trackingid').val();
+                var phonenumber = $('#phonenumber').val();
+                var private_number = $('#private_number').val();
+                // alert(trackingid)
+                if (trackingid == '') {
+                    $('#verification-result').empty()
+                }
+
+                if (trackingid != '' && trackingid.length > 5 || (phonenumber != '')) {
+                    var post_url = $(this).attr("action"); //get form action url
+                    var request_method = $(this).attr("method"); //get form GET/POST method
+                    var form_data = new FormData(this); //Creates new FormData object
+                    $.ajax({
+                        beforeSend: function () {
+
+                            showLoadingBar()
+
+
+                        },
+                        complete: function () {
+                            hideLoadingBar()
+                        },
+                        url: post_url,
+                        type: request_method,
+                        data: {
+                            'trackingid': trackingid, 'phonenumber': phonenumber,
+                            'private_number': private_number,
+                            'csrfmiddlewaretoken': window.CSRF_TOKEN,
+                        },
+
+                        success: function (response) {
+                            if (response.modal_message) {
+                                messageModal(response.modal_message, response.heading)
+
+                            }
+                            if (response.notification) {
+                                notificationModal(response.notification)
+
+                            }
+
+                            if (response.modal_content) {
+                                contentModal(response.modal_content, response.heading)
+
+                            }
+
+                            $('#verification-result').empty()
+                            $('#verification-result').append(response.message);
+                            $('.disappear').on('click', function (event) {
+                                $('#verification-result').empty()
+
+                            })
+
+
+
+
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            alert('there was an error')
+                        }
+                    });
+                }
+            });
+        }(jQuery))
+    };
+
+</script>
+
+
+{% endblock content %}

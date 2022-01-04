@@ -1,0 +1,75 @@
+{% if hostedevent.arrange and hostedevent.ticket_required == False %}
+<div class="card-body">
+    <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Arrangement</th>
+                    <th scope="col">Section</th>
+                    <th scope="col">T/S</th>
+                    <th scope="col">C/T</th>
+                    <th scope="col">Assigned (%)</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for arrangement in hostedevent.arrangements.all %}
+                <tr id="{{hostedevent.eventid}}{{arrangement.pk}}">
+                    <th>
+                        {{arrangement.name}}
+                    </th>
+                    <td>
+                        {{arrangement.sections}}
+                    </td>
+                    <td>
+                        {{arrangement.tables_per_section}}
+                    </td>
+                    <td>
+                        {{arrangement.chairs_per_table}}
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="mr-2">{{arrangement.percent}}%</span>
+                            <div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-gradient-danger" role="progressbar"
+                                        aria-valuenow="{{arrangement.percent}}" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: {{arrangement.percent}}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-info content-modal"
+                            contenturl="{% url 'edit_hostedevent_arrangement' eventid=hostedevent.eventid arrangementid=arrangement.pk %}">
+                            <i class="icon edit "></i> Edit</button>
+                        <button type="button" class="btn btn-sm btn-danger delete-content"
+                            contenturl="{% url 'delete_hostedevent_arrangement' eventid=hostedevent.eventid arrangementid=arrangement.pk %}"
+                            removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"><i class="icon trash "></i>
+                            Delete</button>
+                    </td>
+                </tr>
+
+                {% endfor %}
+                <tr>
+
+
+                    <td colspan="6" class="uk-text-center">
+                        <button type="button"
+                            contenturl="{% url 'create_hosted_event_arrangement' hostedeventid=hostedevent.hostedeventid eventid=hostedevent.eventid action='exit' scope='none' %}"
+                            class="btn btn-default content-modal"><i class="icon add "></i> Add Arrangement</button>
+
+                        {% if hostedevent.arrangement_update_needed %}
+                        <a type="button"
+                            href="{% url 'edit_hosted_event' hostedeventid=hostedevent.hostedeventid eventid=hostedevent.eventid %}"
+                            class="btn btn-warning"><i class="icon sync "></i> Update Arrangement</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}

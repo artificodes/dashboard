@@ -1,0 +1,303 @@
+{% extends "base/ubase.html" %}
+{% load static %}
+{% block content %}
+<div class="main-content" id="panel">
+
+  {% include 'users/navbar.html' %}
+{% if hostedevent.published %}
+
+
+  <div class="container-fluid rounded-lg">
+    <div class="" id="event-manager">
+      <div class="card bg-white">
+        <div class="card-header bg-secondary uk-padding-medium">
+          <div class="row align-items-center">
+            <div class="col">
+              <h6 class="text-uppercase ls-1 mb-1 text-dark h4">{{hostedevent.title}}</h6>
+              <!-- <h5 class="h3 text-white mb-0">Create Event</h5> -->
+            </div>
+            <div class="">
+              <a type="button" class="uk-padding-small" i><i class="icon share alternate text-default"></i></a>
+              <div uk-dropdown='pos:bottom-right;mode:click' class="rounded-lg uk-padding-remove overflow-hidden">
+                <ul class="uk-nav uk-dropdown-nav">
+                  <li class=" uk-padding-small uk-text-bold">Share event</li>
+                  <li class="uk-nav-divider m-0"></li>
+
+                  <li class="uk-active dropdown-item uk-padding-small"><a href="#"> <i
+                        class="icon facebook large text-blue"></i> Facebook</a></li>
+                  <li class="dropdown-item uk-padding-small"><a href="#"> <i class="icon whatsapp large text-green"></i>
+                      Facebook</a></li>
+                  <li class="dropdown-item uk-padding-small"><a href="#"> <i
+                        class="icon instagram large text-purple"></i> Facebook</a></li>
+                  <li class=" dropdown-item uk-padding-small"><a href="#"> <i
+                        class="icon twitter large text-primary"></i> Facebook</a></li>
+                  <li class="uk-nav-divider m-0"></li>
+                  <li class=" dropdown-item uk-padding-small"><a href="#"> <i class="icon copy large"></i> Copy link</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+
+          </div>
+
+        </div>
+        <div class="card-body uk-padding-remove" id="manager-container">
+
+       
+          {% include 'users/attendee_event_manager.html' %}
+
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+
+{% include 'users/ticket_btn.html' %}
+
+</div>
+
+<script>
+  {% for eventday in hostedevent.days.all %}
+  $(function () {
+    var suspension_days = (Number({{ eventday.start_time_timestamp }}) - Number({{ server_timestamp }})) /(86400)
+  var suspension_seconds = Math.ceil(suspension_days * 24 * 60 * 60)
+  var suspension_minutes = Math.ceil(suspension_seconds / 60)
+  var total_remaining_days = suspension_minutes / 60 / 24
+  var remain_days = total_remaining_days | 0
+  var total_remaining_hours = (suspension_minutes / 60) % 24
+  var remain_hours = (total_remaining_hours | 0)
+  var total_remaining_minutes = (total_remaining_hours - remain_hours) * 60
+  var remain_minutes = (total_remaining_minutes) | 0
+  var remain_seconds = Math.round((total_remaining_minutes - remain_minutes) * 60)
+  // if (remain_minutes < 1) {
+  //     $('#briefly-suspended-message{{eventday.dayid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_seconds + ' seconds.')
+
+  // }
+  // else {
+  //     $('#briefly-suspended-message{{eventday.dayid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_days + ' days ' + remain_hours + ' hours ' + remain_minutes + ' minutes and ' + remain_seconds + ' seconds.')
+
+  // }
+
+  function updateTime() {
+
+    if (remain_seconds >= 1) {
+      remain_seconds--
+      $('#days{{eventday.dayid}}').html(remain_days)
+      $('#hours{{eventday.dayid}}').html(remain_hours)
+      $('#minutes{{eventday.dayid}}').html(remain_minutes)
+      $('#seconds{{eventday.dayid}}').html(remain_seconds)
+
+    }
+    else {
+      remain_seconds = 60
+      remain_minutes--
+      $('#days{{eventday.dayid}}').html(remain_days)
+      $('#hours{{eventday.dayid}}').html(remain_hours)
+      $('#minutes{{eventday.dayid}}').html(remain_minutes)
+      $('#seconds{{eventday.dayid}}').html(remain_seconds)
+      if (remain_minutes >= 1) { }
+      else {
+        remain_hours--
+        remain_minutes = 60
+
+        $('#days{{eventday.dayid}}').html(remain_days)
+        $('#hours{{eventday.dayid}}').html(remain_hours)
+        $('#minutes{{eventday.dayid}}').html(remain_minutes)
+        $('#seconds{{eventday.dayid}}').html(remain_seconds)
+        if (remain_hours >= 1) {
+          $('#days{{eventday.dayid}}').html(remain_days)
+          $('#hours{{eventday.dayid}}').html(remain_hours)
+          $('#minutes{{eventday.dayid}}').html(remain_minutes)
+          $('#seconds{{eventday.dayid}}').html(remain_seconds)
+        }
+        else {
+          if (remain_days < 1) {
+            $('#days{{eventday.dayid}}').html(remain_days)
+            $('#hours{{eventday.dayid}}').html(remain_hours)
+            $('#minutes{{eventday.dayid}}').html(remain_minutes)
+            $('#seconds{{eventday.dayid}}').html(remain_seconds)
+          }
+          else {
+            remain_days--
+            remain_hours = 23
+          }
+
+          $('#days{{eventday.dayid}}').html(remain_days)
+          $('#hours{{eventday.dayid}}').html(remain_hours)
+          $('#minutes{{eventday.dayid}}').html(remain_minutes)
+          $('#seconds{{eventday.dayid}}').html(remain_seconds)
+        }
+      }
+    }
+    // else{
+    //     $('#days{{eventday.dayid}}').html(remain_days)
+    // $('#hours{{eventday.dayid}}').html(remain_hours)
+    // $('#minutes{{eventday.dayid}}').html(remain_minutes)
+    // $('#seconds{{eventday.dayid}}').html(remain_seconds)
+    // }
+
+  }
+  setInterval(updateTime, 1000)
+
+    // $('#{{eventday.dayid}}').countdowntimer({
+    //     seconds: 300 - suspension_seconds,
+    //     size: "lg",
+    //     displayFormat: 'DHMS',
+
+    // });
+
+});
+  {% endfor %}
+</script>
+
+
+<script>
+  $(function () {
+    var suspension_days = (Number({{ hostedevent.start_time_timestamp }}) - Number({{ server_timestamp }})) /(86400)
+  var suspension_seconds = Math.floor(suspension_days * 24 * 60 * 60)
+  var suspension_minutes = Math.floor(suspension_seconds / 60)
+  var total_remaining_days = suspension_minutes / 60 / 24
+  var remain_days = total_remaining_days | 0
+  var total_remaining_hours = (suspension_minutes / 60) % 24
+  var remain_hours = (total_remaining_hours | 0)
+  var total_remaining_minutes = (total_remaining_hours - remain_hours) * 60
+  var remain_minutes = (total_remaining_minutes) | 0
+  var remain_seconds = Math.floor((total_remaining_minutes - remain_minutes) * 60)
+  // if (remain_minutes < 1) {
+  //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_seconds + ' seconds.')
+
+  // }
+  // else {
+  //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_days + ' days ' + remain_hours + ' hours ' + remain_minutes + ' minutes and ' + remain_seconds + ' seconds.')
+
+  // }
+
+  function updateTime() {
+
+    if (remain_seconds >= 1) {
+      remain_seconds--
+      $('#days{{hostedevent.eventid}}').html(remain_days)
+      $('#hours{{hostedevent.eventid}}').html(remain_hours)
+      $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+      $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+
+    }
+    else {
+      remain_seconds = 59
+      remain_minutes--
+      $('#days{{hostedevent.eventid}}').html(remain_days)
+      $('#hours{{hostedevent.eventid}}').html(remain_hours)
+      $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+      $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+      if (remain_minutes >= 1) { }
+      else {
+        remain_hours--
+        remain_minutes = 59
+
+        $('#days{{hostedevent.eventid}}').html(remain_days)
+        $('#hours{{hostedevent.eventid}}').html(remain_hours)
+        $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+        $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+        if (remain_hours >= 1) {
+          $('#days{{hostedevent.eventid}}').html(remain_days)
+          $('#hours{{hostedevent.eventid}}').html(remain_hours)
+          $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+          $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+        }
+        else {
+          if (remain_days < 1) {
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+          }
+          else {
+            remain_days--
+            remain_hours = 23
+          }
+
+          $('#days{{hostedevent.eventid}}').html(remain_days)
+          $('#hours{{hostedevent.eventid}}').html(remain_hours)
+          $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+          $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+        }
+      }
+    }
+    // else{
+    //     $('#days{{hostedevent.eventid}}').html(remain_days)
+    // $('#hours{{hostedevent.eventid}}').html(remain_hours)
+    // $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+    // $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+    // }
+
+  }
+  setInterval(updateTime, 1000)
+
+  // $('#{{hostedevent.eventid}}').countdowntimer({
+  //     seconds: 300 - suspension_seconds,
+  //     size: "lg",
+  //     displayFormat: 'DHMS',
+
+  // });
+
+});
+</script>
+<script>
+
+
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+
+<script>
+
+
+</script>
+{% else %}
+
+<div class="container-fluid rounded-lg mt-9 ">
+  <div class="" id="event-manager">
+    <div class="card bg-white">
+      <div class="card-header bg-secondary uk-padding-medium">
+        <div class="row align-items-center">
+          <div class="col">
+            <h6 class="text-uppercase ls-1 mb-1 text-dark h4">{{hostedevent.title}}</h6>
+            <!-- <h5 class="h3 text-white mb-0">Create Event</h5> -->
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="card-body uk-padding-remove text-center" id="manager-container">
+<p class="uk-text-lead h1 uk-text-bold uk-padding-large">Event Unavailable</p>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+{% endif %}
+
+
+{% endblock content %}

@@ -1,0 +1,220 @@
+<div class="card-body">
+
+  <form role="form" id='hosteventform' enctype="multipart/form-data" class="form uk-padding-small text-left" method="POST"
+    action="{% url 'member_host_event' eventid=event.eventid %}">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="material-icons">subject</i></span>
+        </div>
+        <input class="form-control" placeholder="Event Title" type="text" name="title" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event start date and time" class="form-control datetimepicker"
+          name="start_date_time" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event end date and time" class="form-control datetimepicker"
+          name="end_date_time" required />
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-cloud-upload-96"></i></span>
+        </div>
+        <input class="previewimage form-control" name="thumbnail" data-jpreview-container="#preview-container"
+          placeholder="Upload event image" type="file">
+
+      </div>
+      <div id="preview-container" class="jpreview-container uk-padding-small col-csxx-14 col-md-6 col-csx-6"
+        style="float: none;">
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Event verification steps</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification1" value="0" name="verification" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="verification1">No verification</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification2" value="1" name="verification" class="custom-control-input" required>
+        <label class="custom-control-label " for="verification2">Single verification</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification3" value="2" name="verification" class="custom-control-input" required>
+        <label class="custom-control-label " for="verification3">Two-step verification</label>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Attendees arrangement</p>
+      <p class="">Use one-time arrangement?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange1" value="yes" name="one_time_arrangement" class="custom-control-input" required>
+        <label class="custom-control-label " for="arrange1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange2" value="no" name="one_time_arrangement" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="arrange2">No</label>
+      </div>
+
+    </div>
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Event days</p>
+      <p class="">Is this a 1 day event?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="oneday1" value="yes" name="one_day" class="custom-control-input" required>
+        <label class="custom-control-label " for="oneday1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="oneday2" value="no" name="one_day" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="oneday2">No</label>
+      </div>
+
+    </div>
+    <div class="form-group mb-3">
+      <div
+          class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm border rounded-lg p-1 shadow-sm">
+          <div class="input-group-prepend">
+
+              <span class=" input-group-text">
+                  Open to:
+              </span>
+          </div>
+          <div class="col-csxx-x-14">
+              <select class="ui fluid dropdown" data-style="btn btn-link" name="open_to" id="open_to"
+                  class="form-control" required>
+                  <option value="{{hostedevent.open_to}}" selected="selected">
+                      {% if hostedevent.open_to %}
+                      {{hostedevent.open_to}} {% else %} Select {% endif %} </option>
+                  <option value='adults'>Adults</option>
+                  <option value='children'>Children</option>
+
+              </select>
+          </div>
+
+      </div>
+  </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary my-4">Create</button>
+    </div>
+  </form>
+
+</div>
+
+
+
+</div>
+<script>
+  var submit = false
+  $('#hosteventform').djValidator({ mode: 'submit', success: () => { submit = true } })
+
+  $("#hosteventform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit == true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.done) {
+            $('#manager-container').removeClass('uk-animation-fade')
+
+            UIkit.modal($('#content-modal')).hide();
+            $('#manager-container').addClass('uk-animation-fade')
+            $('#manager-container').empty()
+            $('#manager-container').append(response.content)
+            if (response.message) {
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+            }
+          }
+          else if (response.message) {
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+            }
+            if (response.modal_message) {
+          messageModal(response.modal_message)
+
+        }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length == 11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>

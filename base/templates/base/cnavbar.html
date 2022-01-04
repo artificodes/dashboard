@@ -1,0 +1,94 @@
+{% if user.is_authenticated %}
+<div class="row m-0 bg-transparent">
+  <div class="  col-4 pr-0 pl-0 pt-2 pb-2" style="display: inline-block;z-index: 3;" id="top">
+
+    <div class="uk-flex-inline ml-2">
+      <div class="uk-text-center uk-padding-remove" style="">
+        <a href="url 'customer_home' %}"><img src="{{settings.logo.url}}" alt="" style="width: 40px"></a>
+      </div>
+      <!-- <a class="uk-icon-button "  uk-toggle="target: #offcanvas-nav-primary"
+        style="box-shadow: none;z-index: 3;top: 0;">
+        <i class="fa fa-bars uk-text-bold text-darker" style=""></i></a>     -->
+    </div>
+  </div>
+
+  <div class="col text-right pr-0 pl-0 pt-2" style="">
+
+
+    <a class="btn btn-light rounded-circle uk-margin-small-right uk-margin-remove-top bg-white border-0 shadow-none"
+      style="width: 35px !important;height: 35px !important;" href="#account-modal" uk-toggle>
+      <i class="fa fa-user m-0 text-dark uk-position-center" style="font-size: medium;"></i></a>
+
+  </div>
+</div>
+
+<div class="fixed-top text-center">
+  <div class="text-white text-center bg-green pt-2 pb-2 pl-4 pr-4 success hide uk-position-top-center top-0"
+    id="success-alert" style="max-width: 320px;width: 100%;">
+    <p class=""><i class="fa fa-check mr-1"> </i> <span id="success-alert-inner"></span></p>
+  </div>
+</div>
+{% endif %}
+
+
+<!-- <div class="text-white text-center bg-red fixed-top p-2 warning" >
+  <p class=""><i class="fa fa-exclamation mr-1"> </i>  Product updated</p>
+</div> -->
+
+<script>
+
+    // {
+    //     (function ($) { //Most read async
+    //         $('.signout').on('click', function () {
+
+    //             logout()
+    //         });
+    //     }(jQuery))
+    // };
+    // var loggedOut = false
+
+    // function logout() {
+    //     $.ajax({
+
+    //         beforeSend: function () {
+    //             $('#loader-cover').show()
+    //         },
+    //         complete: function () {
+    //             $('#loader-cover').hide()
+    //         },
+    //         type: 'get',
+    //         url: "url 'customer_account_logout' %}",
+    //         data: {
+    //             'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+    //         },
+    //         success: function (response) {
+    //             window.location = 'url 'customer_dashboard' %}'
+
+    //             loggedOut = true
+    //         },
+    //         error: function (xhr, status, error) {
+    //             alert('there was an error')
+    //         }
+    //     });
+    // };
+
+
+    // function callIdle() {
+    //     if (loggedOut == true) {
+
+    //     }
+    //     else {
+    //         logout()
+
+    //     }
+    // }
+
+
+    // $(document).idle({
+    //     onIdle: function () {
+    //         callIdle()
+    //     },
+
+    //     idle: 10000,
+    // })
+</script>

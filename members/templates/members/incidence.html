@@ -1,0 +1,13 @@
+{% autoescape off %}
+
+<div class="card shadow-none text-left">
+    <div class="card-header h2">
+        <p class="h4 text-success"> From {{incidence.department}}</p>
+        {{incidence.title}}
+    </div>
+    <div class="card-body text-left">
+{{incidence.description}}
+    </div>
+</div>
+
+{% endautoescape %}

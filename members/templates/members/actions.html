@@ -1,0 +1,105 @@
+{% extends "base/ubase.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid p-0 mt-7">
+  {% if member.report_category == 'attendance' %}
+    <div class="col-csxx-7 col-cmd-5-e col-csm-5-e col-css-7 p-2">
+      <div class=" text-center">
+        <div class="card-body p-0">
+
+          <button class="btn btn-white content-btn m-0  text-left uk-width-1-1 pl-2 pr-2" contenturl="{% url 'record_attendance' %}">
+            <i class="fa fa-plus text-primary fa-2x"></i><br> Add attendance</button>
+        </div>
+      </div>
+    </div>
+
+  {% endif %}
+  {% if member.report_category == 'incident' %}
+
+    <div class="col-csxx-7 col-cmd-5-e col-csm-5-e col-css-7 p-2">
+      <div class=" text-center ">
+        <div class="card-body p-0">
+
+          <button class="btn btn-white content-btn m-0 text-left uk-width-1-1 pl-2 pr-2" contenturl="{% url 'record_incidence' %}">
+            <i class="fa fa-plus text-warning fa-2x"></i> <br> Add incidence</button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% if user.is_superuser %}
+    <div class="col-csxx-7 col-cmd-5-e col-csm-5-e col-css-7 p-2">
+
+      <div class="text-center">
+        <div class="card-body p-0">
+          <a href="{% url 'dashboard_records' %}" class="btn btn-white m-0 text-left uk-width-1-1 pl-2 pr-2"><i class="fa fa-eye text-green fa-2x"></i> <br> View
+            records</a>
+
+        </div>
+      </div>
+    </div>
+    {%  endif %}
+</div>
+
+
+
+
+
+<script>
+
+  {
+    (function ($) { //Most read async
+      $('.main-content-btn').on('click', function (event) {
+        event.preventDefault();
+        var link = $(this);
+        $.ajax({
+          beforeSend: function () {
+
+            $('#loader-cover').show()
+          },
+          complete: function () {
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.content) {
+              window.location - '#top'
+              $('#tab-header').empty()
+              $('#tab-header').append(response.header);
+              $('#inner-container').empty();
+              $('#inner-container').append(response.content);
+              $('#loader-cover').hide()
+            }
+
+            if (response.message) {
+              $('#notification-modal-inner').empty()
+              $('#notification-modal-inner').append(response.message)
+              $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+              UIkit.modal($('#notification-modal')).show();
+            }
+
+
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+
+</script>
+
+
+
+{% endblock content %}

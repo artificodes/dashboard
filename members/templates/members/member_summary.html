@@ -1,0 +1,49 @@
+
+
+{% if searchedmember %}
+
+<div class="card shadow-none m-1 bg-transparent rounded-0 text-white">
+    <div class="card-body p-1">
+        <div class="disappear card btn uk-margin-remove uk-animation-fade bg-gradient-success text-white uk-border-rounded uk-text-left" style="width: max-content;display: inline-block;">
+            <div class="card-title uk-margin-remove uk-text-center">
+          <div class="uk-text-lead uk-text-bold">Record Found</div>
+            </div>
+              
+          </div>
+            <div class="text-left p-1">
+                <p class="h4 bg-secondary p-2 rounded-sm text-dark text-capitalize"> <span class="uk-text-bold text-darker">Full Name:</span>  
+                    <span class="float-right"> {% if searchedmember.title %}{{searchedmember.title}} {% endif %} 
+                        {{searchedmember.firstname}} {{searchedmember.surname}}</span>
+                   </p>
+            </div>
+            <div class="text-left uk-text-bold p-1">
+                <p class="h4 text-dark bg-lighter p-2 rounded-sm"><span class="uk-text-bold text-darker">Phone Number:</span> 
+                    <span class="float-right"> {{searchedmember.mobile1}} </span></p>
+            </div>
+            <div class="text-left uk-text-bold p-1">
+                <p class="h4 bg-secondary rounded-sm p-2 text-dark"><span class="uk-text-bold text-darker">Gender:</span> 
+                    <span class="float-right"> {{searchedmember.gender}}</span></p>
+            </div>
+            <!-- <div class="text-left uk-text-bold p-0">
+                <p class="h3 text-white"><span class="uk-text-bold text-light">Department:</span> {{searchedmember.bio_data.department}}</p>
+            </div> -->
+           
+
+    </div>
+</div>
+
+{% elif error %}
+<div class="disappear card btn uk-margin-remove uk-animation-fade bg-gradient-danger text-white uk-border-rounded uk-text-left" style="width: max-content;display: inline-block;">
+    <div class="card-title uk-margin-remove uk-text-center">
+  <div class="uk-text-lead uk-text-bold">{{error}}</div>
+    </div>
+      
+  </div>
+{% else %}
+<div class="disappear card btn uk-margin-remove uk-animation-fade bg-gradient-danger text-white uk-border-rounded uk-text-left" style="width: max-content;display: inline-block;">
+    <div class="card-title uk-margin-remove uk-text-center">
+  <div class="uk-text-lead uk-text-bold">Record not Found</div>
+    </div>
+      
+  </div>
+{% endif %}

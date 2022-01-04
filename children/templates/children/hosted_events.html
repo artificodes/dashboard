@@ -1,0 +1,102 @@
+{% if event.hosted_events.all.count > 0 %}
+        <div>
+            <div style="display: flex;flex-wrap: wrap;justify-content: center;">
+
+                {% for hostedevent in event.hosted_events.all %}
+                <div class="col-cmd-3-e col-csxx-12 col-csx-10 col-css-7 col-csm-5-e uk-padding-medium "
+                    style=" min-height: 150px;max-height:250px;">
+                    <div class="ui move right reveal" style="width: 100%;overflow: visible;height: 100%;">
+                        <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+                            {% if hostedevent.thumbnail %}
+                            <img src="{{hostedevent.thumbnail.url}}" class="ui image"
+                                style="width: 100%; min-height: 100%;max-height:100%;">
+                            {% endif %}
+                        </div>
+                        <div class="hidden content" style="width: 100%;height: 100%;">
+                            {% if hostedevent.thumbnail %}
+                            <img src="{{hostedevent.thumbnail.url}}" class="ui image"
+                                style="width: 100%; min-height: 100%;max-height:100%;">
+                            {% endif %}
+                            <div class="uk-overlay uk-position-center"
+                                style="width: 100%; height:100%; background-color:rgba(70, 130, 180, 0.7);">
+                                <div class="card-footer bg-transparent uk-text-center container-fluid uk-position-bottom-center"
+                                    style="display: inline-block;">
+                                    <a class="btn btn-icon btn-info btn-sm"
+                                        href="{% url 'manage_event' eventid=event.eventid hostedeventid=hostedevent.hostedeventid %}"
+                                        type="button">
+                                        <span class="btn-inner--icon"><i class="icon edit"></i></span>
+                                        <span class="btn-inner--text">MANAGE</span>
+                                    </a>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+            </div>
+            <div class="uk-padding-large">
+                <button type="button" contenturl="{% url 'host_event' eventid=event.eventid %}" class="btn bg-blue text-white content-modal"><i
+                        class="icon plus text-white"></i> Host Event</button>
+
+            </div>
+        </div>
+        {% else %}
+        <div class="uk-padding-large">
+            <p class="">You have not hosted any event yet</p>
+            <button type="button" contenturl="{% url 'host_event' eventid=event.eventid %}" class="btn bg-blue text-white content-modal"><i
+                class="icon plus text-white"></i> Host Event</button>
+        </div>
+        {% endif %}
+
+
+<script>
+    $('.content-modal').off()
+        {
+      (function ($) { //Most read async
+        $('.content-modal').on('click', function (event) {
+          event.preventDefault();
+          var link = $(this);
+          $.ajax({
+            beforeSend: function () {
+  
+              $('#loader-cover').show()
+            },
+            complete: function () {
+            },
+            type: 'get',
+            url: link.attr('contenturl'),
+            data: {
+              'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+            },
+            success: function (response) {
+              // if there are still more pages to load,
+              // add 1 to the "Load More Posts" link's page data attribute
+              // else hide the link
+              // append html to the posts div
+              //$('.uk-modal-header-title').empty()
+  
+              //$('.uk-modal-header-title').append(link.attr('inner-html'));
+              if (response.content) {
+                $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                UIkit.modal($('#content-modal')).show();
+                $('#content-modal-body').empty()
+                $('#content-modal-body').append(response.content)
+              }
+  
+  
+  
+  
+            },
+            error: function (xhr, status, error) {
+              alert('there was an error')
+            }
+          });
+        });
+      }(jQuery))
+    };
+ 
+</script>

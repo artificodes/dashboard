@@ -1,0 +1,336 @@
+{% extends "base/ubase.html" %}
+{% load static %}
+{% block content %}
+{% if client.email_confirmed %}
+<div class="main-content" id="panel">
+
+
+  {% include 'users/navbar.html' %}
+  <div class="nav-wrapper uk-padding-small" style="margin-top: 70px;">
+    <ul class="nav nav-pills nav-fill flex-row " id="roundtable-manager" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link mb-sm-3 mb-md-0 active" id="roundtable-manager-1-tab" data-toggle="tab"
+          href="#roundtable-manager-1" role="tab" aria-controls="roundtable-manager-1" aria-selected="true"><i
+            class="uk-padding-small"></i>ALL EVENTS</a>
+      </li>
+      <li class="nav-item uk-margin-small-left">
+        <a class="nav-link mb-sm-3 mb-md-0" id="roundtable-manager-2-tab" data-toggle="tab" href="#roundtable-manager-2"
+          role="tab" aria-controls="roundtable-manager-2" aria-selected="false"><i
+            class="icon shortcut uk-padding-small"></i>QUICK ACTION</a>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="roundtable-manager-1" role="tabpanel"
+      aria-labelledby="roundtable-manager-1-tab">
+      <div class="container-fluid ">
+        <div class="row">
+          <div class="" id="event-manager">
+            <div class="card bg-secondary">
+              <!-- <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col">
+                        <h6 class=" text-uppercase ls-1 mb-1">Roundtable Manager</h6>
+                      </div>
+
+                    </div>
+
+                  </div> -->
+              <div class="card-body uk-padding-small" id="manager-container">
+                <div style="display: flex;flex-wrap: wrap;justify-content: center;">
+                  {% for event in myevents %}
+                  <div class="col-cmd-3-e col-csxx-12 col-csx-10 col-css-7 col-csm-5-e uk-padding-medium "
+                    style=" min-height: 150px;max-height:250px;">
+                    <div class="ui move right reveal" style="width: 100%;overflow: visible;height: 100%;">
+                      <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+                        {% if event.thumbnail %}
+                        <img src="{{event.thumbnail.url}}" class="ui image"
+                          style="width: 100%; min-height: 100%;max-height:100%;">
+                        {% endif %}
+                      </div>
+                      <div class="hidden content" style="width: 100%;height: 100%;">
+                        {% if event.thumbnail %}
+                        <img src="{{event.thumbnail.url}}" class="ui image"
+                          style="width: 100%; min-height: 100%;max-height:100%;">
+                        {% endif %}
+                        <div class="uk-overlay uk-position-center"
+                          style="width: 100%; height:100%; background-color:rgba(70, 130, 180, 0.7);">
+                          <div
+                            class="card-footer bg-transparent uk-text-center container-fluid uk-position-bottom-center"
+                            style="display: inline-block;">
+                            <a class="btn btn-icon btn-sm btn-info" href="{% url 'view_event' eventid=event.eventid %}"
+                              type="button">
+                              <span class="btn-inner--icon"><i class="icon eye"></i></span>
+                              <span class="btn-inner--text">VIEW</span>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+
+              </div>
+
+
+
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
+    </div>
+    <div class="tab-pane fade" id="roundtable-manager-2" role="tabpanel" aria-labelledby="roundtable-manager-2-tab">
+      <div class="container-fluid ">
+        <div class="row">
+          <div class="col-xl-12" id="event-manager">
+            <div class="card bg-secondary">
+              <div class="card-header bg-transparent">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <h6 class="text-uppercase ls-1 mb-1">Roundtable Manager</h6>
+                    <!-- <h5 class="h3 text-white mb-0">Create Event</h5> -->
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="card-body bg-white">
+                <div class="table-responsive">
+                  <!-- Projects table -->
+                  <table class="table align-items-center table-flush">
+
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date & Time</th>
+                        <th scope="col">Attendees</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for event in myevents %}
+                      <tr id="{{event.eventid}}{{arrangement.pk}}">
+                        <th>
+                          {{event.title}}
+                        </th>
+                        <td>
+                          {{event.start_date_time}}
+                        </td>
+                        <td>
+                          {{ event.registrations.count }}
+                        </td>
+
+
+                        <td>
+                         
+                          
+                          <button type="button" class="btn btn-sm btn-info delete-content" contenturl=""
+                            removableelement="#{{event.eventid}}{{arrangement.pk}}"><i class="icon download text-white"></i>
+                            Report</button>
+                            {% if event.arrangements.count > 0 %}
+                            <button type="button" class="btn btn-sm btn-primary delete-content" contenturl=""
+                            removableelement="#{{event.eventid}}{{arrangement.pk}}"><i class="icon download text-white"></i>
+                            Arrangement</button>
+                            {% elif event.tickets.count > 0 %}
+                            <button type="button" class="btn btn-sm btn-success delete-content" contenturl=""
+                            removableelement="#{{event.eventid}}{{arrangement.pk}}"><i class="icon download text-white"></i>
+                            Ticket</button>
+                            {% endif %}
+                        </td>
+                      </tr>
+
+                      {% endfor %}
+                      <tr>
+
+
+                        <td colspan="6" class="uk-text-center">
+                          <button type="button" contenturl="" class="btn btn-default content-modal"><i
+                              class="icon add "></i> Add Arrangement</button>
+
+                          {% if event.arrangement_update_needed %}
+                          <a type="button" href="" class="btn btn-warning"><i class="icon sync "></i> Update
+                            Arrangement</a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+
+<script>
+  {
+    (function ($) { //Most read async
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+
+        },
+        type: 'get',
+        url: "{% url 'dashboard_content' %}",
+        data: {
+          'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+        },
+        success: function (response) {
+          if (response.content) {
+            $('#inner-container').empty()
+            $('#inner-container').append(response.content)
+
+            $('#loader-cover').hide()
+          }
+
+        },
+        error: function (xhr, status, error) {
+
+          $('#notification-modal-inner').empty()
+          $('#notification-modal-inner').append('There was an error')
+          $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+          UIkit.modal($('#notification-modal')).show();
+        }
+      });
+    }(jQuery))
+  };
+</script>
+
+{% else %}
+
+<div class="uk-padding-small container" id="account-setup-container">
+  <div class="card uk-padding-small bg-rose" style="margin-top: 100px;padding: 20px;">
+    <div class="card-body">
+      <div class="uk-text-lead">
+        Unverified Email
+      </div>
+      <p class="uk-text">
+
+        You are seeing this because you have not verified your email address. Kindly click the button below
+        to
+        resend verification email
+
+      </p>
+      <button class="btn btn-primary uk-border-pill action-btn" type="button"
+        contenturl="{% url 'resend_activation_code' %}">Resend Email</button>
+
+    </div>
+
+
+  </div>
+  <form class="form" id="account-activate-form" method="POST" action="{% url 'activate_account' %}">
+
+    {% csrf_token %}
+
+    <div class="activate-form-inner">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="material-icons">lock_outline</i>
+          </span>
+        </div>
+        <input type="text" class="form-control" name="activation_code" id="id_login" required
+          placeholder="6 digit activation code" autofocus="autofocus">
+
+      </div>
+
+    </div>
+    <div class="footer text-center">
+      <button class="btn btn-primary" type="submit" style="border-radius: 50px;">Activate account</button>
+    </div>
+  </form>
+</div>
+
+
+<script>
+
+  $("#account-activate-form").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    $.ajax({
+      beforeSend: function () {
+
+        $('#loader-cover').show()
+      },
+      complete: function () {
+
+      },
+      url: post_url,
+      type: request_method,
+      data: form_data,
+      contentType: false,
+      cache: false,
+      processData: false,
+
+      success: function (response) {
+        if (response.invalid_code) {
+
+          $('.code-alert').remove()
+          $('.activate-form-inner').append('<div class="uk-text-danger code-alert  uk-animation-fade uk-padding-large uk-text-center">Invalid Code entered</div>')
+          $('#loader-cover').hide()
+
+        }
+
+        else if (response.activated) {
+          $('#loader-cover').hide()
+
+
+          $('#notification-modal-inner').empty()
+          $('#notification-modal-inner').append('Account activated')
+          $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'green' })
+          UIkit.modal($('#notification-modal')).show();
+          window.location = "{% url 'dashboard' %}"
+        }
+
+
+      },
+
+      error: function (xhr, status, error) {
+        UIkit.notification.closeAll()
+        UIkit.notification('Operation not successful. Check your internet connection',)
+      }
+    });
+  });
+
+
+
+
+</script>
+
+{% endif %}
+
+{% endblock content %}

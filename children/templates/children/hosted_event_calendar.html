@@ -1,0 +1,112 @@
+<div class="col-csxx-14 uk-padding-remove">
+    <div class="card card-stats shadow-none">
+        <div class="card-body uk-padding-remove">
+
+            {% include 'users/attendee_hosted_event_days.html' %}
+            <div class="uk-text-center col-csxx-14 uk-padding-small" style="">
+
+                <div class=" card bg-white uk-border-rounded border col-csxx-7" style="display: inline-block;">
+                    <div class="card-header uk-padding-small">
+                        <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
+                            <i class="icon calendar text-white"></i>
+                        </div>
+                    </div>
+                    <div class="col-csxx-14">
+                        <div class="col-csxx-7 text-center">
+                            <i class="icon calendar outline text-green"></i>
+                            <p class=" uk-margin-remove">
+                                {{hostedevent.start_date_time.date}}
+                            </p>
+                        </div>
+                        <div class="col-csxx-7 text-center">
+                            <i class="icon clock outline text-green"></i>
+                            <p class=" uk-margin-remove">
+                                {{hostedevent.start_date_time.time}}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-csxx-14">
+                        <div class="col-csxx-7 text-center">
+                            <i class="icon calendar outline text-danger"></i>
+                            <p class=" uk-margin-remove">
+                                {{hostedevent.end_date_time.date}}
+                            </p>
+                        </div>
+                        <div class="col-csxx-7 text-center">
+                            <i class="icon clock outline text-danger"></i>
+                            <p class=" uk-margin-remove">
+                                {{hostedevent.end_date_time.time}}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="uk-text-center uk-padding-small col-csxx-7" style="">
+
+                    <div class="card uk-padding-small uk-text-small bg-white uk-border-rounded border col-csxx-14"
+                        style="font-weight: bold;z-index: 2;cursor:default; display: inline-block;">
+                        <div class="card-header">
+                            <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+                                <i class="icon stopwatch text-white"></i>
+                            </div>
+                        </div>
+                        <div class=" uk-padding-small uk-text-center uk-margin-small-top col-csx-4-e" style="">
+                            <div class="rounded-circle border-success card uk-margin-remove"
+                                style="height: 40px;width: 40px;border: 2px solid green;display: inline-block;">
+                                <div id="days{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                                </div>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                DAYS
+                            </div>
+                        </div>
+                        <div class=" uk-padding-small uk-text-center uk-margin-small-top  col-csx-4-e" style="">
+                            <div class="rounded-circle border-primary card uk-margin-remove"
+                                style="height: 40px;width: 40px;border: 2px solid blue;display: inline-block;">
+                                <div id="hours{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                                </div>
+                            </div>
+
+
+                            <div class="uk-margin-small-top">
+                                HOURS
+                            </div>
+                        </div>
+
+                        <div class=" uk-padding-small uk-text-center uk-margin-small-top  col-csx-4-e" style=" ">
+                            <div class="rounded-circle border-warning card uk-margin-remove"
+                                style="height: 40px;width: 40px;border: 2px solid green;display: inline-block;">
+                                <div id="minutes{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                                </div>
+                            </div>
+                            <div class="uk-margin-small-top">
+                                MINS
+                            </div>
+                        </div>
+                        <div class=" uk-padding-small  uk-text-center uk-margin-small-top col-csx-4-e" style=" ">
+                            <div class="rounded-circle border-danger card uk-margin-remove"
+                                style="height: 40px;width: 40px;border: 2px solid green;display: inline-block;">
+                                <div id="seconds{{hostedevent.eventid}}" class="uk-position-center uk-text-large">
+
+                                </div>
+                            </div>
+
+                            <div class="uk-margin-small-top">
+                                SECS
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+

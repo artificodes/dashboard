@@ -1,0 +1,193 @@
+
+
+<div class="nav-wrapper border-bottom p-0">
+  <ul class="nav nav-pills nav-fill row m-0" id="tabs-icons-text" role="tablist">
+      <li class="nav-item m-0 p-0 col-4">
+          <a class="nav-link mb-sm-3 mb-md-0 heavy active  shadow-none rounded-0 p-1" id="tabs-icons-text-1-tab" 
+          data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true">
+          <i class="fa-child fa mr-2"></i> <br> Dependants ({{parent.dependants.count}})</a>
+      </li>
+      <li class="nav-item m-0 p-0 col-4">
+          <a class="nav-link mb-sm-3 mb-md-0 heavy shadow-none rounded-0 p-1" id="tabs-icons-text-2-tab" 
+          data-toggle="tab" href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false">
+          <i class="fa-users-cog fa mr-2"></i> <br> Family</a>
+      </li>
+      <li class="nav-item m-0 p-0 col-4">
+          <a class="nav-link mb-sm-3 mb-md-0 heavy shadow-none rounded-0 p-1" id="tabs-icons-text-3-tab" 
+          data-toggle="tab" href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false">
+          <i class="fa fa-shield-alt mr-2"></i><br> Security</a>
+      </li>
+  </ul>
+</div>
+<div class="card shadow-none">
+  <div class="card-body">
+      <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+             
+              <div class="uk-position-top-right mt-2 ">
+                <a class=" uk-icon-button btn-info p-4 mr-2" onclick="requestContentModal('{% url 'children_add_dependant' %}', 'get')"
+                  uk-tooltip="Add dependant">
+                  <i class="fa fa-user-plus text-white"></i></a>
+              </div>
+
+            <div class="col-csxx-x-14">
+              {% for dependant in parent.dependants.all %}
+              <div class="p-2 mt-5 col-csm-7 col-cmd-5-e col-csxx-x-14">
+                <div class="card shadow-sm border shadow-sm " style="border-bottom-right-radius: 30px;">
+                  {% if dependant.photo %}
+                  <div class="card-header uk-position-top-center shadow-lg rounded-circle mt--5 bg-white text-center 
+                      uk-text-lead text-dark"
+                    style="height: 80px;width: 80px;background-image: url('{{dependant.photo.url}}');background-position: center;background-size: cover;">
+                  </div>
+                  {% endif %}
+                  <div class="card-body mt-4 p-1">
+                    <p class="m-1"><span class="uk-text-bold">Full Name: </span> {{dependant.bio_data.c_firstname}}
+                      {{dependant.bio_data.c_surname}}</p>
+      
+                    <p class="m-1"><span class="uk-text-bold">Date of Birth: </span> {{dependant.bio_data.c_date_of_birth}}
+                    </p>
+                    <p class="m-1"><span class="uk-text-bold">Age: </span> {{dependant.age}}</p>
+                    <p class="m-1"><span class="uk-text-bold">Real Age: </span> {{dependant.agef}}</p>
+                    <p class="m-1"><span class="uk-text-bold">Group Name: </span> {{dependant.groupname}}</p>
+                    <p class="m-1"><span class="uk-text-bold">Classroom Name: </span> {{dependant.classname}}</p>
+                    <!-- <p class="m-1"><span class="uk-text-bold">Class ID: </span> {{dependant.groupid}}</p> -->
+                    <p class="m-1"><span class="uk-text-bold">Gender: </span><span
+                        class="text-capitalize">{{dependant.bio_data.c_gender}}</span> </p>
+                    <button
+                      onclick="requestContentModal('{% url 'children_change_availability' dependantid=dependant.dependantid status=dependant.available %}', 'get')"
+                      class="btn btn-{% if dependant.available %}success{% else %}warning{% endif %} p-1 mb-6 mr-1 elevation-1 rounded-pill uk-position-bottom-right"
+                      style="height: 40px;width: 40px;" uk-tooltip='Change availability'>
+                      <i class="fa fa-plane text-white mt--2 ml--2 fa  uk-position-center"
+                        style="transform: rotate(270deg);"></i></button>
+                    <button
+                      onclick="requestContentModal('{% url 'children_edit_dependant' dependantid=dependant.dependantid %}', 'get')"
+                      class="btn btn-secondary elevation-1 rounded-pill uk-position-bottom-right mr-1"
+                      style="height: 40px;width: 40px;" uk-tooltip='Edit dependant'> <i
+                        class="fa fa-user-edit uk-position-center"></i></button>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+        
+
+          </div>
+          <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+            <div class="card">
+               
+              <div class="card-header p-3">
+                <p class="uk-text-bold"><b>Parents</b> 
+                </p>
+                {% if member in parent.parent_2.all %}
+                 <div class="uk-position-top-right mt-2 ">
+                <a class=" uk-icon-button p-4 mr-2 bg-purple" onclick="requestContentModal('{% url 'children_add_parent' %}', 'get')"
+                  uk-tooltip="Add Parent">
+                  <i class="fa fa-user-plus text-white"></i></a>
+              </div>
+              {% endif %}
+              </div>
+              <div class="card-body p-1">
+
+                <div class="col-csxx-x-14">
+                  <div class="p-2 mt-1 col-csm-7 col-cmd-5-e col-csxx-x-14">
+                    <div class="card shadow-sm border shadow-lg m-1 bg-success text-white">
+
+                      <div class="card-body {% if dependant.photo %} mt-4 {% endif %} p-1">
+                        <p class="m-1 text-capitalize"><span class="uk-text-bold">Full Name: </span>
+                          {% if member.bio_data.title %} {{member.bio_data.title}} {% endif %}
+                           {{member.bio_data.firstname}}
+                          {{member.bio_data.surname}}</p>
+          
+                        <p class="m-1"><span class="uk-text-bold">Phone number: </span> {{member.bio_data.mobile1}}
+                        </p>
+                        <p class="m-1"><span class="uk-text-bold">Email: </span>{{member.bio_data.email}}</p>
+                       
+                      </div>
+                    </div>
+                  </div>
+                  {% if member in parent.parent_2.all %}
+                  {% else %}
+                  {% for parent_2 in parent.parent_2.all  %}
+                  <div class="p-2 mt-1 col-csm-7 col-cmd-5-e col-csxx-x-14">
+                    <div class="card shadow-sm border shadow-lg m-1 bg-white">
+
+                      <div class="card-body {% if dependant.photo %} mt-4 {% endif %} p-1">
+                        <p class="m-1 text-capitalize"><span class="uk-text-bold">Full Name: </span>
+                          {% if parent_2.bio_data.title %} {{parent_2.bio_data.title}} {% endif %}
+                           {{parent_2.bio_data.firstname}}
+                          {{parent_2.bio_data.surname}}</p>
+          
+                        <p class="m-1"><span class="uk-text-bold">Phone number: </span> {{parent_2.bio_data.mobile1}}
+                        </p>
+                        <p class="m-1"><span class="uk-text-bold">Email: </span>{{parent_2.bio_data.email}}</p>
+                       
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+            
+              </div>
+            </div>
+              <div class="card">
+               
+                <div class="card-header p-3">
+                  <p class="uk-text-bold"><b>Guardians</b> 
+                  </p>
+                   <div class="uk-position-top-right mt-2 ">
+                  <a class=" uk-icon-button p-4 mr-2 bg-info" onclick="requestContentModal('{% url 'children_add_guardian' %}', 'get')"
+                    uk-tooltip="Add Guardian">
+                    <i class="fa fa-user-plus text-white"></i></a>
+                </div>
+                </div>
+                <div class="card-body p-1">
+
+                  <div class="col-csxx-x-14">
+                    {% for guardian in parent.guardians.all %}
+                    <div class="p-2 mt-1 col-csm-7 col-cmd-5-e col-csxx-x-14">
+                      <div class="card shadow-sm border shadow-lg m-1" style="border-bottom-right-radius: 30px;">
+                        {% if dependant.photo %}
+                        <div class="card-header uk-position-top-center shadow-lg rounded-circle mt--5 bg-white text-center 
+                            uk-text-lead text-dark"
+                          style="height: 80px;width: 80px;background-image: url('{{dependant.photo.url}}');background-position: center;background-size: cover;">
+                        </div>
+                        {% endif %}
+                        <div class="card-body {% if dependant.photo %} mt-4 {% endif %} p-1">
+                          <p class="m-1 text-capitalize"><span class="uk-text-bold">Full Name: </span>
+                            {% if guardian.member.title %} {{guardian.member.title}} {% endif %}
+                             {{guardian.member.firstname}}
+                            {{guardian.member.surname}}</p>
+            
+                          <p class="m-1"><span class="uk-text-bold">Phone number: </span> {{guardian.member.mobile1}}
+                          </p>
+                          <p class="m-1"><span class="uk-text-bold">Email: </span>{{guardian.member.email}}</p>
+                         
+                          <button
+                      onclick="requestContentModal('{% url 'children_change_guardian_status' memberid=guardian.member.member_id status=guardian.active %}', 'get')"
+                      class="btn btn-{% if guardian.active %}success{% else %}warning{% endif %} p-1 mr-1 elevation-2 rounded-pill uk-position-bottom-right"
+                      style="height: 40px;width: 40px;" uk-tooltip='Change availability'>
+                      <i class="fa fa-user text-white fa  uk-position-center"
+                        ></i></button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+              
+                </div>
+              </div>
+
+          </div>
+          <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+           <div>
+             <p class="rounded-sm p-3 border m-0 pr-0 position-relative"><i class="fa fa-user-lock mr-2"></i> Private number  
+              <a class="p-2 btn-default uk-position-center-right rounded-pill text-white m-0"
+              onclick="requestContentModal('{% url 'change_private_number' %}', 'get')">
+              Change </a></p>
+           </div>
+           
+                    </div>
+      </div>
+  </div>
+</div>

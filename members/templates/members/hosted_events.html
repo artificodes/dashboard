@@ -1,0 +1,97 @@
+{% if event.hosted_events.all.count > 0 %}
+<div>
+  <div style="display: flex;flex-wrap: wrap;justify-content: center;">
+
+    {% for hostedevent in event.hosted_events.all %}
+    <div
+      class="col-csxx-x-14 col-csxx-xx-14 col-csxx-14 col-csx-14 text-center col-cmd-4-e col-css-7 col-csm-7 p-1 "
+      >
+     <div class="card uk-link col-cmd-4-e shadow-lg--hover overflow-hidden border " style="width: 100%; min-height: 150px;max-height:250px;text-decoration: none;">
+      <a href="{% url 'member_manage_event' eventid=event.eventid hostedeventid=hostedevent.hostedeventid %}"
+      class="main-content-redirect">
+
+      <div class="card-body uk-padding-remove overflow-hidden">
+
+        <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+          {% if hostedevent.thumbnail %}
+          <img src="{{hostedevent.thumbnail.url}}" class="ui image"
+            style="width: 100%; min-height: 100%;max-height:100%;">
+          {% endif %}
+        </div>
+
+      </div>
+      <div class="card-footer h3 p-1">
+        {{hostedevent.title}}
+      </div>
+    </a>
+     </div>
+    </div>
+
+
+    {% endfor %}
+
+  </div>
+  <div class="uk-padding-large">
+    <button type="button" onclick="requestContentModal('{% url 'member_host_event' eventid=event.eventid %}', 'get')"
+      class="btn bg-blue text-white "><i class="icon plus text-white"></i> Host Event</button>
+
+  </div>
+</div>
+{% else %}
+<div class="uk-padding-large">
+  <p class="">You have not hosted any event yet</p>
+  <button type="button" onclick="requestContentModal('{% url 'member_host_event' eventid=event.eventid %}', 'get')"
+    class="btn bg-blue text-white content-modal"><i class="icon plus text-white"></i> Host Event</button>
+</div>
+{% endif %}
+
+
+<script>
+  $('.content-modal').off()
+  {
+    (function ($) { //Most read async
+      $('.content-modal').on('click', function (event) {
+        event.preventDefault();
+        var link = $(this);
+        $.ajax({
+          beforeSend: function () {
+
+            showLoadingBar()
+          },
+          complete: function () {
+            hideLoadingBar()
+
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.content) {
+              $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+              UIkit.modal($('#content-modal')).show();
+              $('#content-modal-body').empty()
+              $('#content-modal-body').append(response.content)
+            }
+
+
+
+
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+</script>

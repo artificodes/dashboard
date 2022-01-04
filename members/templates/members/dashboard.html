@@ -1,0 +1,98 @@
+{% extends "base/ubase.html" %}
+{% load static %}
+{% block content %}
+
+<div class="nav-wrapper uk-padding-remove shadow-lg  fixed-bottom border-top csx-show">
+    <ul class="nav nav-pills nav-fill lex-sm-row" id="tabs-icons-text" role="tablist">
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  active rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-1-tab" data-toggle="tab"
+        href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i
+            class="fa fa-home mr-2"></i>Home</a>
+      </li>
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-2-tab" data-toggle="tab"
+          href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i
+            class="fa fa-bell mr-2"></i>Notifications</a>
+      </li>
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-3-tab" data-toggle="tab"
+        href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i
+            class="fa fa-calendar-day"></i>Events</a>
+      </li>
+    </ul>
+  </div>
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+  
+      {% include 'members/home.html' %}
+    </div>
+    <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+  
+    </div>
+    <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+     
+    </div>
+  </div>
+  
+  
+  
+  
+  <script>
+  
+    {
+      (function ($) { //Most read async
+        $('.main-content-btn').on('click', function (event) {
+          event.preventDefault();
+          var link = $(this);
+          $.ajax({
+            beforeSend: function () {
+  
+              $('#loader-cover').show()
+            },
+            complete: function () {
+            },
+            type: 'get',
+            url: link.attr('contenturl'),
+            data: {
+              'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+            },
+            success: function (response) {
+              // if there are still more pages to load,
+              // add 1 to the "Load More Posts" link's page data attribute
+              // else hide the link
+              // append html to the posts div
+              //$('.uk-modal-header-title').empty()
+  
+              //$('.uk-modal-header-title').append(link.attr('inner-html'));
+              if (response.content) {
+                window.location - '#top'
+                $('#tab-header').empty()
+                $('#tab-header').append(response.header);
+                $('#inner-container').empty();
+                $('#inner-container').append(response.content);
+                $('#loader-cover').hide()
+              }
+  
+              if (response.message) {
+                $('#notification-modal-inner').empty()
+                $('#notification-modal-inner').append(response.message)
+                $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                UIkit.modal($('#notification-modal')).show();
+              }
+  
+  
+            },
+            error: function (xhr, status, error) {
+              alert('there was an error')
+            }
+          });
+        });
+      }(jQuery))
+    };
+  
+  
+  </script>
+  
+
+
+{% endblock content %}

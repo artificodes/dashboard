@@ -1,0 +1,200 @@
+<div class="col-cmd-14">
+  {% for eventday in hostedevent.days.all %}
+  {% if eventday.registrations.count > 0 %}
+    {% for registration in eventday.registrations.all %}
+
+        {% if client == registration.attendee %}
+        {% else %}
+        <div class="col-cmd-7 col-csxx-14 col-csx-14 col-css-7 col-csm-7 uk-padding-small ">
+          <div class="card border">
+            <div class="card-header uk-position-relative p-2 bg-info">
+              <div class="col-csxx-x-14">
+                <div class="uk-text-bold col-csxx-x-14 text-white text-sm ">
+                  {{eventday.title}}
+      
+                </div>
+               
+              </div>
+      
+            </div>
+            <div class="card-body uk-padding-small">
+              <div class="col-csxx-14">
+                <div class="col-csxx-7 text-center">
+                  <i class="icon calendar outline text-green"></i>
+                  <p class=" uk-margin-remove">
+                    {{eventday.start_date_time.date}}
+                  </p>
+                </div>
+                <div class="col-csxx-7 text-center">
+                  <i class="icon clock outline text-green"></i>
+                  <p class=" uk-margin-remove">
+                    {{eventday.start_date_time.time}}
+                  </p>
+                </div>
+              </div>
+              <div class="col-csxx-14">
+                <div class="col-csxx-7 text-center">
+                  <i class="icon calendar outline text-danger"></i>
+                  <p class=" uk-margin-remove">
+                    {{eventday.end_date_time.date}}
+                  </p>
+                </div>
+                <div class="col-csxx-7 text-center">
+                  <i class="icon clock outline text-danger"></i>
+                  <p class=" uk-margin-remove">
+                    {{eventday.end_date_time.time}}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer uk-padding-small uk-text-center">
+              <!-- <button class="btn btn-success bg-gradient-success my-4 content-modal"
+              contenturl="{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+              <i class="ni ni-user-run"></i>
+              Register</button> -->
+            
+              <button class="btn btn-success bg-gradient-success btn-sm content-modal rounded-pill" 
+              onclick="requestContentModal('{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}')"
+              contenturl="{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+              <i class="ni ni-user-run"></i>
+              Register
+              </button>
+
+             
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+      {% else %}
+      <div class="col-cmd-7 col-csxx-14 col-csx-14 col-css-7 col-csm-7 uk-padding-small ">
+        <div class="card border">
+          <div class="card-header uk-position-relative p-2 bg-info">
+            <div class="col-csxx-x-14">
+              <div class="uk-text-bold col-csxx-x-14 text-white text-sm ">
+                {{eventday.title}}
+    
+              </div>
+             
+            </div>
+    
+          </div>
+          <div class="card-body uk-padding-small">
+            <div class="col-csxx-14">
+              <div class="col-csxx-7 text-center">
+                <i class="icon calendar outline text-green"></i>
+                <p class=" uk-margin-remove">
+                  {{eventday.start_date_time.date}}
+                </p>
+              </div>
+              <div class="col-csxx-7 text-center">
+                <i class="icon clock outline text-green"></i>
+                <p class=" uk-margin-remove">
+                  {{eventday.start_date_time.time}}
+                </p>
+              </div>
+            </div>
+            <div class="col-csxx-14">
+              <div class="col-csxx-7 text-center">
+                <i class="icon calendar outline text-danger"></i>
+                <p class=" uk-margin-remove">
+                  {{eventday.end_date_time.date}}
+                </p>
+              </div>
+              <div class="col-csxx-7 text-center">
+                <i class="icon clock outline text-danger"></i>
+                <p class=" uk-margin-remove">
+                  {{eventday.end_date_time.time}}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer uk-padding-small uk-text-center">
+            <!-- <button class="btn btn-success bg-gradient-success my-4 content-modal"
+            contenturl="{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+            <i class="ni ni-user-run"></i>
+            Register</button> -->
+          {% if eventday.full %}
+          <span class="text-danger uk-text-bold">Registration is full</span>
+          {% else %}
+              {% if hostedevent.one_time_ticketing == False and eventday.ticket_required %}
+              <button class="btn bg-yellow btn-sm content-modal rounded-pill text-white" 
+              onclick="requestContentModal('{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}')"
+              contenturl="{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+              <i class="fa fa-ticket-alt text-darker"></i>
+             <span>Buy Ticket</span>
+              </button>
+              {% else %}
+            <button class="btn btn-success bg-gradient-success btn-sm content-modal rounded-pill" 
+            onclick="requestContentModal('{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}')"
+            contenturl="{% url 'event_day_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+            <i class="ni ni-user-run"></i>
+            Register
+            </button>
+            {% endif %}
+            {% endif %}
+
+           
+          </div>
+        </div>
+      </div>
+        {% endif %}
+  
+  {% endfor %}
+</div>
+
+<script>
+  var eventDayIds = []
+  {% if hostedevent.verification_steps != '0' %}
+  eventdayids = [{% for eventday in hostedevent.days.all %} '{{eventday.dayid}}',{% endfor %}]
+  {% endif %}
+  var attendeeVerificationUrl = ''
+  var eventId = ''
+  {
+    (function ($) { //Most read async
+      $('.qr-scan').on('click', function (event) {
+        var eventButton = $(this)
+        attendeeVerificationUrl = eventButton.attr('contenturl')
+        eventId = eventButton.attr('eventid')
+        alert(eventId)
+        UIkit.modal($('#qr-modal')).show();
+        Webcam.set({
+          width: 350,
+          height: 350,
+          image_format: 'jpeg',
+          jpeg_quality: 100
+        });
+        Webcam.attach('#example');
+
+
+        // $('#button').click(function () {
+        // 	take_snapshot();66666
+        // });
+        Webcam.on('load', function () {
+          qrCodeInterval = setInterval(take_snapshot, 100)
+          qrcode.callback = attendeeQrVerification;
+        });
+
+      })
+
+
+    }(jQuery))
+  };
+
+  {
+    (function ($) { //Most read async
+      $('.qr-close').on('click', function (event) {
+        try {
+          clearInterval(qrCodeInterval)
+          Webcam.reset()
+        } catch (ReferenceError) {
+
+        }
+      });
+    }(jQuery))
+  };
+
+  $('.ui.progress').progress()
+</script>
+
+

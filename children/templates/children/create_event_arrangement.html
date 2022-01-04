@@ -1,0 +1,199 @@
+<div class="card-header bg-transparent">
+  <div class="row align-items-center">
+    <div class="col">
+      <h5 class="h3 text-white mb-0">Add Event Arrangement</h5>
+    </div>
+
+  </div>
+
+</div>
+<div class="card-body">
+
+  <form role="form" id='createeventarrangementform' enctype="multipart/form-data" class="form uk-padding-small" method="POST"
+    action="">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="material-icons">subject</i></span>
+        </div>
+        <input class="form-control" placeholder="Arrangement Name" type="text" name="name" required>
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-dashboard"></i></span>
+        </div>
+        <input class="form-control" placeholder="No. of sections" type="number" name="sections" required>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-table"></i></span>
+        </div>
+        <input class="form-control" placeholder="No. of Tables per section" type="number" name="tables_per_section" required>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-chair"></i></span>
+        </div>
+        <input class="form-control" placeholder="No. of Chairs per table" type="number" name="chairs_per_table" required>
+      </div>
+    </div>
+    <div class="text-center">
+     
+     
+      <button type="submit" class="btn btn-primary my-4 arrangement-form-submit" action="next">Create and add another</button>
+
+       <button type="submit" class="btn btn-primary my-4 arrangement-form-submit" action="exit">Create and exit</button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+  var submit = false
+  var action =''
+  {
+      (function ($) { 
+  $('.arrangement-form-submit').on('click',function(event){
+    button = $(this)
+    action = button.attr('action')
+  })}(jQuery))
+}
+  $('#createeventarrangementform').djValidator({ mode: 'submit', success: () => { submit = true } })
+
+  $("#createeventarrangementform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = 'createeventarrangement/{{event.eventid}}/main/'+action; //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit == true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.eventarrangementcreated) {
+            if(response.next){
+              $('#manager-container').empty()
+            $('#side-details').empty()
+            $('#side-details').show()
+            $('#side-details').append(response.event_details)
+            $('#manager-container').append(response.content)
+
+            }
+            else if(response.exit){
+          window.location= '{% url "manage_event" eventid=event.eventid %}'
+
+            }
+           
+          }
+          else {
+
+            alert(response.message)
+          }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length == 11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+
+<script>
+  {
+    (function ($) { //Most read async
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+
+        },
+        type: 'get',
+        url: "{% url 'dashboard_content' %}",
+        data: {
+          'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+        },
+        success: function (response) {
+          if (response.content) {
+            $('#inner-container').empty()
+            $('#inner-container').append(response.content)
+
+            $('#loader-cover').hide()
+          }
+
+        },
+        error: function (xhr, status, error) {
+
+          $('#notification-modal-inner').empty()
+          $('#notification-modal-inner').append('There was an error')
+          $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+          UIkit.modal($('#notification-modal')).show();
+        }
+      });
+    }(jQuery))
+  };
+</script>

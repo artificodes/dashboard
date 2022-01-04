@@ -1,0 +1,44 @@
+<div class="card uk-padding-small uk-margin-remove-top uk-animation-slide-top uk-margin-small" id=""
+    style="box-shadow: none;border-radius: 20px 20px 20px 20px;">
+
+    <div class="card-body uk-margin-remove uk-padding-small">
+        <div class=" card uk-margin-remove card-header-rose uk-text-center"
+            style="display: inline-block;border-radius: 50px !important;">
+            <div class="card-body">Recent Remittances</div>
+        </div>
+        {% for purchase in purchases %}
+
+
+        <div class="card uk-margin-small uk-padding-small  uk-text-left uk-box-shadow-small"
+            style="width: 100%;display: inline-block;">
+            <i class="material-icons uk-position-top-right bg-dark uk-border-circle uk-padding-xsmall"
+                style="color: white;font-size: 10px;">shopping_bag</i>
+            <div class="card-body" style="padding: 5px;">
+                <div class="col-csxx-x-14" style="font-size: 10px;">
+                    <div class="col-csxx-x-14">
+                        <p class="" style="font-weight: bold;font-size: 11px;"><span
+                                style="font-weight: bold;font-size: 11px;">Amount:</span> NGN
+                            {{purchase.formatted_grand_total}}</p>
+                    </div>
+                    <div class="col-csxx-x-14">
+                        <p class="card-text" style="font-size: 10px;"><span
+                                style="font-weight: bold;font-size: 10px;">Products:</span> {{
+                            purchase.purchasedproducts.count }} </p>
+
+                    </div>
+                    <div class="col-csxx-x-14">
+                        <p class="card-text" style="font-size: 10px;"><span
+                                style="font-weight: bold;font-size: 10px;">Date/Time:</span>
+                            {{purchase.date_time_added}}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>

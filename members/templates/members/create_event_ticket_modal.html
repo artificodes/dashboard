@@ -1,0 +1,203 @@
+
+<div class="card-body p-0">
+
+  <form role="form" id='createeventticketform' enctype="multipart/form-data" class="form uk-padding-small" method="POST"
+    action="">
+    {% csrf_token %}
+  <input type="hidden" name="dayid" id="" value="{{dayid}}">
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="material-icons">subject</i></span>
+        </div>
+        <input class="form-control" placeholder="Ticket Name" type="text" name="name" required>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="">₦</i></span>
+        </div>
+        <input class="form-control" placeholder="Ticket Price" type="number" name="price" required>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="icon users"></i></span>
+        </div>
+        <input class="form-control" placeholder="Ticket Quantity" type="number" name="attendance_limit" required>
+      </div>
+    </div>
+{% if hostedevent.one_time_arrangement or eventday.arrange %}
+    <div class="form-group mb-3 ">
+      <div class="input-group border input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-dashboard"></i></span>
+        </div>
+        <input class="form-control" placeholder="No. of sections" type="number" name="sections" required>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-table"></i></span>
+        </div>
+        <input class="form-control" placeholder="No. of Tables per section" type="number" name="tables_per_section"
+          required>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fa fa-chair"></i></span>
+        </div>
+        <input class="form-control" placeholder="No. of Chairs per table" type="number" name="chairs_per_table"
+          required>
+      </div>
+    </div>
+
+
+  {% else %}
+
+      <input class="form-control" placeholder="No. of sections" type="hidden" value="0" name="sections" required>
+  
+      <input class="form-control" placeholder="No. of Tables per section" type="hidden" value="0"name="tables_per_section"
+        required>
+
+
+      <input class="form-control" placeholder="No. of Chairs per table" type="hidden" value="0" name="chairs_per_table"
+        required>
+
+  {% endif %}    
+<div class="text-center">
+
+
+      <button type="submit" class="btn btn-primary my-4 ticket-form-submit" action="next">Create and add
+        another</button>
+     
+      <button type="submit" class="btn btn-primary my-4 ticket-form-submit" action="exit">Create and exit</button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+  var submit = false
+  var action = ''
+  {
+    (function ($) {
+      $('.ticket-form-submit').on('click', function (event) {
+        button = $(this)
+        action = button.attr('action')
+      })
+    }(jQuery))
+  }
+  $('#createeventticketform').djValidator({ mode: 'submit', success: () => { submit = true } })
+
+  $("#createeventticketform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = '/createeventticket/{{hostedevent.eventid}}/{{hostedevent.hostedeventid}}/{{dayid}}/' + action; //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit == true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.done) {
+            if (response.next) {
+              $('#manager-container').removeClass('uk-animation-fade')
+
+              $('#manager-container').addClass('uk-animation-fade')
+              $('#manager-container').empty()
+              $('#manager-container').append(response.content)
+              // $('#full-content-modal-body').empty()
+              // $('#full-content-modal-body').append(response.modal_content)
+
+              $('#content-modal-body').empty()
+              $('#content-modal-body').append(response.modal_content)
+
+              if (response.message) {
+                UIkit.notification.closeAll()
+                UIkit.notification(response.message)
+              }
+            }
+            else if (response.exit) {
+              $('#manager-container').removeClass('uk-animation-fade')
+
+              $('#manager-container').addClass('uk-animation-fade')
+              $('#manager-container').empty()
+              $('#manager-container').append(response.content)
+              if (response.message) {
+                UIkit.notification.closeAll()
+                UIkit.notification(response.message)
+              }
+              UIkit.modal($('#content-modal')).hide();
+
+
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length == 11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+

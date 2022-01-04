@@ -1,0 +1,193 @@
+<div>
+    <p class="h2 text-gray-dark">Attendance Form</p>
+</div> 
+<form class="form" id="attendance-form" method="POST" action="{% url 'record_attendance' %}" style="">
+
+    {% csrf_token %}
+
+    <div class="card-body p-1">
+
+
+        <div class="uk-inline mt-2" style="width: 100%;">
+            <div class="default text text-dark uk-text-bold text-left">Program</div>
+            <div class="ui fluid search selection dropdown bg-secondary border-0">
+                <input type="hidden" id="program" name="program" required>
+                <i class="dropdown icon"></i>
+                <div class="default text text-dark">Select program</div>
+                <div class="menu border-primary border">
+                    {% for program in programs %}
+                    <div class="item" data-value="{{program.pk}}" style="padding: 8px !important;">{{program.programme}} <span class="bg-blue text-white p-1 rounded-md ml-1 float-right">{{program.start_date}}</span> 
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+        <div class="uk-inline mt-2" style="width: 100%;">
+            <div class="default text text-dark uk-text-bold text-left">Department</div>
+            <div class="ui fluid search selection dropdown bg-secondary border-0">
+                <input type="hidden" id="department" name="department" required>
+                <i class="dropdown icon"></i>
+                <div class="default text text-dark">Select department</div>
+                <div class="menu border-primary border">
+            
+                    <div class="item" data-value="{{member.department.pk}}" style="padding: 8px !important;">{{member.department.name}}
+                    </div>
+                   
+
+                </div>
+            </div>
+        </div>
+        <div class="uk-inline mt-2" style="width: 100%;">
+            <div class="default text text-dark uk-text-bold text-left">Category</div>
+            <div class="ui fluid search selection dropdown bg-secondary border-0">
+                <input type="hidden" id="category" name="category" required>
+                <i class="dropdown icon"></i>
+                <div class="default text text-dark">Select category</div>
+                <div class="menu border-primary border">
+                    {% for category in member.report_category_permission.all %}
+
+                    <div class="item" data-value="{{category.pk}}" style="padding: 8px !important;">{{category.name}}
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="uk-inline mt-2" style="width: 100%;">
+            <div class="default text text-dark uk-text-bold text-left">Source</div>
+            <div class="ui fluid search selection dropdown bg-secondary border-0">
+                <input type="hidden" id="source" name="source" required>
+                <i class="dropdown icon"></i>
+                <div class="default text text-dark">Select source</div>
+                <div class="menu border-primary border">
+                    {% for source in member.source_permission.all %}
+                    <div class="item" data-value="{{source.pk}}" style="padding: 8px !important;">{{source.name}}
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="uk-inline mt-4" style="width: 100%;">
+
+            <!-- <span class="uk-position-center-left ml-2"> <i class="fa fa-user"></i></span> -->
+            <input class="uk-input form-control p-3    rounded-md position-relative border border-light text-dark "
+                style="z-index: 2;" id="attendance_number" type="number" name="number" required autofocus>
+            <span class=" uk-position-center-left rounded-sm pl-1 pr-1 ml-2 c-label"
+                style="z-index: 1;font-size: 10px;">
+                Number
+            </span>
+        </div>
+
+
+
+    </div>
+    <div class="mt-1 text-center bg-white">
+        <button class="btn btn-primary shadow-none btn-flat " type="submit" style=""> Submit </button>
+    </div>
+
+</form>
+
+
+<script>
+    $('.ui.dropdown')
+        .dropdown()
+        ;
+
+
+    $("#account_number").on('change', function (event) {
+
+        $.ajax({
+            beforeSend: function () {
+
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+
+            },
+            url: "",
+            type: 'post',
+            data: {
+                'csrfmiddlewaretoken': '{{csrf_token}}',
+                'account_number': $('#account_number').val(),
+                'account_bank': $('#bank').val()
+            },
+
+            success: function (response) {
+                $('#verified-details').empty()
+                $('#verified-details').append(response.full_name)
+                $('#verified-details').show()
+
+
+            },
+
+            error: function (xhr, status, error) {
+                alert(status)
+            }
+        });
+
+    });
+
+
+
+
+    $("#attendance-form").submit(function (event) {
+        event.preventDefault(); //prevent default action 
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this); //Creates new FormData object
+        $.ajax({
+            beforeSend: function () {
+
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+
+            },
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (response) {
+                if (response.full_modal) {
+                    fullcontentModal(response.full_modal, response.heading)
+
+                }
+                if (response.modal_message) {
+                    messageModal(response.modal_message,)
+
+                }
+                if (response.modal_notification) {
+                    notificationModal(response.modal_notification)
+
+                }
+
+                if (response.modal_content) {
+                    contentModal(response.modal_content, response.heading)
+
+                }
+                if (response.message) {
+                    UIkit.notification.closeAll()
+                    UIkit.notification(response.message)
+                }
+            },
+
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+
+
+</script>

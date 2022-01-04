@@ -1,0 +1,141 @@
+{% extends "base/ubase.html" %}
+{% load static %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+
+<div class="page-header header-filter uk-padding-small fixed-top" style="height: 100%; width: 100%;">
+
+  <div class="container uk-text-center mt-4">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 ml-auto mr-auto">
+        <div class="card card-login shadow-none bg-transparent" style="">
+          <div class="card-body p-1">
+            <img src="{{settings.logo.url}}" class="" alt="" style="width:40px;">
+            <div class="text-center mt-5">
+             
+             <p class="m-0 text-darker">THE CITADEL GLOBAL COMMUNITY CHURCH</p>
+             
+             <P class="h4 m-0 text-dark">Where stars are born</P>   
+             </div>
+             
+            <div class="border border-lighter rounded-md p-4 mt-4 bg-transparent position-relative overflow-hidden">
+              <div class="col-csxx-x-14 text-center uk-position-top-center hide" id='progress-container' style="margin-top:-10px;z-index: 3;">
+                <div class="ui tiny col-csxx-x-14 float-none rounded-0 active progress uk-margin-small-top shadow-none uk-display-inline-block"
+                  style="border: none;height: 2px;" id="progress">
+                  <div class="bar rounded-0" style="border-radius: 0 !important;background-color: goldenrod !important;"></div>
+                </div>
+              </div>
+              <div id="form-container" >
+
+              <form class="form" id="loginform" method="POST" action="{% url 'account_login' %}">
+
+                {% csrf_token %}
+                <div class="card-body ">
+                  <p class="m-0 text-sm uk-text-bold text-left">Phone number/Email:</p>
+                  <div class="uk-inline" style="width: 100%;">
+                    <span class="uk-position-center-left ml-2"> <i class="fa fa-user"></i></span>
+                    <input class="uk-input form-control pl-5 p-2 password bg-transparent" style="height: max-content;" id="secretpin"
+                        type="text" placeholder="Enter phone number or Email" name="identifier" required>
+                </div>
+                <div id="error" class="text-danger text-sm uk-text-bold text-left">
+
+                </div>
+
+                  <input type="hidden" name="next" value="{{redirect_url}}" />
+
+                  {% if redirect_field_value %}
+                  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                  {% endif %}
+                </div>
+                  <button class="btn btn-primary text-white uk-width-1-2@s m-0" type="submit">Next</button> 
+                  
+
+              </form>
+            </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="text-center fixed-bottom mb-2">
+    <!-- <p class="h2">from</p>  
+    <p class="">{{settings.platform_name}}</p>
+
+  </div> -->
+</div>
+
+
+<script>
+
+  $("#loginform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    $.ajax({
+      beforeSend: function () {
+
+        showLoadingBar()
+      },
+      complete: function () {
+        hideLoadingBar()
+
+      },
+      url: post_url,
+      type: request_method,
+      data: form_data,
+      contentType: false,
+      cache: false,
+      processData: false,
+
+      success: function (response) {
+        if (response.form_content) {
+          $('#form-container').empty()
+          $('#form-container').append(response.form_content)
+        }
+        if (response.error) {
+          $('#error').empty()
+          $('#error').append(response.error)
+        }
+        if (response.url) {
+          window.location = response.url
+
+        }
+        if (response.modal_message) {
+          messageModal(response.modal_message, response.heading)
+
+        }
+        if (response.modal_notification) {
+          notificationModal(response.modal_notification)
+
+        }
+
+        if (response.modal_content) {
+          contentModal(response.modal_content, response.heading)
+
+        }
+        if (response.message) {
+          UIkit.notification.closeAll()
+          UIkit.notification(response.message)
+        }
+      },
+
+      error: function (xhr, status, error) {
+        UIkit.notification.closeAll()
+        UIkit.notification('Operation not successful. Check your internet connection',)
+      }
+    });
+  });
+
+
+
+
+</script>
+
+{% endblock %}

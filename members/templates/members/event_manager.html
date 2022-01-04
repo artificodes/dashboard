@@ -1,0 +1,310 @@
+<div class="card bg-secondary">
+    <div class="card-header bg-transparent">
+        <div class="row align-items-center">
+            <div class="col">
+                <h6 class="text-light text-uppercase ls-1 mb-1">Event Manager</h6>
+                <!-- <h5 class="h3 text-white mb-0">Create Event</h5> -->
+            </div>
+            <!-- <a type="button" href="{% url 'member_edit_event' eventid=event.eventid %}" class="btn btn-sm btn-info"><i
+                    class="icon edit "></i> Edit</a>
+            <a type="button" href="{% url 'member_create_event' %}" class="btn btn-sm btn-danger"><i
+                    class="icon trash "></i>
+                Delete</a> -->
+        </div>
+
+    </div>
+
+    <div class="card-body uk-padding-small uk-text-center" id="manager-container">
+        {% include 'members/hosted_events.html' %}
+    </div>
+
+    {% comment %}
+    <div class="card-body">
+        <div class="col align-items-center">
+            <h6 class="text-light text-uppercase ls-1 mb-1">Event url</h6>
+
+            <button class=" bg-secondary btn btn-secondary btn-sm uk-padding-small ls-1 mb-1">
+                {{request.get_host}}{% url 'member_view_event' eventid=event.eventid %}</button>
+            <button type="submit" class="btn btn-secondary my-4 uk-padding-small btn-sm"> <i class="icon copy"></i> copy
+                url</button>
+
+        </div>
+        <div class="col">
+            <h6 class="text-light text-uppercase ls-1 mb-1">Share Event</h6>
+            <a type="button" class="uk-icon-button my-4"><i class="icon facebook f large" style="color: blue;"></i>
+            </a>
+            <a type="button" class="uk-icon-button my-4"><i class="icon whatsapp large" style="color: darkgreen;"></i>
+            </a>
+            <a type="button" class="uk-icon-button my-4"><i class="icon instagram large" style="color: purple;"></i>
+            </a>
+            <a type="button" class="uk-icon-button my-4"><i class="icon twitter large" style="color: steelblue;"></i>
+            </a>
+
+        </div>
+        <!-- <div class="col">
+            <h6 class="text-light text-uppercase ls-1 mb-1">Event Authorization</h6>
+           <h5 class="h3 text-white mb-0">Create Event</h5> 
+            <button type="submit" class="btn btn-secondary full-content-modal my-4"
+            contenturl=""><i class="icon qrcode large"></i> EVENT QRCODE</button>
+            {% if event.verification_steps == '2' %}
+
+            <button type="submit" class="btn btn-success my-4 qr-scan"  
+            contenturl="{% url 'member_host_qrcode_verification' eventid=event.eventid %}" 
+            eventid="{{event.eventid}}" eventinitials="{{event.initials}}"><i class="icon check large"></i> VERIFY ATTENDEES</button>
+
+{% endif %}
+        </div> -->
+
+    </div>
+    {% endcomment %}
+</div>
+
+<div id="qr-modal" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog bg-secondary" style="height: 100%;">
+        <button
+            class="uk-modal-close-full btn btn-danger uk-position-top-right uk-margin-small-top uk-padding-remove uk-text-bold qr-close"
+            type="button" style="border-radius: 50%;height: 50px;width: 50px;">Close</button>
+        <div class="modal-body qr-body" id="qr-modal-inner">
+            <div class="container uk-margin-large-top">
+                <form>
+                    <div class="uk-margin">
+                        <div class="uk-inline" style="width: 100%;">
+                            <span class="uk-form-icon" uk-icon="icon: search"></span>
+                            <input class="uk-input uk-border-pill" id="host-verification-search" type="text"
+                                placeholder="Enter registration ID">
+                        </div>
+                    </div>
+                </form>
+                <div id="verification-result" class="uk-text-center uk-margin-small-bottom"></div>
+            </div>
+
+            <div class="pageWrapper">
+
+                <div class="boxWrapper uk-text-center" style="border: none;">
+                    <div id="example" class="" style="max-width:100%; height:auto;width:100%;display: inline-block;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div id='qr-data' class="uk-text-lead">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    {
+        (function ($) { //Most read async
+            $('.content-modal').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        showLoadingBar()
+                    },
+                    complete: function () {
+                        hideLoadingBar()
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.content) {
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#content-modal')).show();
+                            $('#content-modal-body').empty()
+                            $('#content-modal-body').append(response.content)
+                        }
+
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) { //Most read async
+            $('.full-content-modal').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        showLoadingBar()
+                    },
+                    complete: function () {
+                        hideLoadingBar()
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.content) {
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#full-content-modal')).show();
+                            $('#full-content-modal-body').empty()
+                            $('#full-content-modal-body').append(response.content)
+                        }
+
+                        if (response.message) {
+                            window.location = "#top"
+
+                            $('#notification-modal-inner').empty()
+                            $('#notification-modal-inner').append(response.message)
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#notification-modal')).show();
+                            $('#loader-cover').hide()
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+
+
+
+    var hostdoubleVerificationUrl = ''
+    var eventId = ''
+    var eventInitials = '{{event.initials}}'
+    {
+        (function ($) { //Most read async
+            $('.qr-scan').on('click', function (event) {
+                var eventButton = $(this)
+                hostdoubleVerificationUrl = eventButton.attr('contenturl')
+                eventId = eventButton.attr('eventid')
+                UIkit.modal($('#qr-modal')).show();
+                Webcam.set({
+                    width: 350,
+                    height: 250,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100
+                });
+                Webcam.attach('#example');
+
+
+                // $('#button').click(function () {
+                // 	take_snapshot();66666
+                // });
+                Webcam.on('load', function () {
+                    qrCodeInterval = setInterval(take_snapshot, 100)
+                    qrcode.callback = hostQrVerification;
+                });
+
+            })
+
+
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+
+
+
+
+            });
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) { //Most read async
+            $('#host-verification-search').on('input', function () {
+
+
+                var hostverificationsearch = $(this);
+                var query = hostverificationsearch.val()
+                if (hostverificationsearch.val() == '') {
+                    $('#verification-result').empty()
+                }
+                if (query != '' && query.length > 7) {
+                    $.ajax({
+                        beforeSend: function () {
+
+                            $('#search-box-container').addClass('loading');
+
+
+                        },
+                        complete: function () {
+                            $('#search-box-container').removeClass('loading');
+                        },
+                        type: 'get',
+                        url: "",
+                        data: {
+                            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                            'registrationid': query
+                        },
+                        success: function (response) {
+                            // if there are still more pages to load,
+                            // add 1 to the "Load More Posts" link's page data attribute
+                            // else hide the link
+                            // append html to the posts div
+                            //$('.uk-modal-header-title').empty()
+
+                            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                            $('#verification-result').empty()
+                            $('#verification-result').append(response.message);
+                            $('.disappear').on('click', function (event) {
+                                $('#verification-result').empty()
+
+                            })
+
+
+
+
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            alert('there was an error')
+                        }
+                    });
+                }
+            });
+        }(jQuery))
+    };
+
+
+</script>

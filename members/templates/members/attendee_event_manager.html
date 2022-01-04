@@ -1,0 +1,427 @@
+<div class="nav-wrapper uk-padding-remove shadow-lg border-bottom hide-csx show-csm">
+    <ul class="nav nav-pills nav-fill lex-sm-row" id="tabs-icons-text" role="tablist">
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  active rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-1-tab"
+          data-toggle="tab" href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1"
+          aria-selected="true"><i class="fa fa-info-circle mr-2"></i>About</a>
+      </li>
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-2-tab" data-toggle="tab"
+          href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i
+            class="ni ni-calendar-grid-58 mr-2"></i>Calendar</a>
+      </li>
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-3-tab" data-toggle="tab"
+          href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i
+            class="fa fa-user-check mr-2"></i>Verification</a>
+      </li>
+    </ul>
+
+  </div>
+  <div class="nav-wrapper uk-padding-remove shadow-lg  fixed-bottom border-top csx-show">
+    <ul class="nav nav-pills nav-fill lex-sm-row" id="tabs-icons-text" role="tablist">
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  active rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-1-tab" data-toggle="tab"
+          href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i
+            class="fa fa-info-circle mr-2"></i>About</a>
+      </li>
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-2-tab" data-toggle="tab"
+          href="#tabs-icons-text-2" role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i
+            class="ni ni-calendar-grid-58 mr-2"></i>Calendar</a>
+      </li>
+      <li class="nav-item uk-padding-remove m-0">
+        <a class="nav-link  rounded-0 shadow-none p-2 m-0 to-top" id="tabs-icons-text-3-tab" data-toggle="tab"
+          href="#tabs-icons-text-3" role="tab" aria-controls="tabs-icons-text-3" aria-selected="false"><i
+            class="fa fa-user-check mr-2"></i>Verification</a>
+      </li>
+    </ul>
+  </div>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel"
+                  aria-labelledby="tabs-icons-text-1-tab">
+                  <div class="col-cmd-14">
+
+                    {% include 'users/hosted_event_details.html' %}
+                  </div>
+
+
+                </div>
+                <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel"
+                  aria-labelledby="tabs-icons-text-2-tab">
+                  <div class="col-cmd-14">
+
+                    {% include 'users/hosted_event_calendar.html' %}
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel"
+                  aria-labelledby="tabs-icons-text-3-tab">
+                  {% include 'users/attendee_hosted_event_verification.html' %}
+                </div>
+              </div>
+           
+
+
+
+
+
+
+
+
+<!-- 
+
+
+<div class="col align-items-center">
+
+    <div class=" uk-text-left">
+        {% if registration.seat_number %}
+        <div class="uk-text-bold row">
+            <div class="col">
+                <div class="uk-text-lead">Seat No.:</div>
+                <div class=" uk-text-large uk-margin-small-left"> {{registration.seat_number}}</div>
+
+            </div>
+        </div>
+        {% endif %}
+
+        {% if registration.completed %}
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Verified <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Authorized <i class="icon check"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="100">
+            <div class="bar"></div>
+        </div>
+
+        {% elif event.verification_steps == '2' %}
+        {% if registration.verified %}
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Verified <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Authorized <i class="icon warning"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="70">
+            <div class="bar"></div>
+        </div>
+
+        <h6 class=" text-uppercase ls-1 mb-1">2-Step verification</h6>
+        <button class=" bg-translucent-darker uk-disabled btn btn-lg text-white ls-1 mb-1">
+            REG. ID: {{registration.registrationid}}</button>
+        <button  class="btn btn-secondary full-content-modal my-4"
+            contenturl="{% url 'attendee_qrcode' eventid=event.eventid %}"><i class="icon qrcode large"></i> MY
+            QRCODE</button>
+
+        {% elif registered %}
+
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Verified <i class="icon warning"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Authorized <i class="icon warning"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="35">
+            <div class="bar"></div>
+        </div>
+        <h6 class=" text-uppercase ls-1 mb-1">Attendance verification</h6>
+        <button  class="btn btn-secondary bg-gradient-green qr-scan my-4"
+            contenturl="{% url 'event_qrcode_attendance' eventid=event.eventid %}" eventid="{{event.eventid}}"><i
+                class="icon qrcode large"></i> SCAN QRCODE</button>
+        {% endif %}
+
+        {% elif event.verification_steps == '1' %}
+        {% if registration.verified %}
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Verified <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Authorized <i class="icon warning"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="100">
+            <div class="bar"></div>
+        </div>
+
+        <h6 class=" text-uppercase ls-1 mb-1">2-Step verification</h6>
+        <button class=" bg-translucent-darker uk-disabled btn btn-lg text-white ls-1 mb-1">
+            REG. ID: {{registration.registrationid}}</button>
+        <button  class="btn btn-secondary full-content-modal my-4"
+            contenturl="{% url 'attendee_qrcode' eventid=event.eventid %}"><i class="icon qrcode large"></i> MY
+            QRCODE</button>
+
+        {% elif registered %}
+
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Verified <i class="icon warning"></i> </span>
+            </div>
+            
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="50">
+            <div class="bar"></div>
+        </div>
+        <h6 class=" text-uppercase ls-1 mb-1">Attendance verification</h6>
+        <button  class="btn btn-secondary bg-gradient-green qr-scan my-4"
+            contenturl="{% url 'event_qrcode_attendance' eventid=event.eventid %}" eventid="{{event.eventid}}"><i
+                class="icon qrcode large"></i> SCAN QRCODE</button>
+        {% endif %}
+        {% endif %}
+        {% if register %}
+        <button  class="btn btn-success bg-gradient-success my-4 action-btn"
+            contenturl="{% url 'event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}">
+            <i class="ni ni-user-run"></i>
+            Register</button>
+        <button  class="btn btn-danger my-4 uk-button-large"><i class="icon heart"></i> Save</button>
+
+        {% if event.verification_steps == '2' %}
+
+
+        {% endif %}
+
+        {% elif verify %}
+
+
+
+        {% endif %}
+    </div>
+</div>
+
+
+<div class="col col-cmd-7 col-csm-14 col-css-14 col-csx-14 col-csxx-14">
+    
+    <h6 class=" text-uppercase ls-1 mb-1">Event url</h6>
+
+    <button class=" bg-secondary btn btn-sm uk-padding-small ls-1 mb-1">
+        https://{{request.get_host}}{% url 'event_details' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}</button>
+    <button  class="btn btn-dark my-4 uk-padding-small btn-sm"> <i class="icon copy text-white"></i> copy
+        url</button>
+
+</div>
+<div class="col col-cmd-7 col-csm-14 col-css-14 col-csx-14 col-csxx-14">
+        <h6 class=" text-uppercase ls-1 mb-1">Share Event</h6>
+     <h5 class="h3 text-white mb-0">Create Event</h5> 
+        <a type="button" class="uk-icon-button uk-text-center my-4"><i class="icon facebook f large uk-margin-remove"
+                style="color: blue;"></i>
+        </a>
+        <a type="button" class="uk-icon-button my-4 uk-text-center"><i class="icon whatsapp large uk-margin-remove"
+                style="color: darkgreen;"></i>
+        </a>
+        <a type="button" class="uk-icon-button my-4"><i class="icon instagram large uk-margin-remove"
+                style="color: purple;"></i>
+        </a>
+        <a type="button" class="uk-icon-button my-4"><i class="icon twitter large uk-margin-remove"
+                style="color: steelblue;"></i>
+        </a>
+</div>
+
+
+
+<div id="qr-modal" class="uk-modal-full" uk-modal>
+    <div class="uk-modal-dialog" style="height: 100%;background-color: rgba(0, 0, 0, 0.8)">
+        <button
+            class="uk-modal-close-full btn btn-danger uk-position-top-right uk-margin-small-top uk-padding-remove uk-text-bold qr-close"
+            type="button" style="border-radius: 50%;height: 50px;width: 50px;">Close</button>
+        <div class="modal-body qr-body" id="qr-modal-inner">
+
+            <div class="pageWrapper">
+
+                <div class="boxWrapper uk-text-center" style="border: none;">
+                    <div id="example" class="" style="max-width:100%; height:auto;width:100%;display: inline-block;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div id='qr-data' class="uk-text-lead">
+
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<script>
+    {
+        (function ($) { //Most read async
+            $('.full-content-modal').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        $('#loader-cover').show()
+                    },
+                    complete: function () {
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.content) {
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#full-content-modal')).show();
+                            $('#full-content-modal-body').empty()
+                            $('#full-content-modal-body').append(response.content)
+                        }
+
+                        if (response.message) {
+                            window.location = "#top"
+
+                            $('#notification-modal-inner').empty()
+                            $('#notification-modal-inner').append(response.message)
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#notification-modal')).show();
+                            $('#loader-cover').hide()
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+
+
+
+    {
+        (function ($) { //Most read async
+            $('.action-btn').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        $('#loader-cover').show()
+                    },
+                    complete: function () {
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.registered) {
+                            if (response.content) {
+                                $('#event-manager-s2').empty();
+                                $('#event-manager-s2').append(response.content);
+                            }
+                            if (response.message) {
+
+
+                                $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                                UIkit.modal($('#content-modal')).show();
+                                $('#content-modal-body').empty()
+                                $('#content-modal-body').append(response.message)
+
+                            }
+                        }
+                        else if (response.buyticket) {
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#content-modal')).show();
+                            $('#content-modal-body').empty()
+                            $('#content-modal-body').append(response.content)
+
+                        }
+
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+    var attendeeVerificationUrl = ''
+    var eventId = ''
+    {
+        (function ($) { //Most read async
+            $('.qr-scan').on('click', function (event) {
+                var eventButton = $(this)
+                attendeeVerificationUrl = eventButton.attr('contenturl')
+                eventId = eventButton.attr('eventid')
+                UIkit.modal($('#qr-modal')).show();
+                Webcam.set({
+                    width: 350,
+                    height: 350,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100
+                });
+                Webcam.attach('#example');
+
+
+                // $('#button').click(function () {
+                // 	take_snapshot();66666
+                // });
+                Webcam.on('load', function () {
+                    qrCodeInterval = setInterval(take_snapshot, 100)
+                    qrcode.callback = attendeeQrVerification;
+                });
+
+            })
+
+
+        }(jQuery))
+    };
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+            });
+        }(jQuery))
+    };
+
+    $('.ui.progress').progress()
+
+</script>

@@ -1,0 +1,183 @@
+<div class=" p-2 rounded-md bg-default">
+    <div class="card-header text-center  bg-transparent row m-0">
+        <p class="col h1 text-lighter text-left p-1" style="min-width:200px ;"> Report for {{program.programme}}</p>
+        <p class="pt-1 pb-1 pl-3 pr-3 h1 text-cyan rounded-md col" style="max-width: max-content  !important;">
+            {{program.start_date}}</p>
+    </div>
+
+    <div class="card elevation-0 bg-transparent p-2">
+
+
+
+        <div class="card-body recent m-0 mb-3  bg-white rounded-md">
+            <div class="h3 text-darker text-left text-lighter p-0 border-bottom">
+                <p class=" text-darker p-0 rounded-md h3"> OVERVIEW </p>
+            </div>
+            {% for report in record.reports.all %}
+            {% if not report.is_incident %}
+            <a href="" class="col-cmd-3-e col-csm-5-e col-css-7 col-csx-7 col-csxx-7 text-left p-1 position-relative">
+
+                <div class="card rounded-md overflow-hidden shadow-none bg-darker m-0">
+                    <i class="fa fa-check-circle uk-position-top-right mt-2 mr-2 text-yellow"
+                        uk-tooltip="From {{report.department.name}}"></i>
+
+                    <div class="card-header h2 text-darker m-0 p-2 bg-transparent">
+                        <p class="h2 text-lighter">{{report.category.name}}</p>
+                        <p class="h3 text-success">{{report.source.name}}</p>
+                    </div>
+                    <div class="card-body text-right">
+                        <p class="h1 text-white"> {% if report.category.name == 'Offering' %}
+                            {{report.formatted_number}}
+                            {% else %}
+                            {{report.number}} {% endif %}
+                        </p>
+
+
+                    </div>
+                </div>
+
+            </a>
+            <div class="uk-dropdown" uk-dropdown="pos:right">
+                <div class=" text-left p-1 position-relative">
+                    <div class="rounded-0 overflow-hidden shadow-lg bg-white" style="transform: scale(2);">
+                        <i class="fa fa-check-circle uk-position-top-right mt-2 mr-2 text-green"
+                            uk-tooltip="From {{report.department.name}}"></i>
+
+                        <div class="card-header h2 text-darker m-0 p-2 bg-transparent">
+                            <p class="h2 text-dark">{{report.category.name}}</p>
+                            <p class="h6 text-gray">{{report.source.name}}</p>
+                        </div>
+                        <div class="card-body text-right">
+                            <p class="h1 text-darker"> {% if report.category.name == 'Offering' %}
+                                {{report.formatted_number}}
+                                {% else %}
+                                {{report.number}} {% endif %}
+                            </p>
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="card-body p-0">
+            <div class="row m-0">
+                <div class="m-0  col p-1">
+                    <div class="card">
+                        <div class="card-body rounded-md">
+                            <div class="h3 text-darker text-left text-lighter p-0 border-bottom">
+                                <p class=" text-gray p-0 rounded-md h3">PHYSICAL ATTTENDANCE </p>
+                                <p class=" text-dark p-0 rounded-md h3"> TOTAL {{physicalcategoriestotal}}</p>
+                            </div>
+                            {% for report in physicalcategories %}
+
+                            <div class="progress-wrapper">
+                                <div class="progress-info">
+                                    <div class="progress-label">
+                                        <span
+                                            class="{% if report.source.name == 'Youtube' %} text-danger {% elif report.source.name == 'Facebook' %} text-primary {% elif report.source.name == 'Instagram Live' %} text-purple {% endif %} ">
+                                            {{report.source.name}}</span>
+                                            <span class="text-darker h2">{{report.category.name}}</span>
+
+                                        <span class="text-darker h2">{{report.number}}</span>
+                                    </div>
+                                    <div class="progress-percentage">
+                                        <span>{{report.physical_percentage}}%</span>
+                                    </div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {% if report.source.name == 'Youtube' %} bg-danger {% elif report.source.name == 'Facebook' %} bg-primary {% elif report.source.name == 'Instagram Live' %} bg-purple {% endif %} "
+                                        role="progressbar" aria-valuenow="{{report.physical_percentage}}" aria-valuemin="0"
+                                        aria-valuemax="100" style="width: {{report.physical_percentage}}%;"></div>
+                                </div>
+                            </div>
+
+
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="m-0  col p-1">
+                    <div class="card">
+                        <div class="card-body rounded-md">
+                            <div class="h3 text-darker text-left text-lighter p-0 border-bottom">
+                                <p class=" text-gray p-0 rounded-md h3"> SOCIAL MEDIA ATTTENDANCE </p>
+                                <p class=" text-dark p-0 rounded-md h3"> TOTAL {{socialmediatotal}} </p>
+                            </div>
+                            {% for report in socialmediaplatforms %}
+
+                            <div class="progress-wrapper">
+                                <div class="progress-info">
+                                    <div class="progress-label">
+                                        <span
+                                            class="{% if report.source.name == 'Youtube' %} text-danger {% elif report.source.name == 'Facebook' %} text-primary {% elif report.source.name == 'Instagram Live' %} text-purple {% endif %} ">
+                                            {{report.source.name}}</span>
+                                        <span class="text-darker h2">{{report.number}}</span>
+                                    </div>
+                                    <div class="progress-percentage">
+                                        <span>{{report.social_percentage}}%</span>
+                                    </div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar {% if report.source.name == 'Youtube' %} bg-danger {% elif report.source.name == 'Facebook' %} bg-primary {% elif report.source.name == 'Instagram Live' %} bg-purple {% endif %} "
+                                        role="progressbar" aria-valuenow="{{report.social_percentage}}" aria-valuemin="0"
+                                        aria-valuemax="100" style="width: {{report.social_percentage}}%;"></div>
+                                </div>
+                            </div>
+
+
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body recent mt-3  bg-white rounded-md">
+            <div class="h3 text-darker text-left text-lighter p-0 border-bottom">
+                <p class="text-darker p-0 rounded-md h3"> INCIDENCE RECORDS </p>
+            </div>
+            {% for report in record.reports.all %}
+            {% if report.is_incident %}
+            <div class="col-cmd-4-e col-csm-5-e col-css-7 col-csx-7 col-csxx-13 text-left p-1">
+                <div class="card border bg-secondary shadow-none btn p-0 text-left content-btn"
+                    contenturl="{% url 'dashboard_incidence' pk=report.pk %}">
+
+
+
+                    <div class="card-header h2 text-darker m-0 p-2 bg-transparent">
+                        <p class="h3 text-darker">{{report.department}}</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="uk-text-normal text-darker"> {{report.title}}
+                        </p>
+
+
+                    </div>
+                </div>
+
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<script>
+    {
+        (function ($) {
+            $('.content-btn').on('click', function (event) {
+                event.preventDefault()
+                // UIkit.offcanvas($('#offcanvas-content')).show();
+                var link = $(this);
+                requestContentModal(link.attr('contenturl'), 'get')
+            })
+        }(jQuery))
+    }
+</script>

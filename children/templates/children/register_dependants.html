@@ -1,0 +1,107 @@
+<div class="text-center">
+  {% if trackingid %}
+<div class="card shadow-none uk-display-inline-block " style="max-width: max-content;">
+    <div class="card-body h3  uk-text-bold">
+        TRACKING ID <span class=" bg-info p-1 rounded-lg text-white h1">{{trackingid}}</span> 
+    </div>
+</div>
+{% endif %}  
+</div>
+
+<div class="card shadow-sm m-1 border-darker rounded-0 text-white">
+    <div class="card-body p-1">
+        <div class="row m-0">
+            <div class="col text-left uk-text-bold  ">
+                <p class="h2 p-2" style="width: max-content;">{{nonregistered | length}} Dependant(s) can be registered</p>
+            </div>
+            {% if registered|length == dependants|length %}
+            {% elif registered|length < dependants|length and nonregistered|length > 1 %}
+            <div class="col text-right p-0">
+                <button class="btn btn-danger rounded-sm m-0"
+                onclick="requestContentModal('{% url 'children_register_all_dependants' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid phonenumber=member.bio_data.mobile1 %}')">Register All</button>
+        
+            </div>
+            <!-- <div class="col text-right p-0">
+                <button class="btn btn-danger rounded-sm m-0"
+                onclick="requestContentModal('{% url 'children_register_all_dependants' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid phonenumber=member.bio_data.mobile1 %}')">Register All</button>
+        
+            </div> -->
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="card shadow-sm m-1 rounded-0 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <!-- Projects table -->
+            <table class="table align-items-left table-flush">
+
+                <thead class="bg-yellow text-darker  overflow-hidden">
+                    <tr>
+                        <th class="text-darker text-left p-2">Full Name</th>
+                        <th class="text-darker text-left p-2 text-center">Action</th>
+                        <th class="text-darker text-left p-2 text-center">Status</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dependant in dependants %}
+                    <tr id="" class="p-0 text-darker text-left">
+                        <td class="p-1 pl-2" uk-tooltip="{{dependant.full_name}}">
+                            {{dependant.full_name | truncatechars:10}}
+                        </td>
+                       
+                        {% if dependant in registered %}
+                        
+                        {% for registration in registrations %}
+                       
+                        {% if registration.attendee == dependant %}
+                        {% if registration.status == 'pickedup' %}
+                        <td class="p-1">
+                            None
+                        </td>
+                        {% elif registration.status == 'accredited' %}
+                        <td class="p-1">
+                           None
+                        </td>
+                        {% else %}
+                        <td class="p-1 text-center">
+                            <button class="btn btn-warning btn-sm rounded-sm m-0"
+                                onclick="requestContentModal('{% url 'children_unregister_dependant' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid memberid=dependant.memberid %}')">Unregister</button>
+                        </td>
+                        {% endif %}
+                        
+                        <td class="p-1 text-capitalize text-center">
+                            {% if registration.status == '' %}
+                            Registered
+                            {% else %}
+                            {{registration.status}}
+                            {% endif %}
+                        </td>
+                        {% endif %}
+                        {% endfor %}
+                       
+                        {% else %}
+                        <td class="p-1 text-center">
+                            <button class="btn btn-default btn-sm rounded-sm m-0"
+                                onclick="requestContentModal('{% url 'children_register_dependant' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid memberid=dependant.memberid %}')">Register</button>
+                        </td>
+                        <td class="p-1 text-center">
+                            None
+
+                        </td>
+                    
+                        <td class="p-1 text-center">
+                           
+
+                        </td>
+                        {% endif %}
+                        
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

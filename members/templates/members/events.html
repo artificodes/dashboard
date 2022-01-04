@@ -1,0 +1,276 @@
+<div class="container-fluid">
+        <h5 class="card-title text-uppercase mb-0 uk-text-lead h4 border-bottom">Upcoming Events </h5>
+<div class="" id="upcomingeventscontainer">
+{% include 'members/upcoming_events.html' %}
+</div>
+</div>
+
+{% if request.user.is_superuser %}
+ 
+<div class="p-2">
+    <div class="card card-stats position-relative shadow-none border">
+        <div class="card-header">
+           
+                <h5 class="card-title text-uppercase mb-0 uk-text-lead">CREATED Events </h5>
+                    <!-- <span class="h1 font-weight-bold mb-0 text-dark">{{events | length}}</span></h5> -->
+                
+          
+        </div>
+        <div class="card-body p-1 pt-5">
+
+          
+
+                <a class=" uk-icon-button p-4 uk-position-top-right mt-2 mr-2"
+                    onclick="requestContentModal('{% url 'member_create_event' %}', 'get')" uk-tooltip="Create Event">
+                    <i class="fa fa-plus text-yellow"></i></a>
+
+
+
+
+            <div class="col-csxx-x-14">
+
+                <div style="display: flex;flex-wrap: wrap;justify-content: center;">
+                    {% for event in events %}
+                    <a href="{% url 'member_view_event' eventid=event.eventid %}" class="main-content-redirect  col-csxx-x-14 col-csxx-xx-14 col-csxx-14 col-csx-14 text-center col-css-7 col-csm-7 col-cmd-5-e">
+                        <div class="card uk-link shadow-lg--hover overflow-hidden border bg-transparent shadow-none"
+                            style=" min-height: 150px;max-height:250px;text-decoration: none;">
+
+                            <div class="card-body uk-padding-remove overflow-hidden">
+
+                                <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+                                    {% if event.thumbnail %}
+                                    <img src="{{event.thumbnail.url}}" class="ui image"
+                                        style="width: 100%; min-height: 100%;max-height:100%;">
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                            <div class="card-footer h3 p-1">
+                                {{event.title}}
+                            </div>
+
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+
+
+<script>
+
+    // var verificationurl = ''
+    // var eventId = ''
+    // var eventInitials = '{{hostedevent.initials}}'
+    // {
+    //     (function ($) { //Most read async
+    //         $('.qr-scan').on('click', function (event) {
+    //             var eventButton = $(this)
+    //             verificationurl = eventButton.attr('contenturl')
+    //             eventId = eventButton.attr('eventid')
+    //             UIkit.modal($('#qr-modal')).show();
+    //             Webcam.set({
+    //                 width: 350,
+    //                 height: 250,
+    //                 image_format: 'jpeg',
+    //                 jpeg_quality: 100
+    //             });
+    //             Webcam.attach('#example');
+
+
+    //             // $('#button').click(function () {
+    //             // 	take_snapshot();66666
+    //             // });
+    //             Webcam.on('load', function () {
+    //                 qrCodeInterval = setInterval(take_snapshot, 100)
+    //                 qrcode.callback = hostQrVerification;
+    //             });
+
+    //         })
+
+
+    //     }(jQuery))
+    // };
+
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+
+
+
+
+            });
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) {
+            $('.main-content-redirect').on('click', function () {
+
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        showLoadingBar()
+                    },
+                    complete: function () {
+                        hideLoadingBar()
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.content) {
+                            window.location - '#top'
+                            $('#tab-header').empty()
+                            $('#tab-header').append(response.header);
+                            $('#inner-container').empty();
+                            $('#inner-container').append(response.content);
+                            $('#loader-cover').hide()
+                        }
+
+                        if (response.message) {
+                            $('#notification-modal-inner').empty()
+                            $('#notification-modal-inner').append(response.message)
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#notification-modal')).show();
+                        }
+
+
+                    },
+                });
+            });
+        }(jQuery))
+    };
+
+
+
+
+
+    {% for hostedevent in upcomingevents %}
+    // try {
+    //     clearInterval(timeInterval{{hostedevent.eventid}})
+
+    // } catch (ReferenceError) {
+    //     alert('')
+    // }
+
+    $(function () {
+        var suspension_days = (Number({{ hostedevent.start_time_timestamp }}) - Number({{ server_timestamp }})) /(86400)
+    var suspension_seconds = Math.ceil(suspension_days * 24 * 60 * 60)
+    var suspension_minutes = Math.ceil(suspension_seconds / 60)
+    var total_remaining_days = suspension_minutes / 60 / 24
+    var remain_days = total_remaining_days | 0
+    var total_remaining_hours = (suspension_minutes / 60) % 24
+    var remain_hours = (total_remaining_hours | 0)
+    var total_remaining_minutes = (total_remaining_hours - remain_hours) * 60
+    var remain_minutes = (total_remaining_minutes) | 0
+    var remain_seconds = Math.round((total_remaining_minutes - remain_minutes) * 60)
+    // if (remain_minutes < 1) {
+    //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_seconds + ' seconds.')
+
+    // }
+    // else {
+    //     $('#briefly-suspended-message{{hostedevent.eventid}}').html('Your account is briefly suspended. Kindly wait for ' + remain_days + ' days ' + remain_hours + ' hours ' + remain_minutes + ' minutes and ' + remain_seconds + ' seconds.')
+
+    // }
+
+
+    function updateTime() {
+
+        if (remain_seconds >= 1) {
+            remain_seconds--
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+
+        }
+        else {
+            remain_seconds = 60
+            remain_minutes--
+            $('#days{{hostedevent.eventid}}').html(remain_days)
+            $('#hours{{hostedevent.eventid}}').html(remain_hours)
+            $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+            $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+            if (remain_minutes >= 1) { }
+            else {
+                remain_hours--
+                remain_minutes = 60
+
+                $('#days{{hostedevent.eventid}}').html(remain_days)
+                $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                if (remain_hours >= 1) {
+                    $('#days{{hostedevent.eventid}}').html(remain_days)
+                    $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                    $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                    $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                }
+                else {
+                    if (remain_days < 1) {
+                        $('#days{{hostedevent.eventid}}').html(remain_days)
+                        $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                        $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                        $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                    }
+                    else {
+                        remain_days--
+                        remain_hours = 23
+                    }
+
+                    $('#days{{hostedevent.eventid}}').html(remain_days)
+                    $('#hours{{hostedevent.eventid}}').html(remain_hours)
+                    $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+                    $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+                }
+            }
+        }
+        // else{
+        //     $('#days{{hostedevent.eventid}}').html(remain_days)
+        // $('#hours{{hostedevent.eventid}}').html(remain_hours)
+        // $('#minutes{{hostedevent.eventid}}').html(remain_minutes)
+        // $('#seconds{{hostedevent.eventid}}').html(remain_seconds)
+        // }
+
+    }
+    var timeInterval{{ hostedevent.eventid }} =setInterval(updateTime, 1000)
+
+// $('#{{hostedevent.eventid}}').countdowntimer({
+//     seconds: 300 - suspension_seconds,
+//     size: "lg",
+//     displayFormat: 'DHMS',
+
+// });
+
+});
+
+    {% endfor %}
+</script>

@@ -1,0 +1,300 @@
+{% extends "base/chbase.html" %}
+{% load static %}
+{% block content %}
+<!-- <div class="uk-text-center uk-padding-remove uk-display-inline-block m-2" style="width: 200px;">
+    <img src="{{settings.logo_full.url}}" alt="" style="width: 100%;">
+</div> -->
+<div class="position-relative uk-display-block uk-height-viewport bg-white text-center p-2" style="z-index: 10;">
+    {% if request.user.is_staff %}
+    <div class="row m-0">
+        <div class="col-md-6 col-sm-12 p-2">
+            <div class="container-fluid col-csxx-x-14 col-csxx-xx-14 p-0 float-none pt-2 text-center 
+    uk-display-inline-block bg-gradient-white shadow-lg mt-0 rounded-lg">
+                <div class="pageWrapper">
+
+                    <div class="boxWrapper uk-text-center border border-darker uk-display-inline-block position-relative overflow-hidden"
+                        style="min-width: 250px;min-height: 180px;">
+                        <div id="example" class="overflow-hidden uk-position-center" style="width:90% ;height: 90%;">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id='qr-data' class="uk-text-lead">
+
+                </div>
+                <div class="card bg-transparent uk-display-inline-block mb-1 shadow-none" style="width:100%">
+                    <div class="card-body p-1">
+                        <form id="pickup-search" method="POST"
+                            action="{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}">
+                            {% csrf_token %}
+
+                            <div class="m-1">
+                                <div class="uk-inline" style="width: 100%;">
+                                    <span class="uk-position-center-left ml-2"> <i class="fa fa-user-shield"></i></span>
+                                    <input class="uk-input form-control pl-5 p-2 rounded-lg"
+                                        style="height: max-content;" name="trackingid" id="trackingid" type="text"
+                                        placeholder="Tracking ID">
+                                </div>
+                            </div>
+
+                            <div class="m-1">
+                                <div class="uk-inline" style="width: 100%;">
+                                    <span class="uk-position-center-left ml-2"> <i class="fa fa-user-check"></i></span>
+                                    <input class="uk-input form-control pl-5 p-2 rounded-lg"
+                                        style="height: max-content;" id="phonenumber" type="text"
+                                        placeholder="Phone number/Email" name="phone_number">
+                                </div>
+                            </div>
+                            <div class="m-1">
+                                <div class="uk-inline" style="width: 100%;">
+                                    <span class="uk-position-center-left ml-2"> <i class="fa fa-lock"></i></span>
+                                    <input class="uk-input form-control pl-5 p-2 rounded-lg"
+                                        style="height: max-content;" id="private_number" type="password"
+                                        placeholder="Secret Pin" name="private_number">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div id="verification-result" class="uk-text-center mb-3"></div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12 p-2">
+
+            {% include 'members/member_search.html' %}
+        </div>
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body">
+            You are not permitted to be here!!!
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<audio src="{{settings.qrc_sound.url}}" id="qrc-sound"></audio>
+
+<script>
+
+
+function warnIdle(){
+ 
+          messageModal('<p class="uk-text-lead uk-text-bold"> You have been idle for 3 minutes.</p>' +
+           '<br> Kindly ensure to use this interface within the next  <b> 2 minutes </b> from now else you will be logged out')
+
+        
+}
+    function callIdle() {
+        if (loggedOut == true) {
+
+        }
+        else {
+            logout()
+
+        }
+    }
+
+
+    // $(document).idle({
+    //     onIdle: function () {
+    //         warnIdle()
+    //         idleCounter = setTimeout(logout,5000)
+    //     },
+    //     onActive: function () {
+    //         clearTimeout(idleCounter)
+    //     }, 
+    //     events: 'mousemove keydown mousedown touchstart',
+    //     idle: 5000,
+    // })
+
+
+    var verificationurl = ''
+    var eventId = ''
+    var eventInitials = '{{hostedevent.initials}}'
+    var verificationUrl = '{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}'
+    // UIkit.modal($('#qr-modal')).show();
+    Webcam.set({
+        width: 350,
+        height: 250,
+        image_format: 'jpeg',
+        jpeg_quality: 100
+    });
+    Webcam.attach('#example');
+
+
+    // $('#button').click(function () {
+    // 	take_snapshot();66666
+    // });
+    Webcam.on('load', function () {
+        qrCodeInterval = setInterval(take_snapshot, 100)
+        qrcode.callback = hostQrVerification;
+    });
+
+
+
+
+
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+
+
+
+
+            });
+        }(jQuery))
+    };
+
+
+    {
+        (function ($) { //Most read async
+            $('#member-search').on('input', function () {
+                var identifier = $('#identifier').val();
+                if (identifier == '') {
+                    $('#member-search-result').empty()
+                }
+
+                if (identifier != '' && identifier.length >= 10) {
+                    var post_url = $(this).attr("action"); //get form action url
+                    var request_method = $(this).attr("method"); //get form GET/POST method
+                    var form_data = new FormData(this); //Creates new FormData object
+                    $.ajax({
+                        beforeSend: function () {
+
+                            showLoadingBar()
+
+
+                        },
+                        complete: function () {
+                            hideLoadingBar()
+                        },
+                        url: post_url,
+                        type: request_method,
+                        data: {
+                            'identifier': identifier,
+                            'csrfmiddlewaretoken': window.CSRF_TOKEN,
+                        },
+
+                        success: function (response) {
+                            if (response.modal_message) {
+                                messageModal(response.modal_message, response.heading)
+
+                            }
+                            if (response.notification) {
+                                notificationModal(response.notification)
+
+                            }
+
+                            if (response.modal_content) {
+                                contentModal(response.modal_content, response.heading)
+
+                            }
+
+                            $('#member-search-result').empty()
+                            $('#member-search-result').append(response.message);
+                            $('.disappear').on('click', function (event) {
+                                $('#member-search-result').empty()
+
+                            })
+
+
+
+
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            alert('there was an error')
+                        }
+                    });
+                }
+            });
+        }(jQuery))
+    };
+
+    {
+        (function ($) { //Most read async
+            $('#pickup-search').on('input', function () {
+                var trackingid = $('#trackingid').val();
+                var phonenumber = $('#phonenumber').val();
+                var private_number = $('#private_number').val();
+                // alert(trackingid)
+                if (trackingid == '') {
+                    $('#verification-result').empty()
+                }
+
+                if (trackingid != '' && trackingid.length > 5 || (phonenumber != '')) {
+                    var post_url = $(this).attr("action"); //get form action url
+                    var request_method = $(this).attr("method"); //get form GET/POST method
+                    var form_data = new FormData(this); //Creates new FormData object
+                    $.ajax({
+                        beforeSend: function () {
+
+                            showLoadingBar()
+
+
+                        },
+                        complete: function () {
+                            hideLoadingBar()
+                        },
+                        url: post_url,
+                        type: request_method,
+                        data: {
+                            'trackingid': trackingid, 'phonenumber': phonenumber,
+                            'private_number': private_number,
+                            'csrfmiddlewaretoken': window.CSRF_TOKEN,
+                        },
+
+                        success: function (response) {
+                            if (response.modal_message) {
+                                messageModal(response.modal_message, response.heading)
+
+                            }
+                            if (response.notification) {
+                                notificationModal(response.notification)
+
+                            }
+
+                            if (response.modal_content) {
+                                contentModal(response.modal_content, response.heading)
+
+                            }
+
+                            $('#verification-result').empty()
+                            $('#verification-result').append(response.message);
+                            $('.disappear').on('click', function (event) {
+                                $('#verification-result').empty()
+
+                            })
+
+
+
+
+
+
+                        },
+                        error: function (xhr, status, error) {
+                            alert('there was an error')
+                        }
+                    });
+                }
+            });
+        }(jQuery))
+    };
+
+</script>
+
+
+{% endblock content %}

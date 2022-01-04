@@ -1,0 +1,89 @@
+<div class="fixed-bottom">
+  <div class="nav-wrapper container" style="height: 70px;">
+    <ul class="nav nav-pills nav-fill nav-pills-circle uk-position-center" id="tabs-icons-text" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link mb-sm-3 mb-md-0 active uk-padding-small" id="tabs-icons-text-1-tab" data-toggle="tab"
+          href="#tabs-icons-text-1" role="tab" aria-controls="tabs-icons-text-1" aria-selected="true"><i
+            class="material-icons">home</i></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link mb-sm-3 mb-md-0 uk-padding-small" id="tabs-icons-text-2-tab" data-toggle="tab" href="#tabs-icons-text-2"
+          role="tab" aria-controls="tabs-icons-text-2" aria-selected="false"><i
+            class="ni ni-app ni-2x mr-2 uk-margin-small-left"></i></a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="tabs-icons-text-1" role="tabpanel" aria-labelledby="tabs-icons-text-1-tab">
+
+    {% include 'members/search.html' %}
+  </div>
+  <div class="tab-pane fade" id="tabs-icons-text-2" role="tabpanel" aria-labelledby="tabs-icons-text-2-tab">
+    {% include 'members/app.html' %}
+
+  </div>
+  <div class="tab-pane fade" id="tabs-icons-text-3" role="tabpanel" aria-labelledby="tabs-icons-text-3-tab">
+   
+  </div>
+</div>
+
+
+
+
+<script>
+
+  {
+    (function ($) { //Most read async
+      $('.main-content-btn').on('click', function (event) {
+        event.preventDefault();
+        var link = $(this);
+        $.ajax({
+          beforeSend: function () {
+
+            $('#loader-cover').show()
+          },
+          complete: function () {
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.content) {
+              window.location - '#top'
+              $('#tab-header').empty()
+              $('#tab-header').append(response.header);
+              $('#inner-container').empty();
+              $('#inner-container').append(response.content);
+              $('#loader-cover').hide()
+            }
+
+            if (response.message) {
+              $('#notification-modal-inner').empty()
+              $('#notification-modal-inner').append(response.message)
+              $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+              UIkit.modal($('#notification-modal')).show();
+            }
+
+
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+
+</script>

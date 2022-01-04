@@ -1,0 +1,258 @@
+{% if upcomingevents %}
+
+<div style="display: flex;flex-wrap: wrap;justify-content: center;" class="pb-0">
+    {% for hostedevent in upcomingevents %}
+    {% if hostedevent.open_to == 'children' %}
+    <div
+    class="col-csxx-x-14 col-csxx-xx-14 col-csxx-14 col-csx-14 text-center col-cmd-4-e col-css-7 col-csm-7 p-1 "
+    >
+    <div class="card uk-link shadow-lg--hover overflow-hidden text-center  bg-transparent"
+        style=" min-height: 150px;max-height:250px;text-decoration: none;">
+        <!-- <div class=" bg-translucent-success mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small uk-text-bold uk-position-top text-white"
+            style="z-index: 5; height: 40px;width: 40px;font-family: cursive;line-height: 11px;">
+            {{hostedevent.start_date_time.day}} <br>
+            {{hostedevent.start_date_time|date:'M'}}
+        </div>
+        <div class=" bg-translucent-danger mt-5 uk-margin-small-left rounded-sm uk-padding-small uk-text-small uk-text-bold uk-position-top text-white"
+            style="z-index: 5; height: 40px;width: 40px;font-family: cursive;line-height: 11px;">
+            {{hostedevent.end_date_time.day}} <br>
+            {{hostedevent.end_date_time|date:'M'}}
+        </div> -->
+        <div class="card-body uk-padding-remove overflow-hidden">
+            <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+                {% if hostedevent.thumbnail %}
+                <img src="{{hostedevent.thumbnail.url}}" class="ui image"
+                    onclick="requestContentModal('{% url 'children_register_dependant_choice' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+                    style="width: 100%; min-height: 100%;max-height:100%;">
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="card-footer h3 p-1">
+            {{hostedevent.title}}
+            <p class="uk-text-lead uk-text-bold">{{hostedevent.start_date_time}}</p>
+            <!-- <div class="row m-0 text-center">
+                <div class="col-6">
+                    <div class=" bg-translucent-success mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small 
+    uk-text-bold text-white" style="z-index: 5; font-family: cursive;line-height: 11px;">
+                        {{hostedevent.start_date_time.date}}
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class=" bg-translucent-danger  mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small 
+    uk-text-bold  text-white" style="z-index: 5;font-family: cursive;line-height: 11px;">
+                        {{hostedevent.end_date_time.date}}
+                    </div>
+                </div>
+            </div> -->
+
+
+        </div>
+        {% if request.user.is_staff %}
+        <div class="rounded-circle bg-green uk-position-top-right mt-1 mr-1" style="height: 40px;width: 40px;">
+            <a type="submit" class="bg-success my-4 main-content-redirect"
+                href="{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+                eventid="{{hostedevent.hostedeventid}}" eventinitials="{{hostedevent.initials}}">
+                <i class="fa fa-shield-alt uk-position-center fa-2x text-white"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+{% elif hostedevent.open_to == 'adults' %}
+<div
+class="col-csxx-x-14 col-csxx-xx-14 col-csxx-14 col-csx-14 text-center col-cmd-4-e col-css-7 col-csm-7 p-1 "
+>
+    <div class="card uk-link shadow-lg--hover overflow-hidden  text-center  bg-transparent"
+        style=" min-height: 150px;max-height:250px;text-decoration: none;">
+        {% if registrations|length > 0 %}
+        
+        {% for registration in registrations %}
+        {% if registration in hostedevent.registrations.all %}
+        {% if registration.status == 'accredited' %}
+        <button class="btn bg-translucent-success mt-1 uk-margin-small-left rounded-circle uk-padding-small 
+        uk-text-small uk-text-bold uk-position-top-right text-white"
+        onclick="requestContentModal('{% url 'member_event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+        style="z-index: 5; height: 50px;width: 50px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+        <i class="fa fa-user-check uk-position-center fa-2x"></i>
+    </button>
+    {% else %}
+    {% if hostedevent.verification_steps != 0 %}
+    {% if registration.authorized %}
+    <button class="btn bg-translucent-warning mt-1 uk-margin-small-left rounded-circle uk-padding-small 
+    uk-text-small uk-text-bold uk-position-top-right text-white"
+    onclick="requestContentModal('{% url 'member_event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+    style="z-index: 5; height: 50px;width: 50px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+    <i class="fa fa-check uk-position-center fa-2x"></i>
+</button>
+{% elif registration.verified %}
+<button class="btn bg-translucent-warning mt-1 uk-margin-small-left rounded-circle uk-padding-small 
+uk-text-small uk-text-bold uk-position-top-right text-white"
+onclick="requestContentModal('{% url 'member_event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+style="z-index: 5; height: 50px;width: 50px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+<i class="fa fa-user-shield uk-position-center fa-2x"></i>
+</button>
+{% else %}
+<button class="btn bg-translucent-darker mt-1 uk-margin-small-left rounded-circle uk-padding-small 
+uk-text-small uk-text-bold uk-position-top-right text-white qr-scan" 
+eventid="{{hostedevent.eventid}}" 
+contenturl="{% url 'member_event_qrcode_attendance' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+style="z-index: 5; height: 50px;width: 50px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+<i class="fa fa-camera uk-position-center fa-2x"></i>
+</button>
+{% endif %}
+{% endif %}
+{% endif %}
+        {% else %}
+        
+        <button class="btn bg-translucent-success mt-1 uk-margin-small-left rounded-circle uk-padding-small 
+uk-text-small uk-text-bold uk-position-top-right text-white"
+onclick="requestContentModal('{% url 'member_event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+            style="z-index: 5; height: 50px;width: 50px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+            <i class="fa fa-running uk-position-center fa-2x"></i>
+        </button>
+        {%  endif %}
+        
+
+        {% endfor %}
+        {% else %}
+        <button class="btn bg-translucent-darker mt-1 uk-margin-small-left rounded-circle uk-padding-small 
+uk-text-small uk-text-bold uk-position-top-right text-white qr-scan" 
+eventid="{{hostedevent.eventid}}" 
+contenturl="{% url 'member_event_qrcode_attendance' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+style="z-index: 5; height: 30px;width: 30px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+<i class="fa fa-camera uk-position-center"></i>
+</button>
+        <button class="btn bg-translucent-success mt-5 uk-margin-small-left rounded-circle uk-padding-small 
+uk-text-small uk-text-bold uk-position-top-right text-white"
+onclick="requestContentModal('{% url 'member_event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get','#upcomingeventscontainer')"
+            style="z-index: 5; height: 30px;width: 30px;font-family: cursive;line-height: 11px;border: 2px solid white;">
+            <i class="fa fa-running uk-position-center "></i>
+        </button>
+        {% endif %}
+            
+
+        <div class="card-body uk-padding-remove overflow-hidden">
+            <div class="visible content" style="width: 100%;overflow: visible;height: 100%;">
+                {% if hostedevent.thumbnail %}
+                <img src="{{hostedevent.thumbnail.url}}" class="ui image"
+                    style="width: 100%; min-height: 100%;max-height:100%;">
+                {% endif %}
+            </div>
+
+        </div>
+        <div class="card-footer h3 p-1">
+            {{hostedevent.title}}
+            <p class="uk-text-lead uk-text-bold">{{hostedevent.start_date_time}}</p>
+
+            <!-- <div class="row m-0 text-center">
+                <div class="col-6 p-1 m-0">
+                    <div class=" bg-translucent-success mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small 
+uk-text-bold text-white" style="z-index: 5; font-family: cursive;line-height: 11px;">
+                        {{hostedevent.start_date_time.date}}
+                    </div>
+                </div>
+                <div class="col-6 p-1 m-0">
+                    <div class=" bg-translucent-danger  mt-1 uk-margin-small-left rounded-sm uk-padding-small uk-text-small 
+uk-text-bold  text-white" style="z-index: 5;font-family: cursive;line-height: 11px;">
+                        {{hostedevent.end_date_time.date}}
+                    </div>
+                </div>
+            </div>
+ -->
+
+        </div>
+        {% if request.user.is_staff %}
+        <div class="rounded-circle bg-green uk-position-top-left mt-1 ml-1"
+            style="height: 40px;width: 40px;">
+            <a type="submit" class="bg-success my-4 main-content-redirect"
+                href="{% url 'children_pickup_verification' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+                eventid="{{hostedevent.hostedeventid}}" eventinitials="{{hostedevent.initials}}">
+                <i class="fa fa-shield-alt uk-position-center fa-2x text-white"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endif %}
+    {% endfor %}
+</div>
+{% else %}
+<p class="h3 text-danger uk-text-bold">No upcoming events</p>
+{% endif %} 
+
+<div id="qr-modal" class="uk-flex-top top-0 " uk-modal="bg-close:false">
+    <div class="uk-modal-dialog uk-modal-body p-0 uk-margin-auto-vertical uk-animation-slide-top-small  rounded-lg overflow-hidden shadow-none border" style="background-color: rgba(0, 0, 0, 0.8)">
+        <button
+            class="uk-modal-close-full btn bg-yellow uk-position-top-right uk-margin-small-top uk-padding-remove uk-text-bold qr-close"
+            type="button" style="border-radius: 50%;height: 40px;width: 40px;">
+            <i class="material-icons uk-position-center text-white">close</i></button>
+        <div class="modal-body qr-body p-0" id="qr-modal-inner">
+
+            <div class="pageWrapper">
+
+                <div class="boxWrapper uk-text-center" style="border: none;">
+                    <div id="l{{server_timestamp}}" class="" style=" height:inherit;display: inline-block;max-width: 100%;transform: scaleX(3.5) !important;transform: scaleY(1.7) !important;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div id='qr-data' class="uk-text-lead">
+come
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+     var attendeeVerificationUrl = ''
+    var eventId = ''
+    {
+        (function ($) { //Most read async
+            $('.qr-scan').on('click', function (event) {
+                var eventButton = $(this)
+                attendeeVerificationUrl = eventButton.attr('contenturl')
+                eventId = eventButton.attr('eventid')
+                UIkit.modal($('#qr-modal')).show();
+                Webcam.set({
+                    width: 350,
+                    height: 350,
+                    image_format: 'jpeg',
+                    jpeg_quality: 100
+                });
+                Webcam.attach('#l{{server_timestamp}}');
+
+
+                // $('#button').click(function () {
+                // 	take_snapshot();66666
+                // });
+                Webcam.on('load', function () {
+                    qrCodeInterval = setInterval(take_snapshot, 100)
+                    qrcode.callback = attendeeQrVerification;
+                });
+
+            })
+
+
+        }(jQuery))
+    };
+
+    {
+        (function ($) { //Most read async
+            $('.qr-close').on('click', function (event) {
+                try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+                    try {
+                    clearInterval(qrCodeInterval)
+                    Webcam.reset()
+                } catch (ReferenceError) {
+
+                }
+                }
+            });
+        }(jQuery))
+    };
+</script>

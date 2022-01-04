@@ -1,0 +1,111 @@
+{% autoescape off %}
+<div id="offcanvas-nav-secondary" class="uk-offcanvas" uk-offcanvas="flip:true;overlay: false;mode:push;">
+
+    <div
+        class="uk-offcanvas-bar uk-flex uk-flex-column uk-padding-medium uk-box-shadow-medium bg-white  uk-offcanvas-bar-animation uk-offcanvas-slide">
+        <div class="uk-text-center uk-padding-medium bg-primary text-white uk-text-bold"
+            style="width: 90%;height: 75px;">
+            INFORMATION DESK
+        </div>
+        <button
+            class="uk-offcanvas-close uk-button uk-button-default uk-position-top-right uk-margin-small-top uk-padding-small"
+            type="button"><i class="material-icons uk-margin-small-top uk-padding-small"
+                style="color:  #1f0231;font-size: 30px;">east</i></button>
+        <div class="uk-divider-small"></div>
+
+        {% for notification in notifications %}
+        {% if notification.content == 'article' %}
+
+        <div contenturl="{% url 'information_desk_content' cid=notification.contentid content=notification.content %}" class="desk-content-btn card uk-link uk-margin-small uk-box-shadow-hover-large" style="background-color: rgb(248, 248, 248) !important; width: 100%;border-radius: 0;">
+            <div class="card-body uk-padding-remove">
+                <span class="badge badge-info uk-position-top-right"  style="border-radius: 0 !important;margin-top: -5px;">{{notification.content}}</span>
+                <p class="bg-primary uk-margin-remove uk-padding-medium" style="width: 100%;color: white;">
+                    {{notification.title}}</p>
+                <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+                <p class="card-text uk-padding-small" style="color: black;">{{notification.short_description|truncatechars:100}}</p>
+                <!-- <a href="javascript:;" class="card-link btn btn-primary" style="border-radius: 0;">READ</a> -->
+            </div>
+            <div class="card-footer text-muted uk-padding-small">
+               {{notification.date_time_added}}
+              </div>
+        </div>
+        {% elif notification.content == 'announcement' %}
+
+        <div contenturl="{% url 'information_desk_content' cid=notification.contentid content=notification.content %}"  class="desk-content-btn card uk-link uk-margin-small uk-box-shadow-hover-large" style="background-color: rgb(248, 248, 248) !important; width: 100%;border-radius: 0;">
+            <div class="card-body uk-padding-remove">
+                <span class="badge badge-danger uk-position-top-right"  style="border-radius: 0 !important;margin-top: -5px;">{{notification.content}}</span>
+                <p class="bg-primary uk-margin-remove uk-padding-medium" style="width: 100%;color: white;">
+                    {{notification.title}}</p>
+                <!-- <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6> -->
+                <p class="card-text uk-padding-small" style="color: black;">{{notification.short_description|truncatechars:100}}</p>
+                <!-- <a href="javascript:;" class="card-link btn btn-primary" style="border-radius: 0;">READ</a> -->
+            </div>
+            <div class="card-footer text-muted uk-padding-small">
+               {{notification.date_time_added}}
+              </div>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endautoescape %}
+
+<script>
+    
+    {
+      (function ($) { //Most read async
+        $('.desk-content-btn').on('click', function (event) {
+          event.preventDefault(); 
+          var link = $(this);
+          $.ajax({
+            beforeSend: function () {
+
+              $('#loader-cover').show()
+            },
+            complete: function () {
+            },
+            type: 'get',
+            url: link.attr('contenturl'),
+            data: {
+              'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+            },
+            success: function (response) {
+              // if there are still more pages to load,
+              // add 1 to the "Load More Posts" link's page data attribute
+              // else hide the link
+              // append html to the posts div
+              //$('.uk-modal-header-title').empty()
+
+              //$('.uk-modal-header-title').append(link.attr('inner-html'));
+              if (response.content) {
+                  window.location ='#top'
+                $('#tab-header').empty()
+                $('#tab-header').append(response.header);
+                $('#inner-container').empty();
+                $('#inner-container').append(response.content);
+                $('#loader-cover').hide()
+               UIkit.offcanvas($('#offcanvas-nav-secondary')).hide()
+            }
+
+              if (response.message) {
+                $('#notification-modal-inner').empty()
+                $('#notification-modal-inner').append(response.message)
+                $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                UIkit.modal($('#notification-modal')).show();
+              }
+
+
+            },
+            error: function (xhr, status, error) {
+              alert('there was an error')
+            }
+          });
+        });
+      }(jQuery))
+    };
+
+ 
+</script>

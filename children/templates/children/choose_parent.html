@@ -1,0 +1,128 @@
+
+<div class="card shadow-sm m-1 rounded-0 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <!-- Projects table -->
+            <p class="border-bottom h2 text-left"><b>Parents</b></p>
+            <table class="table align-items-left table-flush">
+
+                <thead class="bg-yellow text-darker  overflow-hidden">
+                    <tr>
+                        <th class="text-darker text-left p-2">Full Name</th>
+                        <th class="text-darker text-left p-2 text-center">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr id="" class="p-0 text-darker text-left ">
+                        <td class="p-1 pl-2 text-lg text-capitalize" uk-tooltip="{{dependant.full_name}}">
+                            {% if parent.member.bio_data.title %} {{parent.member.bio_data.title}} {% endif %}
+                            {{parent.member.bio_data.firstname}}
+                           {{parent.member.bio_data.surname}}                        
+                    </td>
+                       
+                     
+                        <td class="p-1 text-center">
+                            {% if action == 'accredit' %}
+                    
+                            <button class="btn btn-danger btn-sm m-0 text-white rounded-pill"
+                            onclick="requestContentModal('{% url 'children_change_registration_status' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dependantid=dependant.member.memberid memberid=parent.member.bio_data.member_id status='accredited' %}','get','#verification-result')">Accredit</button>
+                            
+                            
+                            {% elif action == 'pickup' %}
+                            {% if teacher %}
+
+                                <button class="btn btn-success btn-sm m-0 text-white rounded-pill"
+                                onclick="requestContentModal('{% url 'children_change_registration_status' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dependantid=dependant.member.memberid memberid=parent.member.bio_data.member_id status='pickedup' %}','get','#verification-result')">Pick up</button>
+
+                            {% endif %}
+                            {% else %}
+                            {% endif %}
+                        </td>                        
+                    </tr>
+                    {% if member in parent.parent_2.all %}
+                        {% else %}
+                        {% for parent_2 in parent.parent_2.all  %}
+                    <tr id="" class="p-0 text-darker text-left ">
+                        
+                        <td class="p-1 pl-2 text-lg text-capitalize" uk-tooltip="{{dependant.full_name}}">
+                            {% if parent_2.bio_data.title %} {{parent_2.bio_data.title}} {% endif %}
+                            {{parent_2.bio_data.firstname}}
+                           {{parent_2.bio_data.surname}}                        
+                    </td>
+                       
+                     
+                        <td class="p-1 text-center">
+                            {% if action == 'accredit' %}
+                    
+                            <button class="btn btn-danger btn-sm m-0 text-white rounded-pill"
+                            onclick="requestContentModal('{% url 'children_change_registration_status' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dependantid=dependant.member.memberid memberid=parent_2.bio_data.member_id status='accredited' %}','get','#verification-result')">Accredit</button>
+                            
+                            
+                            {% elif action == 'pickup' %}
+                            {% if teacher %}
+
+                                <button class="btn btn-success btn-sm m-0 text-white rounded-pill"
+                                onclick="requestContentModal('{% url 'children_change_registration_status' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dependantid=dependant.member.memberid memberid=parent_2.bio_data.member_id status='pickedup' %}','get','#verification-result')">Pick up</button>
+
+                            {% endif %}
+                            {% else %}
+                            {% endif %}
+                        </td>                        
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive mt-3">
+            <!-- Projects table -->
+            <p class="border-bottom h2 text-left"><b>Guardians</b></p>
+
+            <table class="table align-items-left table-flush">
+
+                <thead class="bg-yellow text-darker  overflow-hidden">
+                    <tr>
+                        <th class="text-darker text-left p-2">Full Name</th>
+                        <th class="text-darker text-left p-2 text-center">Action</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for guardian in parent.guardians.all %}
+                    {% if guardian.active %}
+                    <tr id="" class="p-0 text-darker text-left ">
+                        <td class="p-1 pl-2 text-lg text-capitalize" uk-tooltip="{{dependant.full_name}}">
+                            {% if guardian.member.title %} {{guardian.member.title}} {% endif %}
+                            {{guardian.member.firstname}}
+                           {{guardian.member.surname}}                        
+                    </td>
+                       
+                     
+                        <td class="p-1 text-center">
+                            {% if action == 'accredit' %}
+                    
+                            <button class="btn btn-danger btn-sm m-0 text-white rounded-pill"
+                            onclick="requestContentModal('{% url 'children_change_registration_status' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dependantid=dependant.member.memberid memberid=guardian.member.member_id status='accredited' %}','get','#verification-result')">Accredit</button>
+                            
+                            
+                            {% elif action == 'pickup' %}
+                            {% if teacher %}
+
+                                <button class="btn btn-success btn-sm m-0 text-white rounded-pill"
+                                onclick="requestContentModal('{% url 'children_change_registration_status' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dependantid=dependant.member.memberid memberid=guardian.member.member_id status='pickedup' %}','get','#verification-result')">Pick up</button>
+
+                            {% endif %}
+                            {% else %}
+                            {% endif %}
+                        </td>                        
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+
+
+<div class="p-2 uk-display-inline-block col-csxx-14 uk-text-center overflow-hidden" id=""
+    style="box-shadow: none;float: none;">
+
+<div class="card card-login uk-animation-slide-top shadow-none" id="other_support">
+
+    <form class="form" id="dependantform" method="POST" enctype="multipart/form-data" action="{% url 'children_add_dependant' %}">
+
+        {% csrf_token %}
+
+        <div class="m-1">
+           <div class="text-left">
+              <span >Dependant Photo</span>
+            </div>
+            <div class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm border rounded-lg p-1 shadow-sm">
+           
+            <input class="previewimage form-control" name="photo" data-jpreview-container="#preview-container"
+              placeholder="Dependant photo" type="file">
+
+          </div>
+          <div id="preview-container" class="jpreview-container uk-padding-small col-csxx-14 col-md-6 col-csx-6"
+            style="float: none;">
+          </div>
+        </div>
+        <div class="input-group m-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-user"></i>
+              </span>
+            </div>
+            <input type="text" class="form-control" name="c_firstname" placeholder="First name"
+              autofocus="autofocus">
+          </div>
+          <div class="input-group m-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-user"></i>
+              </span>
+            </div>
+            <input type="text" class="form-control" value="{{member.user.last_name}}" name="c_surname" placeholder="Last name"
+              autofocus="autofocus">
+          </div>
+          <div class="input-group m-1">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="fa fa-calendar"></i>
+              </span>
+            </div>
+            <input type="date" class="form-control" name="c_date_of_birth" placeholder="Date of Birth"
+              autofocus="autofocus">
+          </div>
+          <div class="form-group m1-3">
+            <div
+                class="input-group input-group-merge input-group-alternative border rounded-lg p-1 shadow-sm border rounded-lg p-1 shadow-sm">
+                <div class="input-group-prepend">
+
+                    <span class=" input-group-text">
+                        Gender:
+                    </span>
+                </div>
+                <div class="col-csxx-x-14">
+                    <select class="ui fluid dropdown" data-style="btn btn-link" name="c_gender" id="gender_id"
+                        class="form-control" required>
+                        <option value="{{dependant.bio_data.c_gender}}" selected="selected">
+                            {% if dependant.bio_data.c_gender %}
+                            {{dependant.bio_data.c_gender}} {% else %} select {% endif %} </option>
+                        <option value='M'>Male</option>
+                        <option value='F'>Female</option>
+
+                    </select>
+                </div>
+
+            </div>
+        </div>
+        <div class="footer text-center">
+            <button class="btn btn-success" type="submit" style="border-radius: 50px;"> <i class="fa fa-user-plus"></i> Create</button>
+        </div>
+    </form>
+</div>
+</div>
+
+
+
+<script>
+
+    $("#dependantform").submit(function (event) {
+        event.preventDefault(); //prevent default action 
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this); //Creates new FormData object
+        $.ajax({
+            beforeSend: function () {
+
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+            },
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (response) {
+              if (response.content) {
+          $('#tabcontent').removeClass('uk-animation-fade')
+
+          $('#tabcontent').addClass('uk-animation-fade')
+          $('#tabcontent').empty()
+          $('#tabcontent').append(response.content)
+
+        }
+               
+                if (response.modal_message) {
+            messageModal(response.modal_message, response.heading)
+
+          }
+          if (response.modal_notification) {
+            notificationModal(response.modal_notification)
+
+          }
+
+          if (response.modal_content) {
+            contentModal(response.modal_content, response.heading)
+
+          }
+          if (response.message) {
+                UIkit.notification.closeAll()
+                UIkit.notification(response.message)
+              }
+},
+
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+    $('.previewimage').jPreview();
+
+
+</script>

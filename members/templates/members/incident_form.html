@@ -1,0 +1,161 @@
+{% load static %}
+
+    <div>
+        <p class="h2 text-gray-dark">Incident Form</p>
+    </div> 
+<form class="form" id="incident-form" method="POST" action="{% url 'record_incidence' %}" style="">
+
+    {% csrf_token %}
+
+    <div class="card-body p-1">
+
+
+        <div class="uk-inline mt-2" style="width: 100%;">
+            <div class="default text text-dark uk-text-bold text-left text-sm">Program</div>
+            <div class="ui fluid search selection dropdown bg-secondary border-0">
+                <input type="hidden" id="program" name="program" required>
+                <i class="dropdown icon"></i>
+                <div class="default text text-dark text-sm">Select program</div>
+                <div class="menu border-primary border">
+                    {% for program in programs %}
+                    <div class="item" data-value="{{program.pk}}" style="padding: 8px !important;">{{program.programme}}
+                        <span class="bg-blue text-white p-1 rounded-md ml-1 float-right">{{program.start_date}}</span>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+        <div class="uk-inline mt-4" style="width: 100%;">
+
+            <div class="default text text-dark uk-text-bold text-left text-sm">Category</div>
+            <input class="uk-input form-control p-3    rounded-md position-relative border border-light text-dark "
+                style="z-index: 2;" id="category" type="text" readonly value="{{category.name}}" name="category" required autofocus>
+            <!-- <span class=" uk-position-center-left rounded-sm pl-1 pr-1 ml-2 c-label"
+                style="z-index: 1;font-size: 10px;">
+                Category
+            </span> -->
+        </div>
+
+        <div class="uk-inline mt-4" style="width: 100%;">
+
+            <div class="default text text-dark uk-text-bold text-left text-sm">Department</div>
+            <input class="uk-input form-control p-3    rounded-md position-relative border border-light text-dark "
+                style="z-index: 2;" id="category" type="text" readonly value="{{member.department.name}}" name="department" required autofocus>
+            <!-- <span class=" uk-position-center-left rounded-sm pl-1 pr-1 ml-2 c-label"
+                style="z-index: 1;font-size: 10px;">
+                Department
+            </span> -->
+        </div>
+
+        <div class="uk-inline mt-4" style="width: 100%;">
+
+            <!-- <span class="uk-position-center-left ml-2"> <i class="fa fa-user"></i></span> -->
+            <input class="uk-input form-control p-3    rounded-md position-relative border border-light text-dark "
+                style="z-index: 2;" id="title" type="text" name="title" required autofocus>
+            <span class=" uk-position-center-left rounded-sm pl-1 pr-1 ml-2 c-label"
+                style="z-index: 1;font-size: 10px;">
+                Title
+            </span>
+        </div>
+
+        <div class="form-group mt-2">
+            <textarea class="form-control" id="description" rows="3" name="description"></textarea>
+          </div>
+
+    </div>
+    <div class="mt-1 text-center bg-white">
+        <button class="btn btn-primary shadow-none btn-flat " type="submit" style=""> Submit </button>
+    </div>
+
+</form>
+
+
+<script src="{% static 'base/tinymce/jquery.tinymce.min.js' %}"></script>
+<script src="{% static 'base/tinymce/tinymce.min.js' %}"></script>
+<script>
+    $('.ui.dropdown')
+        .dropdown()
+        ;
+
+    tinymce.init({
+        selector: 'textarea#description',
+        height: 250,
+        menubar: false,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | help',
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    });
+
+
+
+    $("#incident-form").submit(function (event) {
+        event.preventDefault(); //prevent default action 
+        tinymceIframe = $('#description_ifr')
+        tinymceContent = tinymceIframe.contents().find("body#tinymce").html()
+        $('textarea#description').val(tinymceContent)
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this); //Creates new FormData object
+        $.ajax({
+            beforeSend: function () {
+
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+
+            },
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (response) {
+                if (response.modal_message) {
+                    messageModal(response.modal_message,)
+
+                }
+                if (response.full_modal) {
+                    fullcontentModal(response.full_modal, response.heading)
+
+                }
+                if (response.modal_description) {
+                    descriptionModal(response.modal_description,)
+
+                }
+                if (response.modal_notification) {
+                    notificationModal(response.modal_notification)
+
+                }
+
+                if (response.modal_content) {
+                    contentModal(response.modal_content, response.heading)
+
+                }
+                if (response.description) {
+                    UIkit.notification.closeAll()
+                    UIkit.notification(response.description)
+                }
+            },
+
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+
+
+</script>

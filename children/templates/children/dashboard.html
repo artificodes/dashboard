@@ -1,0 +1,72 @@
+{% extends "base/chbase.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="tab-content" id="tabcontent">
+
+    {% include 'children/home.html' %}
+ 
+</div>
+
+
+
+
+<script>
+
+  {
+    (function ($) { //Most read async
+      $('.main-content-btn').on('click', function (event) {
+        event.preventDefault();
+        var link = $(this);
+        $.ajax({
+          beforeSend: function () {
+
+            $('#loader-cover').show()
+          },
+          complete: function () {
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.content) {
+              window.location - '#top'
+              $('#tab-header').empty()
+              $('#tab-header').append(response.header);
+              $('#inner-container').empty();
+              $('#inner-container').append(response.content);
+              $('#loader-cover').hide()
+            }
+
+            if (response.message) {
+              $('#notification-modal-inner').empty()
+              $('#notification-modal-inner').append(response.message)
+              $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+              UIkit.modal($('#notification-modal')).show();
+            }
+
+
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+
+</script>
+
+
+{% endblock content %}

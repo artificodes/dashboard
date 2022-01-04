@@ -1,0 +1,281 @@
+<i class="material-icons uk-border-circle bg-primary"
+    style="font-size: 2rem;line-height: 2rem;height: 40px;width: 40px; color: white;margin-top: -10px;border: 4px solid white;">
+    account_circle</i>
+<div class="" style="overflow: hidden;">
+    <div class="uk-margin-remove uk-animation-slide-left uk-text-left {{animation}}">
+        <div class="card uk-margin-remove" style="box-shadow: none;border-radius: 0;">
+            <!-- <div class="card-header card-header-primary" style="box-shadow: none;">
+            Profile
+        </div> -->
+            <div class="card-body">
+                <div class="card uk-margin-small-top uk-margin-small-bottom">
+                    <div class="card-body">
+                        <div class="uk-padding-small uk-text-lead uk-text-center">
+                            <span style="font-weight: bold;">User ID </span> <br> {{partner.userid}}
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card uk-margin-remove">
+                    <div class="card-body">
+                        <div class=" ">
+                            <span style="font-weight: bold;">Full name:</span><br> {{request.user.first_name}}
+                            {{request.user.last_name}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card uk-margin-small-top uk-margin-small-bottom">
+                    <div class="card-body">
+                        <div class=" ">
+                            <div> <span style="font-weight: bold;"> Email:</span><br>{{request.user.email}}</div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card uk-margin-small-top uk-margin-small-bottom">
+                    <div class="card-body">
+                        <div class=" ">
+                            <div> <span style="font-weight: bold;">Phone number:</span><br> {{partner.phone_number}}
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="card uk-margin-small-top uk-margin-small-bottom">
+                    <div class="card-body">
+                        <div class=" ">
+                            <div> <span style="font-weight: bold;"> Gender:</span><br> {{partner.gender}}</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card uk-margin-small-top uk-margin-small-bottom">
+                    <div class="card-body">
+                        <div class=" ">
+                            <div><span style="font-weight: bold;"> Residential Address:</span><br>{{partner.street_number}},
+                                {{partner.street}}, {{partner.landmark}}, {{partner.nearest_bus_stop}},
+                                {{partner.city}}, {{partner.lga}}, {{partner.state}}, Nigeria</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card uk-margin-small-top uk-margin-small-bottom">
+                    <div class="card-body">
+                        <div class=" ">
+                            <div><span style="font-weight: bold;"> CGCC Membership Status:</span>  <br>
+                            {% if partner.is_cgcc_member %}  Member {% else %} Not a member {% endif %}</div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card uk-margin-small-top uk-margin-small-bottom" style="box-shadow: none;">
+
+                    <div class=" uk-text-center">
+                        <button class="btn btn-primary  uk-border-circle  edit-profile-btn edit-content-btn" contenturl="{% url 'update_profile' %}"
+                            style="position: relative; height: 50px;min-width: 50px; max-width: 50px;">
+                            <li class="material-icons">edit</li>
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div id="pin-reset-modal" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-border-rounded">
+        <h2 class="uk-modal-title">Transaction pin reset</h2>
+        <p class="modal-message">Why do you want to change your Transaction Pin?</p>
+        <p class="uk-text-center">
+            <button class="btn btn-primary  uk-border-pill " id="compromised-pin-btn" contenturl=""
+                type="button">Compromised</button>
+            <button class="btn btn-primary   uk-border-pill" type="button">Forgotten</button>
+
+        </p>
+    </div>
+</div>
+
+
+
+<script>
+
+    $('.ui.dropdown')
+        .dropdown()
+        ;
+
+
+    $(".edit-pin-btn").on('click', function (event) {
+        UIkit.modal($('#pin-reset-modal')).show();
+    });
+
+
+
+    $("#verify-bvn-btn").on('click', function (event) {
+        $('#main-content').empty()
+
+        var get_url = $(this).attr("contenturl"); //get form action url
+        $.ajax({
+            beforeSend: function () {
+
+                $('#main-content').append(inline_loader_small_center);
+
+
+            },
+            complete: function () {
+                $('#main-content').children('.loading').remove()
+            },
+            url: get_url,
+            success: function (response) {
+                $('#main-content').empty()
+
+
+                //UIkit.modal($('#edit-profile-modal')).show();
+                $('#main-content').append(response.content)
+
+            },
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+
+    $("#forgotten-pin-btn").on('click', function (event) {
+        $('#main-content').empty()
+
+        var get_url = $(this).attr("contenturl"); //get form action url
+        $.ajax({
+            beforeSend: function () {
+
+                $('#main-content').append(inline_loader_small_center);
+
+
+            },
+            complete: function () {
+                $('#main-content').children('.loading').remove()
+            },
+            url: get_url,
+            success: function (response) {
+                $('#main-content').empty()
+
+
+                //UIkit.modal($('#edit-profile-modal')).show();
+                $('#main-content').append(response.content)
+
+            },
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+
+
+
+
+    $("#compromised-pin-btn").on('click', function (event) {
+        $('#main-content').empty()
+
+        var get_url = $(this).attr("contenturl"); //get form action url
+        $.ajax({
+            beforeSend: function () {
+
+                $('#main-content').append(inline_loader_small_center);
+
+
+            },
+            complete: function () {
+                $('#main-content').children('.loading').remove()
+            },
+            url: get_url,
+            success: function (response) {
+                $('#main-content').empty()
+
+
+                //UIkit.modal($('#edit-profile-modal')).show();
+                $('#main-content').append(response.content)
+
+            },
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+    });
+
+
+</script>
+
+<script>
+    
+    {
+      (function ($) { //Most read async
+        $('.edit-content-btn').on('click', function (event) {
+          event.preventDefault(); 
+          var link = $(this);
+          $.ajax({
+            beforeSend: function () {
+
+              $('#loader-cover').show()
+            },
+            complete: function () {
+            },
+            type: 'get',
+            url: link.attr('contenturl'),
+            data: {
+              'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+            },
+            success: function (response) {
+              // if there are still more pages to load,
+              // add 1 to the "Load More Posts" link's page data attribute
+              // else hide the link
+              // append html to the posts div
+              //$('.uk-modal-header-title').empty()
+
+              //$('.uk-modal-header-title').append(link.attr('inner-html'));
+              if (response.content) {
+                  window.location ='#top'
+                $('#tab-header').empty()
+                $('#tab-header').append(response.header);
+                $('#inner-container').empty();
+                $('#inner-container').append(response.content);
+                $('#loader-cover').hide()
+              }
+
+              if (response.message) {
+                $('#notification-modal-inner').empty()
+                $('#notification-modal-inner').append(response.message)
+                $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                UIkit.modal($('#notification-modal')).show();
+              }
+
+
+            },
+            error: function (xhr, status, error) {
+              alert('there was an error')
+            }
+          });
+        });
+      }(jQuery))
+    };
+
+ 
+</script>

@@ -1,0 +1,21 @@
+<div class="card  uk-display-inline-block mb-1 shadow-lg rounded-lg overflow-hidden " style="width:100%">
+  <i class="fa fa-shield-alt uk-position-center text-yellow" style="opacity:0.1;font-size: 250px"></i>
+    <div class="card-body">
+        <form id="member-search" method="POST"
+            action="{% url 'member_search'%}">
+            {% csrf_token %}
+            <p class=" uk-text-bold uk-text-lead text-dark">Member Search</p>
+            <div class="m-1">
+                <div class="uk-inline" style="width: 100%;">
+                    <span class="uk-position-center-left ml-2"> <i class="fa fa-user-check"></i></span>
+                    <input class="uk-input form-control pl-5 rounded-lg bg-lighter" style="" id="identifier" type="text"
+                        placeholder="Enter Phone number or Email" name="identifier">
+                </div>
+            </div>
+            <div id="member-search-result" class="uk-text-center mb-3 mt-3"></div>
+
+            
+        </form>
+    </div>
+
+</div>

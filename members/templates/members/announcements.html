@@ -1,0 +1,81 @@
+<i class="fa fa-bullhorn uk-border-circle bg-primary"
+    style="font-size: 1rem;line-height: 2rem;height: 40px;width: 40px; color: white;margin-top: -10px;border: 4px solid white;">
+    </i>
+{% for announcement in announcements %}
+<div class="card uk-box-shadow-medium uk-margin-remove-left uk-margin-remove-right"
+style="overflow: hidden;">
+
+<div class="bg-primary uk-padding-medium uk-text-center"
+    style="color: white;font-weight: bold;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">
+    {{announcement.title|truncatechars:30}}
+</div>
+<div class="card-body uk-text-left">
+    <p class="card-text" style="">{{announcement.short_description|truncatechars:200}}</p>
+</div>
+<div class="card-footer uk-text-center container-fluid" style="display: inline-block;">
+    <button contenturl="{% url 'announcement_details' announcementid=announcement.contentid %}"
+        class="btn btn-outline-primary btn-round btn-block action-btn"
+        style="width: max-content;display: inline-block;border-radius: 0;">
+        <i class="material-icons">add</i> More
+        <!-- on {{announcement.title|truncatechars:10}} -->
+    </button>
+</div>
+
+</div>
+
+{% endfor %}
+
+<script>
+        {
+        (function ($) { //Most read async
+            $('.action-btn').on('click', function (event) {
+                event.preventDefault();
+                var link = $(this);
+                $.ajax({
+                    beforeSend: function () {
+
+                        $('#loader-cover').show()
+                    },
+                    complete: function () {
+                    },
+                    type: 'get',
+                    url: link.attr('contenturl'),
+                    data: {
+                        'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+                    },
+                    success: function (response) {
+                        // if there are still more pages to load,
+                        // add 1 to the "Load More Posts" link's page data attribute
+                        // else hide the link
+                        // append html to the posts div
+                        //$('.uk-modal-header-title').empty()
+
+                        //$('.uk-modal-header-title').append(link.attr('inner-html'));
+                        if (response.content) {
+                            $('#tab-header').empty()
+                            $('#tab-header').append(response.header);
+                            $('#inner-container').empty();
+                            $('#inner-container').append(response.content);
+                            $('#loader-cover').hide()
+                        }
+
+                        if (response.message) {
+                            window.location = "#top"
+
+                            $('#notification-modal-inner').empty()
+                            $('#notification-modal-inner').append(response.message)
+                            $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                            UIkit.modal($('#notification-modal')).show();
+                            $('#loader-cover').hide()
+                        }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        alert('there was an error')
+                    }
+                });
+            });
+        }(jQuery))
+    };
+</script>

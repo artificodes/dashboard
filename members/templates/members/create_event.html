@@ -1,0 +1,143 @@
+
+  <form role="form" id='createeventform' enctype="multipart/form-data" class="form uk-padding-small text-left"
+    method="POST" action="{% url 'member_create_event' %}">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="material-icons">subject</i></span>
+        </div>
+        <input class="form-control" placeholder="Event Title" type="text" name="title" required>
+      </div>
+    </div>
+   
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative border rounded-lg overflow-hidden shadow-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-cloud-upload-96"></i></span>
+        </div>
+        <input class="previewimage form-control" name="thumbnail" data-jpreview-container="#preview-container"
+          required placeholder="Upload event image" type="file">
+
+      </div>
+      <div id="preview-container" class="jpreview-container uk-padding-small col-csxx-14 col-md-6 col-csx-6"
+        style="float: none;">
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Event Reoccurance</p>
+      <div class="uk-divider-small uk-margin-small"></div>
+      <p class="">Does this event reoccur?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="reoccur1" value="yes" name="reoccur" class="custom-control-input"
+         required>
+        <label class="custom-control-label " for="reoccur1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="reoccur2" value="no" name="reoccur" class="custom-control-input"
+        checked required>
+        <label class="custom-control-label " for="reoccur2">No</label>
+      </div>
+     
+    </div>
+    <div class="form-group">
+      <label for="frequency" class="" >Reoccurance frequency</label>
+      <select class="form-control" id="frequency" name="frequency">
+        <option value="daily">Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="yearly">Yearly</option>
+      </select>
+    </div>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary my-4">Create</button>
+    </div>
+  </form>
+
+
+
+<script>
+  var submit = false
+  $('#createeventform').djValidator({ mode: 'submit', success: () => { submit = true } })
+
+  $("#createeventform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit == true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.eventcreated) {
+            window.location= response.url
+
+          }
+          else {
+
+            alert(response.content)
+          }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length == 11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>

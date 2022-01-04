@@ -1,0 +1,109 @@
+<div class="table-responsive uk-padding-large uk-padding-remove-horizontal uk-padding-remove-top">
+    <!-- Projects table -->
+    <table class="table align-items-center table-flush">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col" colspan="6" class="uk-text-lead text-white">EVENT DAYS</th>
+            </tr>
+        </thead>
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th scope="col">Registrations</th>
+                <th scope="col">Attendees</th>
+                <!-- <th scope="col">Percent</th> -->
+                <th scope="col">Action</th>
+
+
+            </tr>
+        </thead>
+        <tbody class="">
+            {% for day in hostedevent.days.all %}
+            <tr id="{{hostedevent.eventid}}{{ticket.ticketid}}">
+                <th scope="row">
+                    {{day.title}}
+                </th>
+                <td>
+                    {{day.start_date_time.date}}
+                </td>
+                <td>
+                    {{day.start_date_time.time}}
+                </td>
+                <td>
+                    {{day.registrations.count}}
+                </td>
+                <td>
+                    {{day.attendees.count}}
+                </td>
+                <td>
+
+                    <nav class="navbar navbar-top navbar-expand uk-padding-remove">
+                        <div class="container-fluid">
+                            <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link pr-0" role="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <div class="media align-items-center">
+                                            <span class="uk-icon-button uk-position-relative">
+                                                <i
+                                                    class="icon ellipsis vertical large uk-position-center uk-margin-remove"></i>
+                                            </span>
+                                            <div class="media-body  ml-2  d-none d-lg-block">
+                                                <span class="mb-0 text-sm  font-weight-bold"></span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-menu  dropdown-menu-right shadow-sm ">
+
+
+                                        <a contenturl="{% url 'edit_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=day.dayid %}"
+                                            class="dropdown-item full-content-modal">
+                                            <i class="icon edit text-info"></i>
+                                            <span>Edit</span>
+                                        </a>
+                                        <a href="{% url 'edit_hosted_event' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+                                            class="dropdown-item">
+                                            <i class="icon download text-purple"></i>
+                                            <span>Attendance</span>
+                                        </a>
+
+                                        <a class="dropdown-item delete-content"
+                                            removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"
+                                            contenturl="{% url 'delete_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=day.dayid %}">
+                                            <i class="icon trash text-danger"></i>
+                                            <span>Delete</span>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </nav>
+                </td>
+            </tr>
+            {% endfor %}
+            <td colspan="5" class="uk-text-center">
+                <button type="button"
+                    contenturl="{% url 'create_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}"
+                    class="btn bg-gradient-blue full-content-modal text-white"><i
+                        class="icon calendar plus outline text-white"></i> Add Day</button>
+            </td>
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="uk-padding-large uk-text-center uk-position-relative">
+    <i class="massive uk-position-center text-lighter" uk-icon='icon:calendar;ratio:10'></i>
+
+    <div class="uk-position-relative">You have not added any Day to this event</div>
+    <button type="button"
+        contenturl="{% url 'create_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}"
+        class="btn bg-gradient-blue full-content-modal text-white"><i
+            class="icon calendar plus outline text-white"></i>
+        Add Day</button>
+
+
+</div>
+{% endif %}

@@ -1,0 +1,95 @@
+<div class="card bg-transparent uk-display-inline-block mb-1 shadow-none" style="width:100%">
+    <div class="card-body p-1">
+        <form id="addparent" method="POST"
+            action="{% url 'children_add_parent'%}">
+{% csrf_token %}
+                    
+
+            <div class="m-1">
+                <p class="m-0 h4 uk-text-bold text-left">Parent's Phone/Email</p>
+
+                <div class="uk-inline" style="width: 100%;">
+                    <span class="uk-position-center-left ml-2"> <i class="fa fa-phone"></i></span>
+                    <input class="uk-input form-control pl-5 p-2 bg-transparent" style="height: max-content;" id="identifier"
+                        type="text" placeholder="Parent's phone number/Email" name="identifier">
+                </div>
+            </div>
+            <div class="m-1">
+                <p class="m-0 h4 uk-text-bold text-left">Enter password to authorize</p>
+                <div class="uk-inline" style="width: 100%;">
+                    <span class="uk-position-center-left ml-2"> <i class="fa fa-lock"></i></span>
+                    <input class="uk-input form-control pl-5 p-2 bg-transparent" style="height: max-content;" id="password"
+                        type="password" placeholder="Enter password" name="password">
+                </div>
+            </div>  
+            <div class="footer text-center">
+                <button class="btn btn-success" type="submit" style="border-radius: 50px;"> <i class="fa fa-user-plus"></i> Add</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+
+<script>
+      $("#addparent").submit(function (event) {
+        event.preventDefault(); //prevent default action 
+        var post_url = $(this).attr("action"); //get form action url
+        var request_method = $(this).attr("method"); //get form GET/POST method
+        var form_data = new FormData(this); //Creates new FormData object
+        
+            $.ajax({
+            beforeSend: function () {
+
+                showLoadingBar()
+            },
+            complete: function () {
+                hideLoadingBar()
+            },
+            url: post_url,
+            type: request_method,
+            data: form_data,
+            contentType: false,
+            cache: false,
+            processData: false,
+
+            success: function (response) {
+              if (response.content) {
+          $('#tabcontent').removeClass('uk-animation-fade')
+
+          $('#tabcontent').addClass('uk-animation-fade')
+          $('#tabcontent').empty()
+          $('#tabcontent').append(response.content)
+
+        }
+        if (response.modal_message) {
+          messageModal(response.modal_message, response.heading)
+
+        }
+        if (response.modal_notification) {
+          notificationModal(response.modal_notification)
+
+        }
+
+        if (response.modal_content) {
+          contentModal(response.modal_content, response.heading)
+
+        }
+        if(response.logout){
+          setTimeout(logout,5000)
+        }
+        UIkit.modal($('#content-modal')).hide();
+
+               
+},
+
+            error: function (xhr, status, error) {
+                UIkit.notification.closeAll()
+                UIkit.notification('Operation not successful. Check your internet connection',)
+            }
+        });
+  
+       
+    });
+
+</script>

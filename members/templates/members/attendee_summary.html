@@ -1,0 +1,21 @@
+{% if registration %}
+<div class="card disappear uk-margin-remove uk-animation-fade bg-gradient-success btn text-white uk-border-rounded uk-text-left" style="width: max-content;display: inline-block;">
+  <div class="card-title uk-margin-remove uk-text-center">
+<div class="uk-text-lead uk-text-bold">Record Found</div>
+  </div>
+    <div class="card-body uk-padding-small">
+<div class="">Ticket: {{ticket.name}}</div>
+<div class="">Seat No.: {{registration.seat_number}}</div>
+<div class="">Reg. ID: {{registration.registrationid}}</div>
+   </div>
+    
+</div>
+
+{% else %}
+<div class="disappear card btn uk-margin-remove uk-animation-fade bg-gradient-danger text-white uk-border-rounded uk-text-left" style="width: max-content;display: inline-block;">
+    <div class="card-title uk-margin-remove uk-text-center">
+  <div class="uk-text-lead uk-text-bold">Record not Found</div>
+    </div>
+      
+  </div>
+{% endif %}

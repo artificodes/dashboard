@@ -1,0 +1,194 @@
+{% if hostedevent.one_time_ticketing %}
+{% else %}
+{% if hostedevent.one_time_arrangement %}
+<div class="col-csxx-14">
+    <div class="col-csxx-14 uk-position-relative pt-3 border-bottom">
+        <div class="uk-text-bold uk-padding-small ">
+            Arrangements
+        </div>
+        <a type="button"
+            contenturl="{% url 'create_hosted_event_arrangement' hostedeventid=hostedevent.hostedeventid eventid=hostedevent.eventid dayid='None' action='exit' %}"
+            class="uk-icon-button content-modal uk-margin-small-right uk-position-center-right pb-1"><i
+                class="icon plus m-0 standard"></i>
+    </a>
+    </div>
+
+    {% if hostedevent.arrangements.count > 0 %}
+    <div class="col-csxx-14 uk-position-relative" style="z-index: 3;">
+        {% for arrangement in hostedevent.arrangements.all %}
+        <div class="col-cmd-3-e col-csxx-14 col-csx-7 col-css-7 col-csm-5-e uk-padding-small ">
+            <div class="card rounded-lg shadow-sm border bg-white {% if arrangement.chairs_per_table < 1 %} border-danger {% endif %}  ">
+                <div class="card-header uk-position-relative p-2 bg-blue">
+                            <h6 class=" h3 text-uppercase ls-1 mb-1 text-white "> {{arrangement.name}} </h6>
+                  
+                    <div class="uk-position-center-right">
+                        <a type="button" class="uk-padding-small"i><i  class="icon ellipsis vertical text-white"></i></a>
+                        <div uk-dropdown='pos:bottom-right;mode:click' class="rounded-lg uk-padding-remove overflow-hidden shadow-sm border" style="min-width: max-content; max-width: max-content;">
+                          <ul class="uk-nav uk-dropdown-nav">      
+                            <li class="uk-active dropdown-item pl-3 pr-3 pb-1 pt-1">
+                                <a contenturl="{% url 'edit_hosted_event_arrangement'  hostedeventid=hostedevent.hostedeventid eventid=hostedevent.eventid arrangementid=arrangement.arrangementid %}"
+                                class="dropdown-item content-modal">
+                                <i class="icon edit text-info"></i>
+                                <span>Edit</span>
+                            </a>
+                                </li>
+                            <li class="dropdown-item pl-3 pr-3 pb-1 pt-1">
+                                <a href="" class="dropdown-item">
+                                    <i class="icon download text-purple"></i>
+                                    <span>Arrangement</span>
+                                </a>
+
+                            </li>
+                            <li class="dropdown-item pl-3 pr-3 pb-1 pt-1">  <a class="dropdown-item action-btn"
+                                removableelement="#{{hostedevent.eventid}}{{arrangement.arrangementid}}"
+                                contenturl="{% url 'delete_hosted_event_arrangement'  hostedeventid=hostedevent.hostedeventid  eventid=hostedevent.eventid arrangementid=arrangement.arrangementid %}">
+                                <i class="icon trash text-danger"></i>
+                                <span>Delete</span>
+                            </a>
+                        </li>
+                          </ul>
+                        </div>
+                      </div>
+
+
+                </div>
+
+                <div class="card-body uk-padding-small text-darker">
+                    <div class="col-csxx-14">
+                        <div class="col-csxx-7">
+                            <i class="icon users text-darker"></i>
+                        </div>
+                        <div class="col-csxx-7 text-right uk-text-bold">
+                            <span>{{arrangement.attendance_limit}}</span>
+                        </div>
+                    </div>
+                    <div class="col-csxx-14">
+                        <div class="col-csxx-7">
+                            <i class="fa fa-user-check text-darker"></i>
+                        </div>
+                        <div class="col-csxx-7 text-right uk-text-bold">
+                            <span>{{arrangement.registrations.count}}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+    <div class="col-csx-14 uk-text-center uk-position-relative" slot="z-index:1">
+        <button type="button"
+            contenturl="{% url 'create_hosted_event_arrangement' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid='None' %}"
+            class="btn bg-gradient-blue content-modal text-white rounded-pill m-0"><i
+                class="fa fa-chair plus outline text-white"></i>
+            Add </button>
+    </div> 
+    {% else %}
+    <div class="col-csxx-14">
+    <div class="uk-padding-large uk-text-center uk-position-relative">
+        <i class="massive uk-position-center text-lighter fa-chair fa fa-5x" ></i>
+
+        <!-- <div class="uk-position-relative">No Arrangement added to this event</div> -->
+        <button type="button"
+            contenturl="{% url 'create_hosted_event_arrangement' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid='None' %}"
+            class="btn bg-gradient-blue content-modal text-white rounded-pill m-0"><i
+                class="fa fa-chair plus outline text-white"></i>
+            Add </button>
+
+
+    </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if dayarrangements.count > 0 %}
+<div class="col-csxx-14">
+    <div class="uk-text-bold uk-padding-small border-bottom">
+        Event Days Arrangements
+    </div>
+    <div class="col-csxx-14">
+        {% for eventday in hostedevent.days.all %}
+        {% if not eventday.ticket_required and eventday.arrange %}
+            {% if eventday.arrangements.all.count > 0 %}
+        {% for arrangement in eventday.arrangements.all %}
+        <div class="col-cmd-3-e col-csxx-14 col-csx-7 col-css-7 col-csm-5-e uk-padding-small ">
+            <div class="card rounded-lg shadow-sm border bg-white {% if arrangement.chairs_per_table < 1 %} border-danger {% endif %}  ">
+                <div class="card-header uk-position-relative p-2 bg-blue">
+                    <div class="row m-0 text-white"> 
+                        <div class="uk-text-bold col-csxx-5">
+                       DAY {{eventday.day}} 
+                       </div>
+       
+                       <div class="uk-text-bold col-csxx-9">
+                           {{arrangement.name}}
+                       </div>
+       
+                    </div>  
+                         
+                    <div class="uk-position-center-right">
+                        <a type="button" class="uk-padding-small"i><i  class="icon ellipsis vertical text-white"></i></a>
+                        <div uk-dropdown='pos:bottom-right;mode:click' class="rounded-lg uk-padding-remove overflow-hidden shadow-sm border" style="min-width: max-content; max-width: max-content;">
+                          <ul class="uk-nav uk-dropdown-nav">      
+                            <li class="uk-active dropdown-item pl-3 pr-3 pb-1 pt-1">
+                                <a onclick="requestContentModal('{% url 'edit_hosted_event_arrangement'  hostedeventid=hostedevent.hostedeventid eventid=hostedevent.eventid arrangementid=arrangement.arrangementid %}','get')"
+                                class="dropdown-item">
+                                <i class="icon edit text-info"></i>
+                                <span>Edit</span>
+                            </a>
+                                </li>
+                            <li class="dropdown-item pl-3 pr-3 pb-1 pt-1">
+                                <a href="" class="dropdown-item">
+                                    <i class="icon download text-purple"></i>
+                                    <span>Arrangement</span>
+                                </a>
+
+                            </li>
+                            <li class="dropdown-item pl-3 pr-3 pb-1 pt-1">  <a class="dropdown-item"
+                                removableelement="#{{hostedevent.eventid}}{{arrangement.arrangementid}}"
+                                onclick="requestContentModal('{% url 'delete_hosted_event_arrangement'  hostedeventid=hostedevent.hostedeventid  eventid=hostedevent.eventid arrangementid=arrangement.arrangementid %}','get')">
+                                <i class="icon trash text-danger"></i>
+                                <span>Delete</span>
+                            </a>
+                        </li>
+                          </ul>
+                        </div>
+                      </div>
+
+
+                </div>
+
+                <div class="card-body uk-padding-small text-darker">
+                    <div class="col-csxx-14">
+                        <div class="col-csxx-7">
+                            <i class="icon users text-darker"></i>
+                        </div>
+                        <div class="col-csxx-7 text-right uk-text-bold">
+                            <span>{{arrangement.attendance_limit}}</span>
+                        </div>
+                    </div>
+                    <div class="col-csxx-14">
+                        <div class="col-csxx-7">
+                            <i class="fa fa-user-check text-darker"></i>
+                        </div>
+                        <div class="col-csxx-7 text-right uk-text-bold">
+                            <span>{{arrangement.registrations.count}}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    </div>
+</div>
+
+{% endif %}
+{% endif %}

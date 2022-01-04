@@ -1,0 +1,218 @@
+{% if hostedevent.one_day %}
+
+{% else %}
+<div class="col-csxx-14">
+    <div class="col-csxx-14 uk-position-relative pt-3 border-bottom">
+        <div class="uk-text-bold uk-padding-small ">
+            Days
+        </div>
+        <a type="button"
+            onclick="requestContentModal('{% url 'member_create_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}','get')"
+            class="uk-icon-button  uk-margin-small-right uk-position-center-right pb-1"><i
+                class="icon plus m-0 standard"></i>
+        </a>
+    </div>
+    {% if hostedevent.days.count > 0 %}
+
+    {% for eventday in hostedevent.days.all %}
+    <div class="col-cmd-4-e col-csxx-14 col-csx-14 col-css-7 col-csm-5-e uk-padding-small ">
+        <div class="card shadow-lg border m-1 {% if eventday.error %} border-danger {% endif %} ">
+            <div class="card-header uk-position-relative p-2 bg-gradient-blue text-white">
+
+                <div class="uk-text-bold">
+                    DAY {{eventday.day}}
+                </div>
+
+                <div class="uk-position-top-right">
+                    <a type="button" class="uk-icon-button-tp m-1"><i class="icon ellipsis vertical text-white m-0"></i></a>
+                    <div uk-dropdown='pos:bottom-right;mode:click'
+                        class="rounded-lg uk-padding-remove overflow-hidden shadow-sm border">
+                        <ul class="uk-nav uk-dropdown-nav">
+                            <li class="uk-active dropdown-item p-0">
+                                <a onclick="requestContentModal('{% url 'member_edit_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}','get')"
+                                    class="dropdown-item p-2">
+                                    <i class="icon edit text-info"></i>
+                                    <span>Edit</span>
+                                </a>
+
+                            </li>
+                            <li class="dropdown-item p-0">
+                                {% if eventday.ticket_required %}
+                                <a onclick="requestContentModal('{% url 'member_create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid=eventday.dayid %}','get')"
+                                    class="dropdown-item p-2">
+                                    <i class="icon ticket text-yellow"></i>
+                                    <span>Add Ticket</span>
+                                </a>
+                                {% endif %}
+
+                            </li>
+                            <li class="dropdown-item p-0">
+                                {% if not eventday.ticket_required and eventday.arrange %}
+                                <a onclick="requestContentModal('{% url 'member_create_hosted_event_arrangement' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid=eventday.dayid %}','get')"
+                                    class="dropdown-item p-2">
+                                    <i class="fa fa-chair text-blue"></i>
+                                    <span>Add Arrangement</span>
+                                </a>
+                                {% endif %}
+                            </li>
+                            <li class="dropdown-item p-0">
+                                <a href="{% url 'member_edit_hosted_event' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+                                    class="dropdown-item p-2">
+                                    <i class="icon download text-purple"></i>
+                                    <span>Attendance</span>
+                                </a>
+                            </li>
+                            <li class="dropdown-item p-0">
+                                <a class="dropdown-item delete-content p-2"
+                                    removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"
+                                    contenturl="{% url 'member_delete_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+                                    <i class="icon trash text-danger"></i>
+                                    <span>Delete</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
+
+                <!-- <nav class="navbar navbar-top navbar-expand uk-padding-remove uk-position-top-right m-0">
+
+                                <ul class="navbar-nav align-items-center  ml-auto ml-md-0 ">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link p-0" role="button" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            <div class="media align-items-center">
+                                                <span class="uk-icon-button-tp uk-position-relative">
+                                                    <i
+                                                        class="icon text-white ellipsis vertical small uk-position-center uk-margin-remove"></i>
+                                                </span>
+                                                <div class="media-body  ml-2  d-none d-lg-block">
+                                                    <span class="mb-0 text-sm  font-weight-bold"></span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu  dropdown-menu-right shadow-lg ">
+
+
+                                            <a onclick="requestContentModal('{% url 'member_edit_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}','get')"
+                                                class="dropdown-item">
+                                                <i class="icon edit text-info"></i>
+                                                <span>Edit</span>
+                                            </a>
+                                            {% if eventday.ticket_required %}
+                                            <a onclick="requestContentModal('{% url 'member_create_hosted_event_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid=eventday.dayid %}','get')"
+                                                class="dropdown-item ">
+                                                <i class="icon ticket text-yellow"></i>
+                                                <span>Add Ticket</span>
+                                            </a>
+                                            {% endif %}
+
+                                            {% if not eventday.ticket_required and eventday.arrange %}
+                                            <a onclick="requestContentModal('{% url 'member_create_hosted_event_arrangement' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' dayid=eventday.dayid %}','get')"
+                                                class="dropdown-item ">
+                                                <i class="fa fa-chair text-blue"></i>
+                                                <span>Add Arrangement</span>
+                                            </a>
+                                            {% endif %}
+                                            <a href="{% url 'member_edit_hosted_event' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}','get')"
+                                                class="dropdown-item">
+                                                <i class="icon download text-purple"></i>
+                                                <span>Attendance</span>
+                                            </a>
+
+                                            <a class="dropdown-item delete-content"
+                                                removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"
+                                                contenturl="{% url 'member_delete_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid dayid=eventday.dayid %}">
+                                                <i class="icon trash text-danger"></i>
+                                                <span>Delete</span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </nav> -->
+                <div class="col-csxx-x-14 text-center">
+                    <div class="col-csxx-x-4-e text-center">
+                        <i class="icon ticket small text-yellow mr-1" style="font-size: 12px;"></i><span
+                            style="font-size: 12px;">{{eventday.tickets.count}}</span>
+                    </div>
+                    <div class="col-csxx-x-4-e text-center">
+                        <i class="fa fa-chair text-cyan mr-1" style="font-size: 12px;"></i><span
+                            style="font-size: 12px;">{{eventday.arrangements.count}}</span>
+                    </div>
+                    <div class="col-csxx-x-4-e text-center">
+                        <i class="fa fa-user-check check text-green mr-1" style="font-size: 12px;"></i><span
+                            style="font-size:12px ;">{{eventday.attendees.count}}</span>
+                    </div>
+                    <div class="col-csxx-x-4-e text-center">
+                        <i class="fa fa-users text-lighter mr-1" style="font-size: 12px;"></i><span
+                            style="font-size:12px ;">{{eventday.registrations.count}}</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card-body uk-padding-small">
+                <div class="card-title uk-text-bold">
+                    {{eventday.title}}
+
+                </div>
+                <div class="col-csxx-14">
+                    <div class="col-csxx-7 text-center">
+                        <i class="icon calendar outline text-green"></i>
+                        <p class=" uk-margin-remove">
+                            {{eventday.start_date_time.date}}
+                        </p>
+                    </div>
+                    <div class="col-csxx-7 text-center">
+                        <i class="icon clock outline text-green"></i>
+                        <p class=" uk-margin-remove">
+                            {{eventday.start_date_time.time}}
+                        </p>
+                    </div>
+                </div>
+                <div class="col-csxx-14">
+                    <div class="col-csxx-7 text-center">
+                        <i class="icon calendar outline text-danger"></i>
+                        <p class=" uk-margin-remove">
+                            {{eventday.end_date_time.date}}
+                        </p>
+                    </div>
+                    <div class="col-csxx-7 text-center">
+                        <i class="icon clock outline text-danger"></i>
+                        <p class=" uk-margin-remove">
+                            {{eventday.end_date_time.time}}
+                        </p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+    <div class="col-csx-14 text-center">
+        <button type="button"
+            onclick="requestContentModal('{% url 'member_create_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}','get')"
+            class="btn bg-gradient-teal text-white rounded-pill"><i class="icon calendar plus outline text-white"></i>
+            Add</button>
+
+    </div>
+    {% else %}
+    <div class="uk-padding-large uk-text-center uk-position-relative">
+        <i class="massive uk-position-center text-lighter" uk-icon='icon:calendar;ratio:5'></i>
+
+        <button type="button"
+            onclick="requestContentModal('{% url 'member_create_hosted_event_day' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}','get')"
+            class="btn bg-gradient-blue text-white rounded-pill m-0"><i
+                class="icon calendar plus outline text-white"></i>
+            Add</button>
+
+
+    </div>
+    {% endif %}
+</div>
+{% endif %}

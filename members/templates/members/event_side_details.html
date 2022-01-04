@@ -1,0 +1,386 @@
+<div class="card">
+  <div class="card-header bg-transparent">
+    <div class="row align-items-center">
+        <div class="col">
+            <h6 class="text-uppercase text-muted ls-1 mb-1">{{hostedevent.title}}</h6>
+            <h5 class="h3 mb-0">Hosted Event Details</h5>
+        </div>
+    </div>
+</div>
+<div class="card-body " id="">
+    <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Registrations</th>
+                    <th scope="col">Attendees</th>
+                    <th scope="col">Quota</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{hostedevent.registrations.count}}</td>
+                    <td>{{attendeescount}}</td>
+                    <td>{{hostedevent.attendance_limit}}</td>
+
+                </tr>
+            </tbody>
+            {% if hostedevent.ticket_required %}
+
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Tickets</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Quota</th>
+                    <th scope="col">Subscribers</th>
+                    <!-- <th scope="col">Percent</th> -->
+                    <th scope="col">Action</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in hostedevent.tickets.all %}
+                <tr id="{{hostedevent.eventid}}{{ticket.ticketid}}">
+                    <th scope="row">
+                        {{ticket.name}}
+                    </th>
+                    <td>
+                        ₦{{ticket.price}}
+                    </td>
+                    <td>
+                        {{ticket.attendance_limit}}
+                    </td>
+                    <td>
+                        {{ticket.registrations.count}}
+                    </td>
+                    <!-- <td>
+              <div class="d-flex align-items-center">
+                <span class="mr-2">{{ticket.percent}}%</span>
+                <div>
+                  <div class="progress">
+                    <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="{{ticket.percent}}"
+                      aria-valuemin="0" aria-valuemax="100" style="width: {{ticket.percent}}%;"></div>
+                  </div>
+                </div>
+              </div>
+            </td> -->
+                    <td>
+                        <button type="button" class="btn btn-sm btn-info content-modal"
+                            contenturl="{% url 'edit_hosted_event_ticket' eventid=event.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid %}">
+                            <i class="icon edit "></i> Edit</button>
+                        {% if ticket.registrations.count > 0 %}
+                        <button type="button" class="btn btn-sm btn-light delete-content  uk-disabled " contenturl=""
+                            removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"><i class="icon trash "></i>
+                            Delete</button>
+                        {% else %}
+                        <button type="button" class="btn btn-sm btn-danger delete-content"
+                            contenturl="{% url 'delete_hosted_event_ticket' eventid=event.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid %}"
+                            removableelement="#{{hostedevent.eventid}}{{ticket.ticketid}}"><i class="icon trash "></i>
+                            Delete</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                <td colspan="5" class="uk-text-center">
+                    <button type="button"
+                        contenturl="{% url 'create_hosted_event_ticket' eventid=event.eventid hostedeventid=hostedevent.hostedeventid action='exit' scope='none' %}"
+                        class="btn bg-gradient-blue content-modal text-white"><i class="icon add text-white"></i> Add Ticket</button>
+
+                    {% if hostedevent.arrangement_update_needed %}
+                    <a type="button" href="{% url 'edit_hosted_event' eventid=hostedevent.eventid %}"
+                        class="btn btn-warning"><i class="icon sync "></i> Update Arrangement</a>
+                    {% endif %}
+                </td>
+            </tbody>
+            {% endif %}
+        </table>
+    </div>
+</div>
+
+{% if hostedevent.arrange and hostedevent.ticket_required == False %}
+<div class="card-body">
+    <div class="table-responsive">
+        <!-- Projects table -->
+        <table class="table align-items-center table-flush">
+
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Arrangement</th>
+                    <th scope="col">Section</th>
+                    <th scope="col">T/S</th>
+                    <th scope="col">C/T</th>
+                    <th scope="col">Assigned (%)</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for arrangement in hostedevent.arrangements.all %}
+                <tr id="{{hostedevent.eventid}}{{arrangement.pk}}">
+                    <th>
+                        {{arrangement.name}}
+                    </th>
+                    <td>
+                        {{arrangement.sections}}
+                    </td>
+                    <td>
+                        {{arrangement.tables_per_section}}
+                    </td>
+                    <td>
+                        {{arrangement.chairs_per_table}}
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="mr-2">{{arrangement.percent}}%</span>
+                            <div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-gradient-danger" role="progressbar"
+                                        aria-valuenow="{{arrangement.percent}}" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: {{arrangement.percent}}%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-info content-modal"
+                            contenturl="{% url 'edit_hostedevent_arrangement' eventid=hostedevent.eventid arrangementid=arrangement.pk %}">
+                            <i class="icon edit "></i> Edit</button>
+                        <button type="button" class="btn btn-sm btn-danger delete-content"
+                            contenturl="{% url 'delete_hostedevent_arrangement' eventid=hostedevent.eventid arrangementid=arrangement.pk %}"
+                            removableelement="#{{hostedevent.eventid}}{{arrangement.pk}}"><i class="icon trash "></i>
+                            Delete</button>
+                    </td>
+                </tr>
+
+                {% endfor %}
+                <tr>
+
+
+                    <td colspan="6" class="uk-text-center">
+                        <button type="button"
+                            contenturl="{% url 'create_hosted_event_arrangement' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid  action='exit' scope='none' %}"
+                            class="btn btn-default content-modal"><i class="icon add "></i> Add Arrangement</button>
+
+                        {% if hostedevent.arrangement_update_needed %}
+                        <a type="button" href="{% url 'edit_hostedevent' eventid=hostedevent.eventid %}"
+                            class="btn btn-warning"><i class="icon sync "></i> Update Arrangement</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+<script>
+
+    {
+      (function ($) { //Most read async
+        $('.content-modal').on('click', function (event) {
+          event.preventDefault();
+          var link = $(this);
+          $.ajax({
+            beforeSend: function () {
+  
+              $('#loader-cover').show()
+            },
+            complete: function () {
+            },
+            type: 'get',
+            url: link.attr('contenturl'),
+            data: {
+              'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+            },
+            success: function (response) {
+              // if there are still more pages to load,
+              // add 1 to the "Load More Posts" link's page data attribute
+              // else hide the link
+              // append html to the posts div
+              //$('.uk-modal-header-title').empty()
+  
+              //$('.uk-modal-header-title').append(link.attr('inner-html'));
+              if (response.content) {
+                $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+                UIkit.modal($('#content-modal')).show();
+                $('#content-modal-body').empty()
+                $('#content-modal-body').append(response.content)
+              }
+  
+  
+  
+  
+            },
+            error: function (xhr, status, error) {
+              alert('there was an error')
+            }
+          });
+        });
+      }(jQuery))
+    };
+  
+    {
+      (function ($) { //Most read async
+        $('.delete-content').on('click', function (event) {
+          event.preventDefault();
+          var link = $(this);
+          var removableelement = link.attr('removableelement')
+  
+          $.ajax({
+            beforeSend: function () {
+              $(removableelement).addClass('uk-animation-fade')
+  
+            },
+            complete: function () {
+  
+            },
+            type: 'get',
+            url: link.attr('contenturl'),
+            data: {
+              'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+            },
+            success: function (response) {
+              // if there are still more pages to load,
+              // add 1 to the "Load More Posts" link's page data attribute
+              // else hide the link
+              // append html to the posts div
+              //$('.uk-modal-header-title').empty()
+  
+              //$('.uk-modal-header-title').append(link.attr('inner-html'));
+              if (response.done) {
+                $(removableelement).addClass('uk-animation-fade')
+                $(removableelement).remove()
+                UIkit.notification.closeAll()
+                UIkit.notification(response.message)
+  
+                if (response.hosted_event_details) {
+                  $('#event-table-details').removeClass('uk-animation-fade')
+  
+                  $('#event-table-details').addClass('uk-animation-fade')
+                  $('#event-table-details').empty()
+                  $('#event-table-details').append(response.hosted_event_details)
+                }
+              }
+              else{
+                UIkit.notification.closeAll()
+                UIkit.notification(response.message)
+  
+              }
+  
+            },
+            error: function (xhr, status, error) {
+              alert('there was an error')
+            }
+          });
+        });
+      }(jQuery))
+    };
+  
+  
+  </script>
+</div>
+<script>
+
+  {
+    (function ($) { //Most read async
+      $('.content-modal').on('click', function (hostedevent) {
+        hostedevent.prhostedeventDefault();
+        var link = $(this);
+        $.ajax({
+          beforeSend: function () {
+
+            $('#loader-cover').show()
+          },
+          complete: function () {
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.content) {
+              $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+              UIkit.modal($('#content-modal')).show();
+              $('#content-modal-body').empty()
+              $('#content-modal-body').append(response.content)
+            }
+
+
+
+
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+  {
+    (function ($) { //Most read async
+      $('.delete-content').on('click', function (hostedevent) {
+        hostedevent.prhostedeventDefault();
+        var link = $(this);
+        var removableelement = link.attr('removableelement')
+
+        $.ajax({
+          beforeSend: function () {
+            $(removableelement).addClass('uk-animation-fade')
+
+          },
+          complete: function () {
+
+          },
+          type: 'get',
+          url: link.attr('contenturl'),
+          data: {
+            'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+          },
+          success: function (response) {
+            // if there are still more pages to load,
+            // add 1 to the "Load More Posts" link's page data attribute
+            // else hide the link
+            // append html to the posts div
+            //$('.uk-modal-header-title').empty()
+
+            //$('.uk-modal-header-title').append(link.attr('inner-html'));
+            if (response.deleted) {
+              $(removableelement).addClass('uk-animation-fade')
+              $(removableelement).remove()
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+
+              if (response.hostedevent_details) {
+                $('#hostedevent-side-details').removeClass('uk-animation-fade')
+
+                $('#hostedevent-side-details').addClass('uk-animation-fade')
+                $('#hostedevent-side-details').empty()
+                $('#hostedevent-side-details').append(response.hostedevent_details)
+              }
+            }
+            else{
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+
+            }
+
+          },
+          error: function (xhr, status, error) {
+            alert('there was an error')
+          }
+        });
+      });
+    }(jQuery))
+  };
+
+
+</script>

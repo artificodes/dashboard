@@ -1,0 +1,42 @@
+
+<div class="table-responsive">
+    <!-- Projects table -->
+    <table class="table align-items-center table-flush">
+   
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Tickets</th>
+          <th scope="col">Amount</th>
+         <th scope="col">Action</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        {% for ticket in hostedevent.tickets.all %}
+        <tr>
+          <th scope="row">
+            {{ticket.name}}
+          </th>
+          <td>
+            ₦{{ticket.price}}
+          </td>
+          
+          <td>
+            {% if ticket.free %}
+            <button class="btn btn-success bg-gradient-success my-4 action-btn-free"
+            contenturl="{% url 'bought_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid %}" style="">Free</button>
+            {% else %}
+            <button class="btn btn-outline-success" onclick="buyTicketWithPaystack({{ticket.price}}00,'{{user.email}}','{{hostedevent.eventid}}','{{ticket.ticketid}}','{% url 'bought_ticket' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid ticketid=ticket.ticketid %}')"
+            style="">Buy
+            Now</button>
+
+            {% endif %}
+          </td>
+          
+        </tr>
+        {% endfor %}
+    
+      </tbody>
+    </table>
+  </div>
+  

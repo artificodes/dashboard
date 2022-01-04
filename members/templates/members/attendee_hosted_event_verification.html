@@ -1,0 +1,138 @@
+<div class="col-csxx-14 mt-3 p-2" id="event-verification">
+
+    <div class=" uk-text-center">
+        {% if registration.seat_number %}
+        <div class="uk-text-bold row">
+            <div class="col">
+                <div class="uk-text-lead">Seat No.:</div>
+                <div class=" uk-text-large uk-margin-small-left"> {{registration.seat_number}}</div>
+
+            </div>
+        </div>
+        {% endif %}
+
+        {% if registration.completed %}
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Verified <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Authorized <i class="icon check"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="100">
+            <div class="bar"></div>
+        </div>
+
+        {% elif hostedevent.verification_steps == '2' %}
+        {% if registration.verified %}
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Verified <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Authorized <i class="icon warning"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="70">
+            <div class="bar"></div>
+        </div>
+
+        <h6 class=" text-uppercase ls-1 mb-1">2-Step verification</h6>
+        <button class=" bg-translucent-darker uk-disabled btn btn-lg text-white ls-1 mb-1">
+            REG. ID: {{registration.registrationid}}</button>
+        <button class="btn btn-secondary full-content-modal my-4"
+            contenturl="{% url 'attendee_qrcode' eventid=hostedevent.eventid %}"><i class="icon qrcode large"></i> MY
+            QRCODE</button>
+
+        {% elif registered %}
+        <div class="container">
+            <div class="row uk-margin-remove">
+                <div class="progress-label p-2">
+                    <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+                </div>
+                <div class="progress-label p-2">
+                    <span class="bg-danger text-white">Verified <i class="icon warning"></i> </span>
+                </div>
+                <div class="progress-label p-2">
+                    <span class="bg-danger text-white">Authorized <i class="icon warning"></i></span>
+                </div>
+            </div>
+            <div class="ui indicating progress uk-margin-small-top" data-percent="35">
+                <div class="bar"></div>
+            </div>
+            <button class="btn bg-gradient-green qr-scan my-4"
+                contenturl="{% url 'event_qrcode_attendance' eventid=hostedevent.eventid %}"
+                eventid="{{hostedevent.eventid}}"><i class="icon qrcode massive"></i> </button>
+        </div>
+
+        {% endif %}
+
+        {% elif hostedevent.verification_steps == '1' %}
+        {% if registration.verified %}
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-success text-white">Verified <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Authorized <i class="icon warning"></i></span>
+            </div>
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="100">
+            <div class="bar"></div>
+        </div>
+
+        <h6 class=" text-uppercase ls-1 mb-1">2-Step verification</h6>
+        <button class=" bg-translucent-darker uk-disabled btn btn-lg text-white ls-1 mb-1">
+            REG. ID: {{registration.registrationid}}</button>
+        <button class="btn btn-secondary full-content-modal my-4"
+            contenturl="{% url 'attendee_qrcode' eventid=hostedevent.eventid %}"><i class="icon qrcode large"></i> MY
+            QRCODE</button>
+
+        {% elif registered %}
+
+        <div class="row uk-margin-remove">
+            <div class="progress-label">
+                <span class="bg-success text-white uk-text-small">Registered <i class="icon check"></i> </span>
+            </div>
+            <div class="progress-label">
+                <span class="bg-danger text-white">Verified <i class="icon warning"></i> </span>
+            </div>
+
+        </div>
+        <div class="ui indicating progress uk-margin-small-top" data-percent="50">
+            <div class="bar"></div>
+        </div>
+        <button class="btn rounded-pill bg-gradient-green qr-scan my-4"
+            contenturl="{% url 'event_qrcode_attendance' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}"
+            eventid="{{hostedevent.hostedeventid}}"><i class="icon qrcode large"></i> SCAN QRCODE</button>
+        {% endif %}
+        {% endif %}
+        {% if register %}
+        <button class="btn btn-success bg-gradient-success my-4 content-modal"
+            contenturl="{% url 'event_registration' eventid=hostedevent.eventid hostedeventid=hostedevent.hostedeventid %}">
+            <i class="ni ni-user-run"></i>
+            Register</button>
+        <button class="btn btn-danger my-4 uk-button-large"><i class="icon heart"></i> Save</button>
+
+        {% if hostedevent.verification_steps == '2' %}
+
+
+        {% endif %}
+
+        {% elif verify %}
+
+
+
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,308 @@
+<div class="card-body">
+
+  <form role="form" id='hosteventform' enctype="multipart/form-data" class="form uk-padding-small" method="POST"
+    action="{% url 'host_event' eventid=event.eventid %}">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="material-icons">subject</i></span>
+        </div>
+        <input class="form-control" placeholder="Event Title" type="text" name="title" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event start date and time" class="form-control datetimepicker"
+          name="start_date_time" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+        </div>
+        <input type="text" placeholder="Event end date and time" class="form-control datetimepicker"
+          name="end_date_time" required />
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <div class="input-group input-group-merge input-group-alternative">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="ni ni-cloud-upload-96"></i></span>
+        </div>
+        <input class="previewimage form-control" name="thumbnail" data-jpreview-container="#preview-container" required
+          placeholder="Upload event image" type="file">
+
+      </div>
+      <div id="preview-container" class="jpreview-container uk-padding-small col-csxx-14 col-md-6 col-csx-6"
+        style="float: none;">
+      </div>
+    </div>
+
+    <!-- <div class="form-group mb-3">
+                <p class="uk-text-lead ">Does this event require ticketing?</p>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="ticketing1" value="yes" name="ticketing" class="custom-control-input" checked
+                    required>
+                  <label class="custom-control-label " for="ticketing1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="ticketing2" value="no" name="ticketing" class="custom-control-input" required>
+                  <label class="custom-control-label " for="ticketing2">No</label>
+                </div>
+              </div> -->
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Event verification steps</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification1" value="0" name="verification" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="verification1">No verification</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification2" value="1" name="verification" class="custom-control-input" required>
+        <label class="custom-control-label " for="verification2">Single verification</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="verification3" value="2" name="verification" class="custom-control-input" required>
+        <label class="custom-control-label " for="verification3">Two-step verification</label>
+      </div>
+    </div>
+    <div class="form-group mb-3 uk-position-relative">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Event ticketing</p>
+      <a class="uk-icon-button bg-darker rounded-circle uk-position-top-right"
+        style="height: 20px !important;width: 20px !important;"
+        uk-tooltip='Select <b>YES</b> if you want one-time ticketing for attendees. With this option, attendees are required to buy ticket once 
+        and use it throughout the duration of this event. Select <b>NO</b> if event does not require ticketing or if you want to add custom tickets to days of this event.'><i
+          class="icon help text-white small"></i></a>
+      <p class="">Require one-time ticketing?</p>
+
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="ticketing1" value="yes" name="one_time_ticketing" class="custom-control-input" required>
+        <label class="custom-control-label " for="ticketing1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="ticketing2" value="no" name="one_time_ticketing" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="ticketing2">No</label>
+      </div>
+    </div>
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Attendees arrangement</p>
+      <p class="">Use one-time arrangement?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange1" value="yes" name="one_time_arrangement" class="custom-control-input" required>
+        <label class="custom-control-label " for="arrange1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="arrange2" value="no" name="one_time_arrangement" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="arrange2">No</label>
+      </div>
+
+    </div>
+    <div class="form-group mb-3">
+      <p class="uk-text-lead  uk-text-bold uk-margin-remove">Event days</p>
+      <p class="">Is this a 1 day event?</p>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="oneday1" value="yes" name="one_day" class="custom-control-input" required>
+        <label class="custom-control-label " for="arrange1">Yes</label>
+      </div>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input type="radio" id="oneday1" value="no" name="one_day" class="custom-control-input" checked
+          required>
+        <label class="custom-control-label " for="arrange2">No</label>
+      </div>
+
+    </div>
+
+    <!-- <div class="form-group mb-3">
+                <p class="uk-text-lead  uk-margin-remove uk-text-bold">Attendance Limit</p>
+                <div class="uk-divider-small uk-margin-small"></div>
+              
+                  <div class="input-group input-group-merge input-group-alternative">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="icon users"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="Attendance Limit" type="number" name="attendance_limit" required>
+                  </div>
+                
+              </div> -->
+
+    <!-- <div class="form-group mb-3">
+                <p class="uk-text-lead  uk-text-bold uk-margin-remove">Seat and Table Number Assignment</p>
+                <div class="uk-divider-small uk-margin-small"></div>
+                <p class="">Do you want Roundtable to assign seats and tables to attendees?</p>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="arrange1" value="yes" name="arrange" class="custom-control-input"
+                   required>
+                  <label class="custom-control-label " for="arrange1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="arrange2" value="no" name="arrange" class="custom-control-input"
+                  checked required>
+                  <label class="custom-control-label " for="arrange2">No</label>
+                </div>
+               
+              </div> -->
+
+    <!-- <div class="form-group mb-3">
+                <p class="uk-text-lead  uk-text-bold uk-margin-remove">Special Offers</p>
+                <div class="uk-divider-small uk-margin-small"></div>
+                <p class="">Does this event have special offers?</p>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="offer1" value="yes" name="offer" class="custom-control-input"
+                   required>
+                  <label class="custom-control-label " for="offer1">Yes</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" id="offer2" value="no" name="offer" class="custom-control-input"
+                  checked required>
+                  <label class="custom-control-label " for="offer2">No</label>
+                </div>
+               
+              </div> -->
+
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary my-4">Create</button>
+    </div>
+  </form>
+
+</div>
+
+
+
+</div>
+<script>
+  var submit = false
+  $('#hosteventform').djValidator({ mode: 'submit', success: () => { submit = true } })
+
+  $("#hosteventform").submit(function (event) {
+    event.preventDefault(); //prevent default action 
+    var post_url = $(this).attr("action"); //get form action url
+    var request_method = $(this).attr("method"); //get form GET/POST method
+    var form_data = new FormData(this); //Creates new FormData object
+    if (submit == true) {
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+          $('#loader-cover').hide()
+        },
+        url: post_url,
+        type: request_method,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+
+        success: function (response) {
+
+          if (response.done) {
+            $('#manager-container').removeClass('uk-animation-fade')
+
+            UIkit.modal($('#content-modal')).hide();
+            $('#manager-container').addClass('uk-animation-fade')
+            $('#manager-container').empty()
+            $('#manager-container').append(response.content)
+            if (response.message) {
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+            }
+          }
+          else if (response.message) {
+              UIkit.notification.closeAll()
+              UIkit.notification(response.message)
+            }
+        },
+        error: function (xhr, status, error) {
+          UIkit.notification.closeAll()
+          UIkit.notification('Not sent. Check your internet connection',)
+        }
+      });
+
+    }
+  });
+
+  function isEleven($field) {
+    value = $field.val();
+    if (value.length == 11) {
+      if (isNaN(value)) { return false }
+      else { return true }
+    }
+    else {
+      return false;
+    }
+  }
+
+  function isNotEmpty($field) {
+    value = $field.val();
+    if (value.length > 15) {
+      return true
+    }
+    else {
+      return false;
+    }
+  }
+</script>
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+
+<script>
+  {
+    (function ($) { //Most read async
+
+      $.ajax({
+        beforeSend: function () {
+          $('#loader-cover').show()
+        },
+        complete: function () {
+
+        },
+        type: 'get',
+        url: "{% url 'dashboard_content' %}",
+        data: {
+          'csrfmiddlewaretoken': window.CSRF_TOKEN, // from index.html
+        },
+        success: function (response) {
+          if (response.content) {
+            $('#inner-container').empty()
+            $('#inner-container').append(response.content)
+
+            $('#loader-cover').hide()
+          }
+
+        },
+        error: function (xhr, status, error) {
+
+          $('#notification-modal-inner').empty()
+          $('#notification-modal-inner').append('There was an error')
+          $('.uk-modal-body').css({ 'background-color': 'white', 'color': 'black' })
+          UIkit.modal($('#notification-modal')).show();
+        }
+      });
+    }(jQuery))
+  };
+</script>

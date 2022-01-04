@@ -1,0 +1,42 @@
+{% extends "base/chbase.html" %}
+{% load static %}
+{% block content %}
+
+<div class="main-content" id="panel">
+
+{% include 'base/navbar.html' %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        {% include 'members/event_manager.html' %}
+
+      </div>
+
+     
+    </div>
+  </div>
+
+
+</div>
+
+<script>
+  $('.previewimage').jPreview();
+
+  $('.datetimepicker').datetimepicker({
+    icons: {
+      time: "fa fa-clock",
+      date: "fa fa-calendar",
+      up: "fa fa-chevron-up",
+      down: "fa fa-chevron-down",
+      previous: 'fa fa-chevron-left',
+      next: 'fa fa-chevron-right',
+      today: 'fa fa-screenshot',
+      clear: 'fa fa-trash',
+      close: 'fa fa-remove'
+    }
+  });
+
+</script>
+
+
+{% endblock content %}
